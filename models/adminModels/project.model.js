@@ -5,6 +5,15 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  client_name: {
+    type: String,
+    required: true,
+  },
+  client_contact: {
+    type: String,
+    required: true,
+    },
+  
   project_id: {
     type: String,
     required: true,

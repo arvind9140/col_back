@@ -17,6 +17,7 @@ import userRoutes from "./routes/userRoutes/user.routes.js";
 import { initializeSocketIO } from "./socket/index.js";
 import { fileURLToPath } from "url";
 import messageRouter from "./routes/chatRoutes/message.routes.js";
+import registerRouter from"./routes/registerRoutes/register.route.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -99,8 +100,9 @@ initializeSocketIO(io);
 //*********/ write all routes here *********
 app.use("/v1/api/admin", adminRoutes);
 app.use("/v1/api/chats", chatRoutes);
-app.use("/v1/api/users", userRoutes);
+// app.use("/v1/api/users", userRoutes);
 app.use("/v1/api/chats/messages", messageRouter);
+app.use("/v1/api/users", registerRouter)
 
 httpServer.listen(8000, () => {
   connect();

@@ -1,4 +1,4 @@
-import adminLoginModel from "../../../models/adminModels/adminLoginModel.js";
+
 import leadModel from "../../../models/adminModels/leadModel.js";
 import { responseData } from "../../../utils/respounse.js";
 
@@ -24,11 +24,6 @@ export const createLead = async (req, res) => {
   // vaalidation all input
 
   try {
-    const check_role = await adminLoginModel.find({ role: role });
-    if (check_role.length < 1) {
-      responseData(res, "", 401, false, "you are not admin.");
-    }
-    if (check_role.length > 0) {
       const check_email = await leadModel.find({ email: email });
       if (check_email.length > 0) {
         responseData(res, "", 401, false, "email already exist.");
@@ -59,27 +54,22 @@ export const createLead = async (req, res) => {
           lead_data
         );
       }
-    }
+    
   } catch (err) {
     console.log(err);
     res.send(err);
   }
 };
 
+export const getAllLead = async (req, res) => {
+  try {
+    const leads = await leadModel.find({});
 
-
- export const getAllLead = async(req,res) =>{
-
-    try {
-        const leads = await leadModel.find({});
-
-        responseData(res,"All Lead Data", 200,true, "", leads);
-    } catch (error)
-    {
-        responseData(res,500,error.message);
-    }
-}
-
+    responseData(res, "All Lead Data", 200, true, "", leads);
+  } catch (error) {
+    responseData(res, 500, error.message);
+  }
+};
 
 export const getSingleLead = async (req, res) => {
   const lead_id = req.query.lead_id;
@@ -96,7 +86,6 @@ export const getSingleLead = async (req, res) => {
     responseData(res, "", 500, false, error.message);
   }
 };
-
 
 export const updateLead = async (req, res) => {
   const lead_id = req.body.lead_id;
@@ -149,4 +138,3 @@ export const updateLead = async (req, res) => {
     console.log(err);
   }
 };
-

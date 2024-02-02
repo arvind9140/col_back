@@ -1,5 +1,5 @@
 import { responseData } from "../../../utils/respounse.js";
-import projectModel from "../../../models/adminModels/projectModel.js";
+import projectModel from "../../../models/adminModels/project.model.js";
 import AWS from "aws-sdk";
 
 function generateSixDigitNumber() {

@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
 
-import adminLogin, { verifyOtp } from "../../controllers/adminControllers/adminLoginController.js";
 import fileupload from "../../controllers/adminControllers/fileUploadController/fileuploadController.js";
 import quotation from "../../controllers/adminControllers/quotationController/quotationController.js";
 import getQuotation from "../../controllers/adminControllers/quotationController/getQuotationController.js";
@@ -12,9 +11,6 @@ import { createmom, getAllMom, getSingleMom } from "../../controllers/adminContr
 import { createLead, getAllLead, getSingleLead, updateLead } from "../../controllers/adminControllers/leadController/lead.controller.js";
 import { createProject, getAllProject, getSingleProject, updateProjectDetails } from "../../controllers/adminControllers/projectController/project.controller.js";
 
-
-router.post("/login/", adminLogin);
-router.post("/login/varry/", verifyOtp);
 
 router.post("/fileupload/",fileupload);
 router.get("/getfile/", getFileData);
