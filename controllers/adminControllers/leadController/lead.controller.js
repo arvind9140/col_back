@@ -25,6 +25,7 @@ export const createLead = async (req, res) => {
   const content = req.body.content;
   const createdBy = req.body.createdBy;
   const role = req.body.role;
+  const date = req.body.date;
 
   // vaalidation all input
   if (!onlyAlphabetsValidation(name) && name.length >= 3) {
@@ -60,10 +61,12 @@ export const createLead = async (req, res) => {
           location: location,
           status: status,
           source: source,
+          date:date,
           notes: [
             {
               content: content,
               createdBy: createdBy,
+              date:date,
             },
           ],
         });
@@ -115,6 +118,7 @@ export const updateLead = async (req, res) => {
   const status = req.body.status;
   const content = req.body.content;
   const createdBy = req.body.createdBy;
+  const update = req.body.date;
 
   if (!lead_id) {
     responseData(res, "", 400, false, "lead_id is required", []);
@@ -136,6 +140,7 @@ export const updateLead = async (req, res) => {
               notes: {
                 content: content,
                 createdBy: createdBy,
+                date:update,
               },
             },
           },

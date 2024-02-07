@@ -31,6 +31,11 @@ const lead = new mongoose.Schema({
     type: String,
     // You can define specific sources based on your needs
   },
+  date:{
+    type:String,
+    require:true,
+
+  },
   notes: [
     {
       content: {
@@ -39,9 +44,8 @@ const lead = new mongoose.Schema({
       createdBy: {
         type: String,
       },
-      createdAt: {
-        type: Date,
-        default: () => moment().tz("Asia/Kolkata").toDate(),
+      date: {
+        type: String,
       },
     },
   ],
