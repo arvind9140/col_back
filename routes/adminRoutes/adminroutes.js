@@ -17,6 +17,7 @@ import {
   createLead,
   getAllLead,
   getSingleLead,
+  leadToProject,
   updateLead,
 } from "../../controllers/adminControllers/leadController/lead.controller.js";
 import {
@@ -42,6 +43,7 @@ router.route("/create/lead").post(createLead);
 router.route("/getall/lead").get(getAllLead);
 router.route("/getsingle/lead").get(getSingleLead);
 router.route("/update/lead").put(updateLead);
+router.route("/create/lead/project").post(leadToProject);
 
 router.route("/create/mom").post(createmom);
 router.route("/getall/mom").get(getAllMom);

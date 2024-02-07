@@ -10,6 +10,9 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  lead_id:{
+    type:String,
+  },
 
   project_type: {
     type: String,

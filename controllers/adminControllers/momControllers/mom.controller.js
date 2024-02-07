@@ -63,7 +63,7 @@ export const createmom = async (req, res) => {
     {
       return res.status(400).send({status:false,message:"architech is required"})
     }
-   else if(!organiser && !onlyAlphabetsValidation(organiser))
+   else if(!organisor && !onlyAlphabetsValidation(organisor))
     {
       return res.status(400).send({status:false,message:"organiser is required"})
     }
@@ -288,7 +288,7 @@ export const generatePdf = async (req, res) => {
               momData.attendees.organisor
             }</li>
             <li><span class="label">Architect:</span> ${
-              momData.attendees.architech
+              momData.attendees.architect
             }</li>
             <li><span class="label">Consultant Name:</span> ${
               momData.attendees.consultant_name

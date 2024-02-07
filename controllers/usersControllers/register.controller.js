@@ -225,7 +225,7 @@ export const registerUser = async (req, res) => {
                 // Store access token in the database (you can adjust this based on your database schema)
                 const login = new loginModel({
                   userID: result._id,
-                  token: accessToken,
+                  token: token,
                   logInDate: new Date(),
                 });
                 login.save();

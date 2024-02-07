@@ -263,7 +263,7 @@ export const getAllProject = async (req, res) => {
 
 export const getSingleProject = async (req, res) => {
   const project_ID = req.query.project_id;
-  const id = req.body.id;
+  const id = req.query.id;
 
   if (!project_ID) {
     responseData(res, "", 404, false, " Project ID is required.", []);

@@ -60,14 +60,7 @@ const io = new Server(httpServer, {
 app.set("io", io); // using set method to mount the `io` instance on the app to avoid usage of `global`
 
 // global middlewares
-app.use(
-  cors({
-    origin:
-     [ "http://localhost:5173,  https://65c276b796121e1f34eb8524--fantastic-gingersnap-891f8e.netlify.app"],
-    credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  })
-);
+app.use(cors());
 app.use(requestIp.mw());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
