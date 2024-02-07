@@ -1,12 +1,14 @@
-import emailverifyModel from "../../models/registerModels/emailverify.model.js";
-import otpModel from "../../models/registerModels/otp.model.js";
+import emailverifyModel from "../../models/usersModels/emailverify.model.js";
+import otpModel from "../../models/usersModels/otp.model.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import Randomstring from "randomstring";
+import jwt from "jsonwebtoken";
 import { responseData } from "../../utils/respounse.js";
-import registerModel from "../../models/registerModels/register.model.js";
+import registerModel from "../../models/usersModels/register.model.js";
+import loginModel from "../../models/usersModels/login.model.js";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -20,7 +22,11 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendOtp = async (req, res) => {
+  const user_name = req.body.username;
   const email = req.body.email;
+  const password = req.body.password;
+  const confirm_password = req.body.confirmpassword;
+  const role = req.body.role;
   if (!email) {
     responseData(res, "", 400, false, "Email is required");
   }
@@ -28,9 +34,18 @@ export const sendOtp = async (req, res) => {
     responseData(res, "", 400, false, " Invalid email!");
   } else {
     try {
-      const checkInfo = await registerModel.find({ email: email });
+      const checkInfo = await registerModel.find({
+        $and: [{ email: email }, { username: user_name }],
+      });
       if (checkInfo.length > 0) {
-        responseData(res, "", 400, false, "This email Already registered", []);
+        responseData(
+          res,
+          "",
+          400,
+          false,
+          "This email  or username Already registered",
+          []
+        );
       }
       if (checkInfo.length < 1) {
         const checkVerifiedEmail = await emailverifyModel.find({
@@ -113,7 +128,7 @@ export const verifyOtp = async (req, res) => {
       if (otpdata.length > 0) {
         let otpCheck = bcrypt.compare(otp, otpdata[0].otp);
         if (!otpCheck) {
-          responseData(res, "", "401", false, "Wrong OTP!");
+          responseData(res, "", 401, false, "Wrong OTP!");
         } else {
           const updatestatus = await emailverifyModel.find({ email: email });
           if (updatestatus.length > 0) {
@@ -147,55 +162,91 @@ export const registerUser = async (req, res) => {
   const role = req.body.role;
 
   if (user_name.length < 3) {
-    responseData(res, "", "400", false, "User name must be 3 character");
+    responseData(res, "", 400, false, "User name must be 3 characters");
   } else if (email.length < 5 || !validator.isEmail(email)) {
-    responseData(res, "", "400", false, "Invalid email");
+    responseData(res, "", 400, false, "Invalid email");
   } else if (password.length < 6) {
-    responseData(res, "", "400", false, "Password must be 6 character");
+    responseData(res, "", 400, false, "Password must be 6 characters");
   } else if (!confirm_password) {
     responseData(res, "", 400, false, "Confirm password is required");
   } else if (confirm_password !== password) {
-    responseData(res, "", "400", false, "Password not match");
+    responseData(res, "", 400, false, "Password does not match");
   } else if (!role) {
-    responseData(res, "", "400", false, "Please select role");
+    responseData(res, "", 400, false, "Please select a role");
   } else {
     try {
       const checkemail = await registerModel.find({ email: email });
+
       if (checkemail.length > 0) {
-        responseData(res, "", "400", false, "Email already exist");
+        responseData(res, "", 400, false, "Email already exists");
       }
+
       if (checkemail.length < 1) {
         const checkVerifiedEmail = await emailverifyModel.find({
           $and: [{ email: email }, { status: true }],
         });
+
         if (checkVerifiedEmail.length < 1) {
-          responseData(res, "", "400", false, "Email not verified");
+          responseData(res, "", 400, false, "Email not verified");
         }
+
         if (checkVerifiedEmail.length > 0) {
           bcrypt.hash(password, 10, async function (err, hash) {
             if (err) {
-              responseData(res, "", "400", false, "Something went wrong");
+              responseData(res, "", 400, false, "Something went wrong");
             } else {
               const register = new registerModel({
                 username: user_name,
+                userProfile: "",
                 email: email,
                 password: hash,
                 status: true,
                 role: role,
               });
+
               const result = await register.save();
+
               if (result) {
-                responseData(res, "", "200", true, "Registration successfully", result);
+                const token = jwt.sign(
+                  { userId: result._id, email: result.email },
+                  process.env.ACCESS_TOKEN_SECRET,
+                  { expiresIn: "1d" } // You can adjust the expiration time
+                );
+
+                // Include the access token in the response headers
+                res.header("Authorization", `Bearer ${token}`);
+
+                // Store access token in cookies
+                res.cookie("auth", token, {
+                  httpOnly: true,
+                  maxAge: 24 * 60 * 60 * 1000, // 1 day
+                });
+
+                // Store access token in the database (you can adjust this based on your database schema)
+                const login = new loginModel({
+                  userID: result._id,
+                  token: accessToken,
+                  logInDate: new Date(),
+                });
+                login.save();
+
+                responseData(
+                  res,
+                  "",
+                  200,
+                  true,
+                  "Registration successful",
+                  result
+                );
               } else {
-                responseData(res, "", "400", false, "Registration failed");
+                responseData(res, "", 400, false, "Registration failed");
               }
             }
           });
         }
       }
     } catch (err) {
-      res.send(err);
-      console.log(err);
+      responseData(res, "", 500, false, "Internal Server Error", err.message);
     }
   }
 };

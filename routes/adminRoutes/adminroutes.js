@@ -1,5 +1,5 @@
-import express from "express";
-const router = express.Router();
+import { Router } from "express";
+const router = Router();
 
 import fileupload from "../../controllers/adminControllers/fileUploadController/fileuploadController.js";
 import quotation from "../../controllers/adminControllers/quotationController/quotationController.js";
@@ -7,41 +7,46 @@ import getQuotation from "../../controllers/adminControllers/quotationController
 import getFileData from "../../controllers/adminControllers/fileUploadController/getFileController.js";
 import getSingleFileData from "../../controllers/adminControllers/fileUploadController/getSingleFileController.js";
 
-import { createmom, getAllMom, getSingleMom } from "../../controllers/adminControllers/momControllers/mom.controller.js";
-import { createLead, getAllLead, getSingleLead, updateLead } from "../../controllers/adminControllers/leadController/lead.controller.js";
-import { createProject, getAllProject, getSingleProject, updateProjectDetails } from "../../controllers/adminControllers/projectController/project.controller.js";
+import {
+  createmom,
+  generatePdf,
+  getAllMom,
+  getSingleMom,
+} from "../../controllers/adminControllers/momControllers/mom.controller.js";
+import {
+  createLead,
+  getAllLead,
+  getSingleLead,
+  updateLead,
+} from "../../controllers/adminControllers/leadController/lead.controller.js";
+import {
+  createProject,
+  getAllProject,
+  getSingleProject,
+  updateProjectDetails,
+} from "../../controllers/adminControllers/projectController/project.controller.js";
 
+router.route("/fileupload").post(fileupload);
+router.route("/getfile").get(getFileData);
+router.route("/get/onefile").get(getSingleFileData);
 
-router.post("/fileupload/",fileupload);
-router.get("/getfile/", getFileData);
-router.get("/get/onefile/", getSingleFileData)
+router.post("/quotation", quotation);
+router.get("/get/quotation", getQuotation);
 
+router.route("/create/project").post(createProject);
+router.route("/getall/project").get( getAllProject);
+router.route("/getsingle/project").get(getSingleProject);
+router.route("/update/project").put(updateProjectDetails);
 
-router.post("/quotation/",quotation)
-router.get("/get/quotation/", getQuotation);
+router.route("/create/lead").post(createLead);
+router.route("/getall/lead").get(getAllLead);
+router.route("/getsingle/lead").get(getSingleLead);
+router.route("/update/lead").put(updateLead);
 
-router.post("/create/project/",createProject);
-router.get("/getall/project/", getAllProject);
-router.get("/getsingle/project/", getSingleProject);
-router.put("/update/project/",updateProjectDetails);
-
-
-
-router.post("/create/lead/", createLead);
-router.get("/getall/lead/", getAllLead);
-router.get("/getsingle/lead/", getSingleLead);
-router.put("/update/lead/", updateLead);
-
-router.post("/create/mom/",createmom);
-router.get("/getall/mom/",getAllMom);
-router.get("/getsingle/mom/",getSingleMom);
-
-
-
-
-
-
-
+router.route("/create/mom").post(createmom);
+router.route("/getall/mom").get(getAllMom);
+router.route("/getsingle/mom").get(getSingleMom);
+router.route("/generate/pdf").get(generatePdf)
 
 
 export default router;

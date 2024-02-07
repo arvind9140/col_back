@@ -1,6 +1,7 @@
 
 import leadModel from "../../../models/adminModels/leadModel.js";
 import { responseData } from "../../../utils/respounse.js";
+import { onlyAlphabetsValidation, onlyEmailValidation, onlyPhoneNumberValidation } from "../../../utils/validation.js";
 
 function generateSixDigitNumber() {
   const min = 100000;
@@ -22,6 +23,30 @@ export const createLead = async (req, res) => {
   const role = req.body.role;
 
   // vaalidation all input
+  if(!onlyAlphabetsValidation(name) && name.length >=3)
+  {
+    responseData(res, "", 401, false, "name should be greater than 3 characters.");
+  }
+ else  if (!onlyEmailValidation(email) && email.length>5) {
+    responseData(res, "", 401, false, "email is invalid.");
+  }
+ else if (!onlyPhoneNumberValidation(phone) && phone.length ==10) {
+    responseData(res, "", 401, false, "phone number  is  invalid.");
+  }
+  else if (!location) {
+    responseData(res, "", 401, false, "location is required.");
+  }
+  else if (!status) {
+    responseData(res, "", 401, false, "status is required.");
+  }
+  else if (!source) {
+    responseData(res, "", 401, false, "source is required.");
+  }
+ 
+  
+  else{
+
+  
 
   try {
       const check_email = await leadModel.find({ email: email });
@@ -59,6 +84,7 @@ export const createLead = async (req, res) => {
     console.log(err);
     res.send(err);
   }
+}
 };
 
 export const getAllLead = async (req, res) => {
@@ -73,6 +99,7 @@ export const getAllLead = async (req, res) => {
 
 export const getSingleLead = async (req, res) => {
   const lead_id = req.query.lead_id;
+  
 
   try {
     const leads = await leadModel.find({ lead_id: lead_id });
@@ -89,16 +116,25 @@ export const getSingleLead = async (req, res) => {
 
 export const updateLead = async (req, res) => {
   const lead_id = req.body.lead_id;
-  const name = req.body.name;
-  const email = req.body.email;
-  const phone = req.body.phone;
-  const location = req.body.location;
   const status = req.body.status;
-  const source = req.body.source;
   const content = req.body.content;
   const createdBy = req.body.createdBy;
 
-  //////// Validation here ///////
+
+  if(!lead_id)
+  {
+    responseData(res, "", 400, false, "lead_id is required", []);
+  }
+  else if (!status)
+  {
+    responseData(res, "", 400, false, "status is required", []);
+  }
+  else if (!createdBy)
+  {
+    responseData(res, "", 400, false, "createdBy is required", []);
+  }
+  else{
+
 
   try {
     const find_lead = await leadModel.find({ lead_id: lead_id });
@@ -108,11 +144,6 @@ export const updateLead = async (req, res) => {
         {
           $set: {
             status: status,
-            name: name,
-            email: email,
-            phone: phone,
-            location: location,
-            source: source,
           },
           $push: {
             notes: {
@@ -137,4 +168,5 @@ export const updateLead = async (req, res) => {
     responseData(res, "", 500, false, "error", err.message);
     console.log(err);
   }
+}
 };

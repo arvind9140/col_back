@@ -14,10 +14,7 @@ const signUp = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
-  //   token:{
-  //     type:String,
 
-  //   },
   role: {
     type: String,
     required: true,
@@ -26,13 +23,8 @@ const signUp = new mongoose.Schema({
     type: String,
     require: true,
   },
-
-  confirm_password: {
+  userProfile: {
     type: String,
-    require: true,
-  },
-  userProfile:{
-    type:String,
     // required:true,
   },
   createdAt: {

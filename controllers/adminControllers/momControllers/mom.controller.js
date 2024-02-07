@@ -1,6 +1,8 @@
 import { responseData } from "../../../utils/respounse.js";
 import projectModel from "../../../models/adminModels/project.model.js";
 import AWS from "aws-sdk";
+import { onlyAlphabetsValidation } from "../../../utils/validation.js";
+import pdf from "html-pdf";
 
 function generateSixDigitNumber() {
   const min = 100000;
@@ -34,13 +36,44 @@ export const createmom = async (req, res) => {
     const meetingDate = req.body.meetingdate;
     const source = req.body.source;
     const client_name = req.body.client_name;
-    const architech = req.body.architech;
-    const organiser = req.body.organiser;
+    const architect = req.body.architect;
+    const organisor = req.body.organisor;
     const consultant_name = req.body.consultant_name;
     const remark = req.body.remark;
     const imaportant_note = req.body.imaportant_note;
 
     // write here validation ///
+    if(!project_id)
+    {
+      return res.status(400).send({status:false,message:"project_id is required"})
+    }
+   else if(!meetingDate)
+    {
+      return res.status(400).send({status:false,message:"meetingDate is required"})
+    }
+   else if(!source)
+    {
+      return res.status(400).send({status:false,message:"source is required"})
+    }
+   else if(!client_name && !onlyAlphabetsValidation(client_name))
+    {
+      return res.status(400).send({status:false,message:"client_name is required"})
+    }
+   else if(!architect && !onlyAlphabetsValidation(architect))
+    {
+      return res.status(400).send({status:false,message:"architech is required"})
+    }
+   else if(!organiser && !onlyAlphabetsValidation(organiser))
+    {
+      return res.status(400).send({status:false,message:"organiser is required"})
+    }
+   else if(!consultant_name && !onlyAlphabetsValidation(consultant_name))
+   {
+     return res.status(400).send({status:false,message:"consultant_name is required"})
+   }
+    else{
+
+    
 
     const check_project = await projectModel.find({ project_id: project_id });
     if (check_project.length > 0) {
@@ -96,8 +129,8 @@ export const createmom = async (req, res) => {
                 source: source,
                 attendees: {
                   client_name: client_name,
-                  organiser: organiser,
-                  architech: architech,
+                  organisor: organisor,
+                  architect: architect,
                   consultant_name: consultant_name,
                 },
                 remark: remark,
@@ -123,6 +156,7 @@ export const createmom = async (req, res) => {
     if (check_project < 1) {
       responseData(res, "", 404, false, "Project Not Found.");
     }
+  }
   } catch (error) {
     responseData(res, "", 400, false, error.message);
   }
@@ -169,3 +203,152 @@ export const getSingleMom = async (req, res) => {
     responseData(res, "", 400, false, error.message);
   }
 };
+
+export const generatePdf = async (req, res) => {
+  try {
+    const project_id = req.query.project_id;
+    const mom_id = req.query.mom_id;
+
+    const check_project = await projectModel.find({ project_id: project_id });
+
+    if (check_project.length > 0) {
+      const check_mom = check_project[0].mom.filter(
+        (mom) => mom.mom_id.toString() === mom_id
+      );
+
+      if (check_mom.length > 0) {
+        const momData = check_mom[0]; // Extracting the MOM data
+        const momRemarkSplit = momData.remark.split(".").filter(Boolean); // Filter to remove empty strings
+        const momRemarkHtml = momRemarkSplit
+          .map((remark) => 
+          `<li>${remark.trim()}</li>`)
+          .join("");
+          const momNoteSplit = momData.imaportant_note.split(".").filter(Boolean); // Filter to remove empty strings
+          const momImportant_noteHtml = momNoteSplit
+            .map((note) => `<li>${note.trim()}</li>`)
+            .join("");
+
+     const htmlTemplate = `
+<html>
+  <head>
+    <title>MOM Data Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .content {
+        text-align: left; /* Align content to the left */
+        max-width: 600px; /* Limit width to make content centered */
+        margin: auto; /* Center content horizontally */
+      }
+      h1 {
+        color: #333;
+        text-align: center; /* Center the heading */
+      }
+      ul {
+        list-style: none; /* Remove default list styles */
+        padding: 0; /* Remove default padding */
+      }
+      li {
+        margin-bottom: 10px; /* Add space between list items */
+      }
+      .label {
+        font-weight: bold; /* Make labels bold */
+        display: inline-block; /* Display labels inline */
+        width: 150px; /* Set a fixed width for labels */
+        margin-bottom: 10px;
+      }
+      a {
+        color: blue;
+      }
+      .feedback {
+        text-align: center; /* Center the feedback section */
+        margin-top: 10px; /* Add space above the feedback section */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <h1>MOM Data Report</h1>
+      <ul>
+        <li><span class="label">MOM_ID:</span> ${momData.mom_id}</li>
+        <li><span class="label">MOM_Date:</span> ${momData.meetingdate}</li>
+        <li><span class="label">MOM_Source:</span> ${momData.source}</li>
+        <li><span class="label">Attendees:</span>
+          <ul>
+            <li><span class="label">Client Name:</span> ${
+              momData.attendees.client_name
+            }</li>
+            <li><span class="label">Organisor:</span> ${
+              momData.attendees.organisor
+            }</li>
+            <li><span class="label">Architect:</span> ${
+              momData.attendees.architech
+            }</li>
+            <li><span class="label">Consultant Name:</span> ${
+              momData.attendees.consultant_name
+            }</li>
+          </ul>
+        </li>
+        <li><span class="label">MOM_Remark:</span> 
+        <br>
+          <ul>
+           <ol>
+        ${momRemarkHtml}
+      </ol>
+          </ul>
+        </li>
+        <li><span class="label">MOM_Important_Notes:</span>
+        <ol>
+        ${momImportant_noteHtml}
+      </ol></li>
+        <li><span class="label">Files:</span>
+          <ul>
+            <ol>
+        ${momData.files
+          .map((file) => `<li><a href="${file}">${file}</a></li>`)
+          .join("")}
+      </ol>
+          </ul>
+        </li>
+      </ul>
+    </div>
+        <div class="feedback">
+      <p>Would you like to provide feedback on this MOM report?</p>
+      <a href="/feedback?project_id=${project_id}&mom_id=${mom_id}">Submit Feedback</a>
+    </div>
+
+  </body>
+</html>
+`;
+
+        const pdfOptions = {
+          format: "Letter",
+        };
+
+        // Generate PDF
+        pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
+          if (err) {
+            res.status(500).send(err);
+          } else {
+            res.setHeader("Content-Type", "application/pdf");
+            stream.pipe(res);
+          }
+        });
+      } else {
+        responseData(res, "", 404, false, "MOM Not Found");
+      }
+    } else {
+      responseData(res, "", 404, false, "Project Not Found");
+    }
+  } catch (err) {
+    console.log(err);
+    responseData(res, "", 400, false, err.message);
+  }
+};
+

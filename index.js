@@ -17,7 +17,7 @@ import userRoutes from "./routes/userRoutes/user.routes.js";
 import { initializeSocketIO } from "./socket/index.js";
 import { fileURLToPath } from "url";
 import messageRouter from "./routes/chatRoutes/message.routes.js";
-import registerRouter from"./routes/registerRoutes/register.route.js";
+import usersRouter from "./routes/usersRoutes/users.route.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -62,7 +62,8 @@ app.set("io", io); // using set method to mount the `io` instance on the app to 
 // global middlewares
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin:
+      "https://65c2022372de2764c478d6ac--fantastic-gingersnap-891f8e.netlify.app/",
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
@@ -102,7 +103,7 @@ app.use("/v1/api/admin", adminRoutes);
 app.use("/v1/api/chats", chatRoutes);
 // app.use("/v1/api/users", userRoutes);
 app.use("/v1/api/chats/messages", messageRouter);
-app.use("/v1/api/users", registerRouter)
+app.use("/v1/api/users", usersRouter);
 
 httpServer.listen(8000, () => {
   connect();
