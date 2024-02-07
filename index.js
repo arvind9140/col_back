@@ -60,7 +60,9 @@ const io = new Server(httpServer, {
 app.set("io", io); // using set method to mount the `io` instance on the app to avoid usage of `global`
 
 // global middlewares
-app.use(cors());
+app.use(
+  cors()
+);
 app.use(requestIp.mw());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
