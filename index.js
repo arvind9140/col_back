@@ -63,7 +63,7 @@ app.set("io", io); // using set method to mount the `io` instance on the app to 
 app.use(
   cors({
     origin:
-      "http://localhost:5173,  https://65c276b796121e1f34eb8524--fantastic-gingersnap-891f8e.netlify.app",
+     [ "http://localhost:5173,  https://65c276b796121e1f34eb8524--fantastic-gingersnap-891f8e.netlify.app"],
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
