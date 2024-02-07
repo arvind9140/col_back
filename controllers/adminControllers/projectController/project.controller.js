@@ -257,7 +257,7 @@ export const getAllProject = async (req, res) => {
       }
     }
   } catch (error) {
-    responseData(res, "", 500, false, "error in fetching projects", err);
+    responseData(res, "", 500, false, "error in fetching projects");
   }
 };
 
