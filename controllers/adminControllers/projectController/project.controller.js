@@ -208,11 +208,27 @@ export const createProject = async (req, res) => {
   }
 };
 
+// Function to check if the project is older than 6 months
+function isProjectOlderThan6Months(createdDate) {
+  // Get the current date
+  const currentDate = new Date();
+
+  // Calculate the difference in months
+  const diffMonths =
+    (currentDate.getFullYear() - createdDate.getFullYear()) * 12 +
+    (currentDate.getMonth() - createdDate.getMonth());
+
+  // Check if the difference is greater than or equal to 6 months
+  return diffMonths >= 6;
+}
+
+// Example usage
+
 export const getAllProject = async (req, res) => {
   try {
     const id = req.query.id;
     if (!id) {
-      responseData(res, "", 400, false, "id is required");
+      responseData(res, "", 400, false, "user id is required");
     } else {
       const check_role = await registerModel.find({ _id: id });
       if (check_role.length > 0) {
@@ -220,6 +236,7 @@ export const getAllProject = async (req, res) => {
           let execution = [];
           let design = [];
           let completed = [];
+          let archive = [];
           const projects = await projectModel.find({});
           for (let i = 0; i < projects.length; i++) {
             if (projects[i].project_status == "execution") {
@@ -230,6 +247,11 @@ export const getAllProject = async (req, res) => {
             }
             if (projects[i].project_status == "completed") {
               completed.push(projects[i]);
+              const createdDate = projects[i].project_end_date; 
+              const isOlderThan6Months = isProjectOlderThan6Months(createdDate);
+              if (isOlderThan6Months) {
+                archive.push(isOlderThan6Months);
+              }
             }
           }
 
@@ -238,6 +260,7 @@ export const getAllProject = async (req, res) => {
             Execution_Phase: execution.length,
             Design_Phase: design.length,
             completed: completed.length,
+            archive: archive.length,
             projects,
           };
           responseData(
