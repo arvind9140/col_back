@@ -67,6 +67,7 @@ export const createLead = async (req, res) => {
               content: content,
               createdBy: createdBy,
               date:date,
+              status:status,
             },
           ],
         });
@@ -141,6 +142,7 @@ export const updateLead = async (req, res) => {
                 content: content,
                 createdBy: createdBy,
                 date:update,
+                status:status
               },
             },
           },

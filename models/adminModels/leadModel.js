@@ -47,6 +47,10 @@ const lead = new mongoose.Schema({
       date: {
         type: String,
       },
+      status:{
+        type:String,
+
+      },
     },
   ],
   createdAt: {
