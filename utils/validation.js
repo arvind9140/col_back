@@ -24,7 +24,7 @@ export const onlyPasswordPatternValidation = (pass_word) => {
 
 export const onlyPhoneNumberValidation = (num_ber) => {
   // Updated regular expression with length constraint
-  let phoneNumber = /^\+\d{1,3}-\d{9,10}$/;
+  let phoneNumber = /^\d{10}$/;
 
   if (phoneNumber.test(num_ber)) {
     return true;

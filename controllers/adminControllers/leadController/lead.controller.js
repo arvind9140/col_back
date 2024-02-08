@@ -26,6 +26,7 @@ export const createLead = async (req, res) => {
   const createdBy = req.body.createdBy;
   const role = req.body.role;
   const date = req.body.date;
+  
 
   // vaalidation all input
   if (!onlyAlphabetsValidation(name) && name.length >= 3) {
@@ -38,7 +39,7 @@ export const createLead = async (req, res) => {
     );
   } else if (!onlyEmailValidation(email) && email.length > 5) {
     responseData(res, "", 401, false, "email is invalid.");
-  } else if (!onlyPhoneNumberValidation(phone) && phone.length == 10) {
+  } else if (!onlyPhoneNumberValidation(phone)) {
     responseData(res, "", 401, false, "phone number  is  invalid.");
   } else if (!location) {
     responseData(res, "", 401, false, "location is required.");
