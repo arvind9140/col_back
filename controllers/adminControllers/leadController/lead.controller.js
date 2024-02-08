@@ -186,11 +186,12 @@ export const leadToProject = async(req,res) =>{
       const find_lead = await leadModel.find({lead_id:lead_id});
       if(find_lead.length > 0)
       {
-        const project_ID = `COL\P${generateSixDigitNumber}`
+        const project_ID = generateSixDigitNumber()
+        
         const project_data = await projectModel.create({
           project_name: project_name,
           project_type: project_type,
-          project_id: project_ID,
+          project_id: `COL\P-${project_ID}`,
           client: {
             client_name: client_name,
             client_email: client_email,
