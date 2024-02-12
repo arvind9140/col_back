@@ -32,44 +32,52 @@ const uploadFile = async (file, fileName, project_id, mom_id) => {
 };
 
 export const getAllProjectMom = async(req,res) =>{
-  const id = req.query.id;
-
-  if(!id){
-     responseData(res,"",400,false,"admin id is required");
-  }
-  else{
+  
+  
     try{
-      const checkAdmin = await registerModel.find({_id:id});
+      // const checkAdmin = await registerModel.find({_id:id});
       
-      if(checkAdmin.length <1)
+      // if(checkAdmin.length <1)
+      // {
+      //   responseData(res,"",400,false,"admin id is not valid");  
+      // }
+      // if(checkAdmin.length >0){
+      //   const getAllProjectMom = await projectModel.find({admin_id:id});
+      //   if(getAllProjectMom.length <1)
+      //   {
+      //     responseData(res,"",400,false,"no project found");
+      //   }
+      //   if(getAllProjectMom.length >0)
+      //   {
+      //     let MomData =[]
+      //     for (let i=0;i<getAllProjectMom.length;i++)
+      //     {
+      //       MomData.push(getAllProjectMom[i].mom)
+
+      //     }
+
+      const find_project = await projectModel.find({})
+      // console.log(find_project)
+
+      let MomData = []
+      for(let i=0;i<find_project.length;i++)
       {
-        responseData(res,"",400,false,"admin id is not valid");  
+        MomData.push(find_project[i].mom)
       }
-      if(checkAdmin.length >0){
-        const getAllProjectMom = await projectModel.find({admin_id:id});
-        if(getAllProjectMom.length <1)
-        {
-          responseData(res,"",400,false,"no project found");
-        }
-        if(getAllProjectMom.length >0)
-        {
-          let MomData =[]
-          for (let i=0;i<getAllProjectMom.length;i++)
-          {
-            MomData.push(getAllProjectMom[i].mom)
 
-          }
-          responseData(res, "all project mom", 200, true, "", MomData);
-        }
+          responseData(res, "all project mom", 200, true, "",MomData);
+        // }
 
-        }
+
+        
       
 
     }
     catch(err) {
       responseData(res,500,false,err.message);
+      console.log(err.message)
     }
-  }
+  
 
 
 }
