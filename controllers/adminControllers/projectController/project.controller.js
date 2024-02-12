@@ -130,6 +130,7 @@ export const createProject = async (req, res) => {
             await Promise.all(newfileuploads);
 
             const project_data = await projectModel.create({
+              admin_id:id,
               project_name: project_name,
               client_name: client_name,
               project_id: `COL\P-${project_ID}`,
@@ -179,6 +180,7 @@ export const createProject = async (req, res) => {
             );
           } else {
             const project_data = await projectModel.create({
+              admin_id:id,
               project_name: project_name,
               client_name: client_name,
               project_id: `COL\P-${project_ID}`,

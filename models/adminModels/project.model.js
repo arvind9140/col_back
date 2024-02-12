@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const projectSchema = new mongoose.Schema({
+  admin_id:{
+    type:String,
+    required:true
+  },
   project_name: {
     type: String,
     required: true,

@@ -11,6 +11,7 @@ import {
   createmom,
   generatePdf,
   getAllMom,
+  getAllProjectMom,
   getSingleMom,
 } from "../../controllers/adminControllers/momControllers/mom.controller.js";
 import {
@@ -49,6 +50,7 @@ router.route("/create/mom").post(createmom);
 router.route("/getall/mom").get(getAllMom);
 router.route("/getsingle/mom").get(getSingleMom);
 router.route("/generate/pdf").get(generatePdf)
+router.route("/getall/project/mom").get(getAllProjectMom)
 
 
 export default router;
