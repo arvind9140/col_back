@@ -273,7 +273,7 @@ export const getAllProject = async (req, res) => {
           let design = [];
           let completed = [];
           let archive = [];
-          const projects = await projectModel.find({});
+         const projects = await projectModel.find({}).sort({ createdAt: -1 }); 
           for (let i = 0; i < projects.length; i++) {
             if (projects[i].project_status == "execution") {
               execution.push(projects[i]);
@@ -290,6 +290,7 @@ export const getAllProject = async (req, res) => {
               }
             }
           }
+         
 
           const response = {
             total_Project: projects.length,

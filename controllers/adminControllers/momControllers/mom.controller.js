@@ -35,28 +35,8 @@ export const getAllProjectMom = async(req,res) =>{
   
   
     try{
-      // const checkAdmin = await registerModel.find({_id:id});
-      
-      // if(checkAdmin.length <1)
-      // {
-      //   responseData(res,"",400,false,"admin id is not valid");  
-      // }
-      // if(checkAdmin.length >0){
-      //   const getAllProjectMom = await projectModel.find({admin_id:id});
-      //   if(getAllProjectMom.length <1)
-      //   {
-      //     responseData(res,"",400,false,"no project found");
-      //   }
-      //   if(getAllProjectMom.length >0)
-      //   {
-      //     let MomData =[]
-      //     for (let i=0;i<getAllProjectMom.length;i++)
-      //     {
-      //       MomData.push(getAllProjectMom[i].mom)
-
-      //     }
-
-      const find_project = await projectModel.find({})
+     
+      const find_project = await projectModel.find({}).sort({ createdAt: -1 });
       // console.log(find_project)
 
       let MomData = []
@@ -233,9 +213,11 @@ export const createmom = async (req, res) => {
 export const getAllMom = async (req, res) => {
   try {
     const project_id = req.query.project_id;
-    const check_project = await projectModel.find({
-      project_id: project_id,
-    });
+    const check_project = await projectModel
+      .find({
+        project_id: project_id,
+      })
+      .sort({ createdAt: -1 });
 
     if (check_project.length > 0) {
       responseData(res, "MOM Found", 200, true, "", check_project[0].mom);

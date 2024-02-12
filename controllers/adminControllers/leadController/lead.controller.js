@@ -91,7 +91,7 @@ export const createLead = async (req, res) => {
 
 export const getAllLead = async (req, res) => {
   try {
-    const leads = await leadModel.find({});
+    const leads = await leadModel.find({}).sort({ createdAt: -1 });
 
     responseData(res, "All Lead Data", 200, true, "", leads);
   } catch (error) {
