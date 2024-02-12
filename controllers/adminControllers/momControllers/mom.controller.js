@@ -43,120 +43,136 @@ export const createmom = async (req, res) => {
     const imaportant_note = req.body.imaportant_note;
 
     // write here validation ///
-    if(!project_id)
-    {
-      return res.status(400).send({status:false,message:"project_id is required"})
-    }
-   else if(!meetingDate)
-    {
-      return res.status(400).send({status:false,message:"meetingDate is required"})
-    }
-   else if(!source)
-    {
-      return res.status(400).send({status:false,message:"source is required"})
-    }
-   else if(!client_name && !onlyAlphabetsValidation(client_name))
-    {
-      return res.status(400).send({status:false,message:"client_name is required"})
-    }
-   else if(!architect && !onlyAlphabetsValidation(architect))
-    {
-      return res.status(400).send({status:false,message:"architech is required"})
-    }
-   else if(!organisor && !onlyAlphabetsValidation(organisor))
-    {
-      return res.status(400).send({status:false,message:"organiser is required"})
-    }
-   else if(!consultant_name && !onlyAlphabetsValidation(consultant_name))
-   {
-     return res.status(400).send({status:false,message:"consultant_name is required"})
-   }
-    else{
+    if (!project_id) {
+      return res
+        .status(400)
+        .send({ status: false, message: "project_id is required" });
+    } else if (!meetingDate) {
+      return res
+        .status(400)
+        .send({ status: false, message: "meetingDate is required" });
+    } else if (!source) {
+      return res
+        .status(400)
+        .send({ status: false, message: "source is required" });
+    } else if (!client_name && !onlyAlphabetsValidation(client_name)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "client_name is required" });
+    } else if (!architect && !onlyAlphabetsValidation(architect)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "architech is required" });
+    } else if (!organisor && !onlyAlphabetsValidation(organisor)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "organiser is required" });
+    } else if (!consultant_name && !onlyAlphabetsValidation(consultant_name)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "consultant_name is required" });
+    } else {
+      const check_project = await projectModel.find({ project_id: project_id });
+      if (check_project.length > 0) {
+        const mom_id = `COl-M-${generateSixDigitNumber()}`; // generate meeting id
+        let mom_data;
+          const files = req.files?.files;
+          const fileUploadPromises = [];
+          // Limit the number of files to upload to at most 5
+          const filesToUpload = Array.isArray(files) ? files.slice(0, 5) : [];
 
-    
+        for (const file of filesToUpload) {
+          const fileName = Date.now() + file.name;
+          fileUploadPromises.push(
+            uploadFile(file, fileName, project_id, mom_id)
+          );
+        }
 
-    const check_project = await projectModel.find({ project_id: project_id });
-    if (check_project.length > 0) {
-      const mom_id = `COl-M-${generateSixDigitNumber()}`; // generate meeting id
-      let mom_data;
-      const files = Array.isArray(req.files.files)
-        ? req.files.files
-        : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
-      const fileUploadPromises = [];
+        const responses = await Promise.all(fileUploadPromises);
 
-      if (!files || files.length === 0) {
-        return res.send({
-          message: "",
-          statuscode: 400,
-          status: false,
-          errormessage: "No files provided",
-          data: [],
-        });
-      }
+        const fileUploadResults = responses.map((response) => ({
+          status: response.Location ? true : false,
+          data: response ? response : response.err,
+        }));
 
-      // Limit the number of files to upload to at most 5
-      const filesToUpload = files.slice(0, 5);
-
-      for (const file of filesToUpload) {
-        const fileName = Date.now() + file.name;
-        fileUploadPromises.push(uploadFile(file, fileName, project_id, mom_id));
-      }
-
-      const responses = await Promise.all(fileUploadPromises);
-
-      const fileUploadResults = responses.map((response) => ({
-        status: response.Location ? true : false,
-        data: response ? response : response.err,
-      }));
-
-      const successfullyUploadedFiles = fileUploadResults.filter(
-        async (result) => result.data
-      );
-      let file = [];
-      if (successfullyUploadedFiles.length > 0) {
-        const newfileuploads = successfullyUploadedFiles.map((result, index) =>
-          file.push(result.data.Location)
+        const successfullyUploadedFiles = fileUploadResults.filter(
+          async (result) => result.data
         );
-        await Promise.all(newfileuploads);
+        let file = [];
+        if (successfullyUploadedFiles.length > 0) {
+          const newfileuploads = successfullyUploadedFiles.map(
+            (result, index) => file.push(result.data.Location)
+          );
+          await Promise.all(newfileuploads);
 
-        const update_mom = await projectModel.findOneAndUpdate(
-          { project_id: project_id },
-          {
-            $push: {
-              mom: {
-                mom_id: mom_id,
-                meetingdate: meetingDate,
-                source: source,
-                attendees: {
-                  client_name: client_name,
-                  organisor: organisor,
-                  architect: architect,
-                  consultant_name: consultant_name,
+          const update_mom = await projectModel.findOneAndUpdate(
+            { project_id: project_id },
+            {
+              $push: {
+                mom: {
+                  mom_id: mom_id,
+                  meetingdate: meetingDate,
+                  source: source,
+                  attendees: {
+                    client_name: client_name,
+                    organisor: organisor,
+                    architect: architect,
+                    consultant_name: consultant_name,
+                  },
+                  remark: remark,
+                  imaportant_note: imaportant_note,
+                  files: file,
                 },
-                remark: remark,
-                imaportant_note: imaportant_note,
-                files: file,
               },
             },
-          },
-          { new: true }
-        );
-        responseData(
-          res,
-          "Document updated successfully:",
-          200,
-          true,
-          "",
-          update_mom
-        );
-      } else {
-        responseData(res, "", 500, false, "Error uploading files", []);
+            { new: true }
+          );
+          responseData(
+            res,
+            "Document updated successfully:",
+            200,
+            true,
+            "",
+            update_mom
+          );
+        } else {
+           const update_mom = await projectModel.findOneAndUpdate(
+             { project_id: project_id },
+             {
+               $push: {
+                 mom: {
+                   mom_id: mom_id,
+                   meetingdate: meetingDate,
+                   source: source,
+                   attendees: {
+                     client_name: client_name,
+                     organisor: organisor,
+                     architect: architect,
+                     consultant_name: consultant_name,
+                   },
+                   remark: remark,
+                   imaportant_note: imaportant_note,
+                   files: file,
+                 },
+               },
+             },
+             { new: true }
+           );
+           responseData(
+             res,
+             "Document updated successfully:",
+             200,
+             true,
+             "",
+             update_mom
+           );
+          
+        }
+      }
+      if (check_project < 1) {
+        responseData(res, "", 404, false, "Project Not Found.");
       }
     }
-    if (check_project < 1) {
-      responseData(res, "", 404, false, "Project Not Found.");
-    }
-  }
   } catch (error) {
     responseData(res, "", 400, false, error.message);
   }
@@ -220,15 +236,14 @@ export const generatePdf = async (req, res) => {
         const momData = check_mom[0]; // Extracting the MOM data
         const momRemarkSplit = momData.remark.split(".").filter(Boolean); // Filter to remove empty strings
         const momRemarkHtml = momRemarkSplit
-          .map((remark) => 
-          `<li>${remark.trim()}</li>`)
+          .map((remark) => `<li>${remark.trim()}</li>`)
           .join("");
-          const momNoteSplit = momData.imaportant_note.split(".").filter(Boolean); // Filter to remove empty strings
-          const momImportant_noteHtml = momNoteSplit
-            .map((note) => `<li>${note.trim()}</li>`)
-            .join("");
+        const momNoteSplit = momData.imaportant_note.split(".").filter(Boolean); // Filter to remove empty strings
+        const momImportant_noteHtml = momNoteSplit
+          .map((note) => `<li>${note.trim()}</li>`)
+          .join("");
 
-     const htmlTemplate = `
+        const htmlTemplate = `
 <html>
   <head>
     <title>MOM Data Report</title>
@@ -351,4 +366,3 @@ export const generatePdf = async (req, res) => {
     responseData(res, "", 400, false, err.message);
   }
 };
-

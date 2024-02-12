@@ -105,31 +105,15 @@ export const createProject = async (req, res) => {
       const check_role = await registerModel.find({ _id: id });
       if (check_role.length > 0) {
         if (check_role[0].role == "ADMIN") {
-          const files = Array.isArray(req.files.files)
-            ? req.files.files
-            : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
+          const files = req.files?.files;
           const fileUploadPromises = [];
-
-          if (!files || files.length === 0) {
-            return res.send({
-              message: "",
-              statuscode: 400,
-              status: false,
-              errormessage: "No files provided",
-              data: [],
-            });
-          }
-
           // Limit the number of files to upload to at most 5
-          const filesToUpload = files.slice(0, 5);
-
+          const filesToUpload = Array.isArray(files) ? files.slice(0, 5) : [];
           for (const file of filesToUpload) {
             const fileName = Date.now() + file.name;
             fileUploadPromises.push(uploadFile(file, fileName, project_ID));
           }
-
           const responses = await Promise.all(fileUploadPromises);
-
           const fileUploadResults = responses.map((response) => ({
             status: response.Location ? true : false,
             data: response ? response : response.err,
@@ -194,9 +178,59 @@ export const createProject = async (req, res) => {
               project_data
             );
           } else {
-            responseData(res, "", 404, false, " You are not admin!", []);
+            const project_data = await projectModel.create({
+              project_name: project_name,
+              client_name: client_name,
+              project_id: `COL\P-${project_ID}`,
+              project_type: project_type,
+              description: description,
+              leadmanager: leadmanager,
+              designers: [
+                {
+                  junior_designer: [
+                    {
+                      name: junior_designer,
+                      status: "working",
+                      id: generateSixDigitNumber(),
+                    },
+                  ],
+                  senior_designer: [
+                    {
+                      name: senior_designer,
+                      status: "working",
+                      id: generateSixDigitNumber(),
+                    },
+                  ],
+                },
+              ],
+              superviser: superviser,
+              visualizer: visualizer,
+              project_status: project_status,
+              project_start_date: project_start_date,
+              timeline_date: timeline_date,
+              project_end_date: timeline_date,
+              project_budget: `${project_budget} ₹`,
+              project_location: project_location,
+              files: file,
+              client: {
+                client_name: client_name,
+                client_contact: client_contact,
+                client_email: client_email,
+              },
+            });
+            responseData(
+              res,
+              "Project Create Successfully!",
+              200,
+              true,
+              "",
+              project_data
+            );
           }
+        } else {
+          responseData(res, "", 404, false, " You are not admin!", []);
         }
+
         if (check_role.length < 1) {
           responseData(res, "", 404, false, " User not found.", []);
         }
@@ -247,7 +281,7 @@ export const getAllProject = async (req, res) => {
             }
             if (projects[i].project_status == "completed") {
               completed.push(projects[i]);
-              const createdDate = projects[i].project_end_date; 
+              const createdDate = projects[i].project_end_date;
               const isOlderThan6Months = isProjectOlderThan6Months(createdDate);
               if (isOlderThan6Months) {
                 archive.push(isOlderThan6Months);
