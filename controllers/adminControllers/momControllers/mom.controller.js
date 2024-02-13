@@ -45,7 +45,8 @@ export const getAllProjectMom = async(req,res) =>{
         // MomData.push(find_project[i].mom)
         if(find_project[i].mom.length!==0)
         {
-          MomData.push({project_name:find_project[i].project_name,
+          MomData.push({project_id:find_project[i].project_id,
+            project_name:find_project[i].project_name,
             mom:find_project[i].mom})
         }
         
