@@ -130,7 +130,6 @@ export const createProject = async (req, res) => {
             await Promise.all(newfileuploads);
 
             const project_data = await projectModel.create({
-            
               project_name: project_name,
               client_name: client_name,
               project_id: `COL\P-${project_ID}`,
@@ -180,7 +179,6 @@ export const createProject = async (req, res) => {
             );
           } else {
             const project_data = await projectModel.create({
-            
               project_name: project_name,
               client_name: client_name,
               project_id: `COL\P-${project_ID}`,
@@ -273,7 +271,7 @@ export const getAllProject = async (req, res) => {
           let design = [];
           let completed = [];
           let archive = [];
-         const projects = await projectModel.find({}).sort({ createdAt: -1 }); 
+          const projects = await projectModel.find({}).sort({ createdAt: -1 });
           for (let i = 0; i < projects.length; i++) {
             if (projects[i].project_status == "execution") {
               execution.push(projects[i]);
@@ -290,7 +288,6 @@ export const getAllProject = async (req, res) => {
               }
             }
           }
-         
 
           const response = {
             total_Project: projects.length,
@@ -359,9 +356,10 @@ export const getSingleProject = async (req, res) => {
 
 export const updateProjectDetails = async (req, res) => {
   const project_ID = req.body.project_id;
-  const leadmanager = req.body.leadmanager;
+  const project_status = req.body.project_status;
   const timeline_date = req.body.timeline_date;
   const project_budget = req.body.project_budget;
+  const description = req.body.description;
 
   if (!project_ID) {
     responseData(res, "", 400, false, " Project ID is required.", []);
@@ -369,8 +367,8 @@ export const updateProjectDetails = async (req, res) => {
     responseData(res, "", 400, false, " timeline_date is required.", []);
   } else if (!project_budget) {
     responseData(res, "", 400, false, " project_budget is required.", []);
-  } else if (!onlyAlphabetsValidation(leadmanager) && leadmanager.length > 2) {
-    responseData(res, "", 400, false, "Invalid leadmanager name", []);
+  } else if (!project_status) {
+    responseData(res, "", 400, false, "project status required.", []);
   }
 
   //  *********** add other validation **********//
@@ -383,8 +381,9 @@ export const updateProjectDetails = async (req, res) => {
           {
             $set: {
               project_budget: `${project_budget} ₹`,
-              leadmanager: leadmanager,
+              project_status: project_status,
               timeline_date: timeline_date,
+              description: description,
             },
           },
           { new: true, useFindAndModify: false }
