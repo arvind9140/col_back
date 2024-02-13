@@ -42,19 +42,21 @@ export const getAllProjectMom = async(req,res) =>{
       let MomData = []
       for(let i=0;i<find_project.length;i++)
       {
-        MomData.push(find_project[i].mom)
+        // MomData.push(find_project[i].mom)
+        if(find_project[i].mom.length!==0)
+        {
+          MomData.push({project_name:find_project[i].project_name,
+            mom:find_project[i].mom})
+        }
+        
       }
 
           responseData(res, "all project mom", 200, true, "",MomData);
         // }
 
-
-        
-      
-
     }
     catch(err) {
-      responseData(res,500,false,err.message);
+      responseData(res,"",500,false,err.message);
       console.log(err.message)
     }
   
