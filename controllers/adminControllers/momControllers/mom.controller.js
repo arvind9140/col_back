@@ -70,13 +70,18 @@ export const createmom = async (req, res) => {
     const project_id = req.body.project_id;
     const meetingDate = req.body.meetingdate;
     const source = req.body.source;
-    const client_name = req.body.client_name;
-    const architect = req.body.architect;
-    const organisor = req.body.organisor;
-    const consultant_name = req.body.consultant_name;
+      const client_name = req.body.client_name
+        ? JSON.parse(req.body.client_name)
+        : [];
+    const architect = req.body.architect ? JSON.parse(req.body.architect) : [];
+    const organisor = req.body.organisor ? JSON.parse(req.body.organisor) : [];
+    const consultant_name = req.body.consultant_name
+      ? JSON.parse(req.body.consultant_name)
+      : [];
     const remark = req.body.remark;
     const imaportant_note = req.body.imaportant_note;
 
+    
     // write here validation ///
     if (!project_id) {
       return res
@@ -140,31 +145,36 @@ export const createmom = async (req, res) => {
           );
           await Promise.all(newfileuploads);
 
-          const update_mom = await projectModel.findOneAndUpdate(
-            { project_id: project_id },
-            {
-              $push: {
-                mom: {
-                  mom_id: mom_id,
-                  meetingdate: meetingDate,
-                  source: source,
-                  attendees: {
-                    client_name: client_name,
-                    organisor: organisor,
-                    architect: architect,
-                    consultant_name: consultant_name,
-                  },
-                  remark: remark,
-                  imaportant_note: imaportant_note,
-                  files: file,
-                },
-              },
-            },
-            { new: true }
-          );
+         const update_mom = await projectModel.findOneAndUpdate(
+           { project_id: project_id },
+           {
+             $push: {
+               mom: {
+                 $each: [
+                   {
+                     mom_id: mom_id,
+                     meetingdate: meetingDate,
+                     source: source,
+                     attendees: [
+                       client_name=[ client_name],
+                       organisor=[organisor],
+                       architect=[architect],
+                       consultant_name= [consultant_name],
+                     ],
+                     remark: remark,
+                     imaportant_note: imaportant_note,
+                     files: file,
+                   },
+                 ],
+                 $position: 0,
+               },
+             },
+           },
+           { new: true }
+         );
           responseData(
             res,
-            "Document updated successfully:",
+            "Mom created  successfully:",
             200,
             true,
             "",
@@ -176,18 +186,23 @@ export const createmom = async (req, res) => {
              {
                $push: {
                  mom: {
-                   mom_id: mom_id,
-                   meetingdate: meetingDate,
-                   source: source,
-                   attendees: {
-                     client_name: client_name,
-                     organisor: organisor,
-                     architect: architect,
-                     consultant_name: consultant_name,
-                   },
-                   remark: remark,
-                   imaportant_note: imaportant_note,
-                   files: file,
+                   $each: [
+                     {
+                       mom_id: mom_id,
+                       meetingdate: meetingDate,
+                       source: source,
+                       attendees: {
+                         client_name: client_name,
+                         organisor: organisor,
+                         architect: architect,
+                         consultant_name: consultant_name,
+                       },
+                       remark: remark,
+                       imaportant_note: imaportant_note,
+                       files: file,
+                     },
+                   ],
+                   $position: 0,
                  },
                },
              },
@@ -195,7 +210,7 @@ export const createmom = async (req, res) => {
            );
            responseData(
              res,
-             "Document updated successfully:",
+             "Mom created successfully:",
              200,
              true,
              "",
