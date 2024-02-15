@@ -24,6 +24,7 @@ const projectSchema = new mongoose.Schema({
   },
   files: [],
   mom: [],
+  quotation:[],
   leadmanager: {
     type: String,
     require: true,

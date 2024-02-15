@@ -295,6 +295,7 @@ export const getAllProject = async (req, res) => {
             Design_Phase: design.length,
             completed: completed.length,
             archive: archive.length,
+            active_Project: projects.length - completed.length,
             projects,
           };
           responseData(

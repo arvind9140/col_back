@@ -2,8 +2,8 @@ import { Router } from "express";
 const router = Router();
 
 import fileupload from "../../controllers/adminControllers/fileUploadController/fileuploadController.js";
-import quotation from "../../controllers/adminControllers/quotationController/quotationController.js";
-import getQuotation from "../../controllers/adminControllers/quotationController/getQuotationController.js";
+
+
 import getFileData from "../../controllers/adminControllers/fileUploadController/getFileController.js";
 import getSingleFileData from "../../controllers/adminControllers/fileUploadController/getSingleFileController.js";
 
@@ -27,13 +27,15 @@ import {
   getSingleProject,
   updateProjectDetails,
 } from "../../controllers/adminControllers/projectController/project.controller.js";
+import getQuotation, {getSingleTypeQuotation} from "../../controllers/adminControllers/quotationController/getQuotation.controller.js";
+import { createQuotation } from "../../controllers/adminControllers/quotationController/quotation.controller.js";
+
 
 router.route("/fileupload").post(fileupload);
 router.route("/getfile").get(getFileData);
 router.route("/get/onefile").get(getSingleFileData);
 
-router.post("/quotation", quotation);
-router.get("/get/quotation", getQuotation);
+
 
 router.route("/create/project").post(createProject);
 router.route("/getall/project").get( getAllProject);
@@ -51,6 +53,11 @@ router.route("/getall/mom").get(getAllMom);
 router.route("/getsingle/mom").get(getSingleMom);
 router.route("/generate/pdf").get(generatePdf)
 router.route("/getall/project/mom").get(getAllProjectMom)
+
+router.route("/create/quotation").post(createQuotation);
+router.route("/get/quotation").get(getQuotation);
+router.route("/getsingle/quotation").get(getSingleTypeQuotation);
+
 
 
 export default router;

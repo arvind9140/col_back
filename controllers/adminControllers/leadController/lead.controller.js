@@ -177,6 +177,7 @@ export const leadToProject = async(req,res) =>{
   const description = req.body.description;
   const project_type = req.body.project_type;
   const project_name = req.body.project_name;
+  const project_status = req.body.project_status;
 
 
   
@@ -208,7 +209,7 @@ export const leadToProject = async(req,res) =>{
           project_end_date: "",
           timeline_date: "",
           project_start_date: "",
-          project_status: "",
+          project_status: project_status,
           visualizer: "",
           superviser: "",
           leadmanager: "",
