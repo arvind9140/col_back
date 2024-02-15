@@ -61,14 +61,18 @@ export const createmom = async (req, res) => {
     const project_id = req.body.project_id;
     const meetingDate = req.body.meetingdate;
     const source = req.body.source;
-    let client_name = req.body.client_name
-      ? JSON.parse(req.body.client_name)
-      : [];
-    let architect = req.body.architect ? JSON.parse(req.body.architect) : [];
-    let organisor = req.body.organisor ? JSON.parse(req.body.organisor) : [];
-    let consultant_name = req.body.consultant_name
-      ? JSON.parse(req.body.consultant_name)
-      : [];
+    // let client_name = req.body.client_name
+    //   ? JSON.parse(req.body.client_name)
+    //   : [];
+    // let architect = req.body.architect ? JSON.parse(req.body.architect) : [];
+    // let organisor = req.body.organisor ? JSON.parse(req.body.organisor) : [];
+    // let consultant_name = req.body.consultant_name
+    //   ? JSON.parse(req.body.consultant_name)
+    //   : [];
+    const client_name = req.body.client_name;
+    const architect = req.body.architect;
+    const organisor = req.body.organisor;
+   const  consultant_name = req.body.consultant_name; 
     const remark = req.body.remark;
     const imaportant_note = req.body.imaportant_note;
 
@@ -145,12 +149,12 @@ export const createmom = async (req, res) => {
                       mom_id: mom_id,
                       meetingdate: meetingDate,
                       source: source,
-                      attendees: [
-                        (client_name = [client_name]),
-                        (organisor = [organisor]),
-                        (architect = [architect]),
-                        (consultant_name = [consultant_name]),
-                      ],
+                      attendees: {
+                        client_name: client_name,
+                        organisor : organisor,
+                        architect : architect,
+                        consultant_name : consultant_name,
+                      },
                       remark: remark,
                       imaportant_note: imaportant_note,
                       files: file,
