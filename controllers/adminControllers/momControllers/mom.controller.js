@@ -3,7 +3,9 @@ import projectModel from "../../../models/adminModels/project.model.js";
 import AWS from "aws-sdk";
 import { onlyAlphabetsValidation } from "../../../utils/validation.js";
 import pdf from "html-pdf";
-import registerModel from "../../../models/usersModels/register.model.js";
+import nodemailer from "nodemailer";
+import fs from "fs";
+
 
 function generateSixDigitNumber() {
   const min = 100000;
@@ -72,7 +74,7 @@ export const createmom = async (req, res) => {
     const client_name = req.body.client_name;
     const architect = req.body.architect;
     const organisor = req.body.organisor;
-   const  consultant_name = req.body.consultant_name; 
+    const consultant_name = req.body.consultant_name;
     const remark = req.body.remark;
     const imaportant_note = req.body.imaportant_note;
 
@@ -90,9 +92,7 @@ export const createmom = async (req, res) => {
         .status(400)
         .send({ status: false, message: "source is required" });
     } else if (!client_name && !onlyAlphabetsValidation(client_name)) {
-     
-    }
-     else if (!architect && !onlyAlphabetsValidation(architect)) {
+    } else if (!architect && !onlyAlphabetsValidation(architect)) {
       return res
         .status(400)
         .send({ status: false, message: "architech is required" });
@@ -104,16 +104,20 @@ export const createmom = async (req, res) => {
       return res
         .status(400)
         .send({ status: false, message: "consultant_name is required" });
-    } 
-    else {
+    } else {
       const check_project = await projectModel.find({ project_id: project_id });
       if (check_project.length > 0) {
         const mom_id = `COl-M-${generateSixDigitNumber()}`; // generate meeting id
         let mom_data;
-        const files = req.files?.files;
-        const fileUploadPromises = [];
+        
+        const files = Array.isArray(req.files?.files)
+          ? req.files.files
+          : [req.files.files];
+          const fileUploadPromises = [];
+          const filesToUpload = files.slice(0, 5);
         // Limit the number of files to upload to at most 5
-        const filesToUpload = Array.isArray(files) ? files.slice(0, 5) : [];
+      
+        
 
         for (const file of filesToUpload) {
           const fileName = Date.now() + file.name;
@@ -123,6 +127,7 @@ export const createmom = async (req, res) => {
         }
 
         const responses = await Promise.all(fileUploadPromises);
+        
 
         const fileUploadResults = responses.map((response) => ({
           status: response.Location ? true : false,
@@ -138,7 +143,8 @@ export const createmom = async (req, res) => {
             (result, index) => file.push(result.data.Location)
           );
           await Promise.all(newfileuploads);
-          // console.log(file);
+          
+         
           const update_mom = await projectModel.findOneAndUpdate(
             { project_id: project_id },
             {
@@ -151,9 +157,9 @@ export const createmom = async (req, res) => {
                       source: source,
                       attendees: {
                         client_name: client_name,
-                        organisor : organisor,
-                        architect : architect,
-                        consultant_name : consultant_name,
+                        organisor: organisor,
+                        architect: architect,
+                        consultant_name: consultant_name,
                       },
                       remark: remark,
                       imaportant_note: imaportant_note,
@@ -370,10 +376,10 @@ export const generatePdf = async (req, res) => {
         <li><span class="label">Files:</span>
           <ul>
             <ol>
-        ${momData.files
-          .map((file) => `<li><a href="${file}">${file}</a></li>`)
-          .join("")}
-      </ol>
+             ${momData.files
+               .map((image) => `<li><img src="${image}" alt="Image"></li>`)
+               .join("")}
+        </ol>
           </ul>
         </li>
       </ul>
@@ -411,3 +417,202 @@ export const generatePdf = async (req, res) => {
     responseData(res, "", 400, false, err.message);
   }
 };
+
+export const sendPdf = async (req, res) => {
+  try {
+    const project_id = req.query.project_id;
+    const mom_id = req.query.mom_id;
+
+    const check_project = await projectModel.find({ project_id: project_id });
+
+    if (check_project.length > 0) {
+      const check_mom = check_project[0].mom.filter(
+        (mom) => mom.mom_id.toString() === mom_id
+      );
+
+      if (check_mom.length > 0) {
+        const momData = check_mom[0]; // Extracting the MOM data
+        const momRemarkSplit = momData.remark.split(".").filter(Boolean); // Filter to remove empty strings
+        const momRemarkHtml = momRemarkSplit
+          .map((remark) => `<li>${remark.trim()}</li>`)
+          .join("");
+        const momNoteSplit = momData.imaportant_note.split(".").filter(Boolean); // Filter to remove empty strings
+        const momImportant_noteHtml = momNoteSplit
+          .map((note) => `<li>${note.trim()}</li>`)
+          .join("");
+
+        const htmlTemplate = `
+<html>
+  <head>
+    <title>MOM Data Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .content {
+        text-align: left; /* Align content to the left */
+        max-width: 600px; /* Limit width to make content centered */
+        margin: auto; /* Center content horizontally */
+      }
+      h1 {
+        color: #333;
+        text-align: center; /* Center the heading */
+      }
+      ul {
+        list-style: none; /* Remove default list styles */
+        padding: 0; /* Remove default padding */
+      }
+      li {
+        margin-bottom: 10px; /* Add space between list items */
+      }
+      .label {
+        font-weight: bold; /* Make labels bold */
+        display: inline-block; /* Display labels inline */
+        width: 150px; /* Set a fixed width for labels */
+        margin-bottom: 10px;
+      }
+      a {
+        color: blue;
+      }
+      .feedback {
+        text-align: center; /* Center the feedback section */
+        margin-top: 10px; /* Add space above the feedback section */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <h1>MOM Data Report</h1>
+      <ul>
+        <li><span class="label">MOM_ID:</span> ${momData.mom_id}</li>
+        <li><span class="label">MOM_Date:</span> ${momData.meetingdate}</li>
+        <li><span class="label">MOM_Source:</span> ${momData.source}</li>
+        <li><span class="label">Attendees:</span>
+          <ul>
+            <li><span class="label">Client Name:</span> ${
+              momData.attendees.client_name
+            }</li>
+            <li><span class="label">Organisor:</span> ${
+              momData.attendees.organisor
+            }</li>
+            <li><span class="label">Architect:</span> ${
+              momData.attendees.architect
+            }</li>
+            <li><span class="label">Consultant Name:</span> ${
+              momData.attendees.consultant_name
+            }</li>
+          </ul>
+        </li>
+        <li><span class="label">MOM_Remark:</span> 
+        <br>
+          <ul>
+           <ol>
+        ${momRemarkHtml}
+      </ol>
+          </ul>
+        </li>
+        <li><span class="label">MOM_Important_Notes:</span>
+        <ol>
+        ${momImportant_noteHtml}
+      </ol></li>
+        <li><span class="label">Files:</span>
+          <ul>
+           <ol>
+             ${momData.files
+               .map((image) => `<li><img src="${image}" alt="Image"></li>`)
+               .join("")}
+        </ol>
+          </ul>
+        </li>
+      </ul>
+    </div>
+        <div class="feedback">
+      <p>Would you like to provide feedback on this MOM report?</p>
+      <a href="/feedback?project_id=${project_id}&mom_id=${mom_id}">Submit Feedback</a>
+    </div>
+
+  </body>
+</html>
+`;
+
+        const pdfOptions = {
+          format: "A4",
+          border: {
+            top: "1cm",
+            right: "1cm",
+            bottom: "1cm",
+            left: "1cm",
+          },
+        };
+
+        // Generate PDF
+
+        pdf
+          .create(htmlTemplate, pdfOptions)
+          .toFile(`momdata/${mom_id}.pdf`, (err, pdfPath) => {
+            if (err) {
+              res.status(500).send(err);
+            } else {
+              const filePath = `momdata/${mom_id}.pdf`;
+
+              const mailOptions = {
+                from: "a72302492@gmail.com",
+                to: check_project[0].client[0].client_email,
+                subject: "MOM Data",
+                attachments: [
+                  {
+                    filename: `${mom_id}.pdf`,
+                    path: filePath, // Pass the file path directly
+                  },
+                ],
+              };
+
+              transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                  responseData(res, "", 400, false, "Failed to send email");
+                } else {
+                  fs.unlink(filePath, (err) => {
+                    if (err) {
+                      console.error("Error deleting file:", err);
+                    } else {
+                      console.log("File deleted successfully");
+                    }
+                  });
+                  responseData(
+                    res,
+                    `Email has been sent successfully`,
+                    200,
+                    true,
+                    ""
+                  );
+                }
+              });
+            }
+          });
+
+      } else {
+        responseData(res, "", 404, false, "MOM Not Found");
+      }
+    } else {
+      responseData(res, "", 404, false, "Project Not Found");
+    }
+  } catch (err) {
+    console.log(err);
+    responseData(res, "", 400, false, err.message);
+  }
+};
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "a72302492@gmail.com",
+    pass: process.env.APP_PASSWORD,
+  },
+});

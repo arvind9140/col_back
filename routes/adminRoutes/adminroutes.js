@@ -13,6 +13,7 @@ import {
   getAllMom,
   getAllProjectMom,
   getSingleMom,
+  sendPdf,
 } from "../../controllers/adminControllers/momControllers/mom.controller.js";
 import {
   createLead,
@@ -53,6 +54,7 @@ router.route("/getall/mom").get(getAllMom);
 router.route("/getsingle/mom").get(getSingleMom);
 router.route("/generate/pdf").get(generatePdf)
 router.route("/getall/project/mom").get(getAllProjectMom)
+router.route("/send/momdata").get(sendPdf)
 
 router.route("/create/quotation").post(createQuotation);
 router.route("/get/quotation").get(getQuotation);
