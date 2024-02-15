@@ -178,6 +178,9 @@ export const leadToProject = async(req,res) =>{
   const project_type = req.body.project_type;
   const project_name = req.body.project_name;
   const project_status = req.body.project_status;
+  const timeline_date = req.body.timeline_date;
+  const project_start_date = req.body.project_start_date;
+  const project_budget = req.body.project_budget;
 
 
   
@@ -205,10 +208,10 @@ export const leadToProject = async(req,res) =>{
           project_location: location,
           description: description,
           lead_id: lead_id,
-          project_budget: "",
-          project_end_date: "",
-          timeline_date: "",
-          project_start_date: "",
+          project_budget: project_budget,
+          project_end_date: timeline_date,
+          timeline_date: timeline_date,
+          project_start_date:project_start_date ,
           project_status: project_status,
           visualizer: "",
           superviser: "",
