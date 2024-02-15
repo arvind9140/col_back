@@ -29,7 +29,7 @@ import {
 } from "../../controllers/adminControllers/projectController/project.controller.js";
 import getQuotation, {getSingleTypeQuotation} from "../../controllers/adminControllers/quotationController/getQuotation.controller.js";
 import { createQuotation } from "../../controllers/adminControllers/quotationController/quotation.controller.js";
-
+import { updateQuotation } from "../../controllers/adminControllers/quotationController/update.quotation.controller.js";
 
 router.route("/fileupload").post(fileupload);
 router.route("/getfile").get(getFileData);
@@ -57,6 +57,7 @@ router.route("/getall/project/mom").get(getAllProjectMom)
 router.route("/create/quotation").post(createQuotation);
 router.route("/get/quotation").get(getQuotation);
 router.route("/getsingle/quotation").get(getSingleTypeQuotation);
+router.route("/update/quotation").put(updateQuotation);
 
 
 

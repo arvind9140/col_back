@@ -31,57 +31,47 @@ const uploadFile = async (file, fileName, project_id, mom_id) => {
     .promise();
 };
 
-export const getAllProjectMom = async(req,res) =>{
-  
-  
-    try{
-     
-      const find_project = await projectModel.find({}).sort({ createdAt: -1 });
-      // console.log(find_project)
+export const getAllProjectMom = async (req, res) => {
+  try {
+    const find_project = await projectModel.find({}).sort({ createdAt: -1 });
+    // console.log(find_project)
 
-      let MomData = []
-      for(let i=0;i<find_project.length;i++)
-      {
-        // MomData.push(find_project[i].mom)
-        if(find_project[i].mom.length!==0)
-        {
-          MomData.push({project_id:find_project[i].project_id,
-            project_name:find_project[i].project_name,
-            mom:find_project[i].mom})
-        }
-        
+    let MomData = [];
+    for (let i = 0; i < find_project.length; i++) {
+      // MomData.push(find_project[i].mom)
+      if (find_project[i].mom.length !== 0) {
+        MomData.push({
+          project_id: find_project[i].project_id,
+          project_name: find_project[i].project_name,
+          mom: find_project[i].mom,
+        });
       }
-
-          responseData(res, "all project mom", 200, true, "",MomData);
-        // }
-
     }
-    catch(err) {
-      responseData(res,"",500,false,err.message);
-      console.log(err.message)
-    }
-  
 
-
-}
+    responseData(res, "all project mom", 200, true, "", MomData);
+    // }
+  } catch (err) {
+    responseData(res, "", 500, false, err.message);
+    console.log(err.message);
+  }
+};
 
 export const createmom = async (req, res) => {
   try {
     const project_id = req.body.project_id;
     const meetingDate = req.body.meetingdate;
     const source = req.body.source;
-      const client_name = req.body.client_name
-        ? JSON.parse(req.body.client_name)
-        : [];
-    const architect = req.body.architect ? JSON.parse(req.body.architect) : [];
-    const organisor = req.body.organisor ? JSON.parse(req.body.organisor) : [];
-    const consultant_name = req.body.consultant_name
+    let client_name = req.body.client_name
+      ? JSON.parse(req.body.client_name)
+      : [];
+    let architect = req.body.architect ? JSON.parse(req.body.architect) : [];
+    let organisor = req.body.organisor ? JSON.parse(req.body.organisor) : [];
+    let consultant_name = req.body.consultant_name
       ? JSON.parse(req.body.consultant_name)
       : [];
     const remark = req.body.remark;
     const imaportant_note = req.body.imaportant_note;
 
-    
     // write here validation ///
     if (!project_id) {
       return res
@@ -96,10 +86,9 @@ export const createmom = async (req, res) => {
         .status(400)
         .send({ status: false, message: "source is required" });
     } else if (!client_name && !onlyAlphabetsValidation(client_name)) {
-      return res
-        .status(400)
-        .send({ status: false, message: "client_name is required" });
-    } else if (!architect && !onlyAlphabetsValidation(architect)) {
+     
+    }
+     else if (!architect && !onlyAlphabetsValidation(architect)) {
       return res
         .status(400)
         .send({ status: false, message: "architech is required" });
@@ -111,15 +100,16 @@ export const createmom = async (req, res) => {
       return res
         .status(400)
         .send({ status: false, message: "consultant_name is required" });
-    } else {
+    } 
+    else {
       const check_project = await projectModel.find({ project_id: project_id });
       if (check_project.length > 0) {
         const mom_id = `COl-M-${generateSixDigitNumber()}`; // generate meeting id
         let mom_data;
-          const files = req.files?.files;
-          const fileUploadPromises = [];
-          // Limit the number of files to upload to at most 5
-          const filesToUpload = Array.isArray(files) ? files.slice(0, 5) : [];
+        const files = req.files?.files;
+        const fileUploadPromises = [];
+        // Limit the number of files to upload to at most 5
+        const filesToUpload = Array.isArray(files) ? files.slice(0, 5) : [];
 
         for (const file of filesToUpload) {
           const fileName = Date.now() + file.name;
@@ -144,34 +134,34 @@ export const createmom = async (req, res) => {
             (result, index) => file.push(result.data.Location)
           );
           await Promise.all(newfileuploads);
-
-         const update_mom = await projectModel.findOneAndUpdate(
-           { project_id: project_id },
-           {
-             $push: {
-               mom: {
-                 $each: [
-                   {
-                     mom_id: mom_id,
-                     meetingdate: meetingDate,
-                     source: source,
-                     attendees: [
-                       client_name=[ client_name],
-                       organisor=[organisor],
-                       architect=[architect],
-                       consultant_name= [consultant_name],
-                     ],
-                     remark: remark,
-                     imaportant_note: imaportant_note,
-                     files: file,
-                   },
-                 ],
-                 $position: 0,
-               },
-             },
-           },
-           { new: true }
-         );
+          // console.log(file);
+          const update_mom = await projectModel.findOneAndUpdate(
+            { project_id: project_id },
+            {
+              $push: {
+                mom: {
+                  $each: [
+                    {
+                      mom_id: mom_id,
+                      meetingdate: meetingDate,
+                      source: source,
+                      attendees: [
+                        (client_name = [client_name]),
+                        (organisor = [organisor]),
+                        (architect = [architect]),
+                        (consultant_name = [consultant_name]),
+                      ],
+                      remark: remark,
+                      imaportant_note: imaportant_note,
+                      files: file,
+                    },
+                  ],
+                  $position: 0,
+                },
+              },
+            },
+            { new: true }
+          );
           responseData(
             res,
             "Mom created  successfully:",
@@ -181,42 +171,41 @@ export const createmom = async (req, res) => {
             update_mom
           );
         } else {
-           const update_mom = await projectModel.findOneAndUpdate(
-             { project_id: project_id },
-             {
-               $push: {
-                 mom: {
-                   $each: [
-                     {
-                       mom_id: mom_id,
-                       meetingdate: meetingDate,
-                       source: source,
-                       attendees: {
-                         client_name: client_name,
-                         organisor: organisor,
-                         architect: architect,
-                         consultant_name: consultant_name,
-                       },
-                       remark: remark,
-                       imaportant_note: imaportant_note,
-                       files: file,
-                     },
-                   ],
-                   $position: 0,
-                 },
-               },
-             },
-             { new: true }
-           );
-           responseData(
-             res,
-             "Mom created successfully:",
-             200,
-             true,
-             "",
-             update_mom
-           );
-          
+          const update_mom = await projectModel.findOneAndUpdate(
+            { project_id: project_id },
+            {
+              $push: {
+                mom: {
+                  $each: [
+                    {
+                      mom_id: mom_id,
+                      meetingdate: meetingDate,
+                      source: source,
+                      attendees: {
+                        client_name: client_name,
+                        organisor: organisor,
+                        architect: architect,
+                        consultant_name: consultant_name,
+                      },
+                      remark: remark,
+                      imaportant_note: imaportant_note,
+                      files: file,
+                    },
+                  ],
+                  $position: 0,
+                },
+              },
+            },
+            { new: true }
+          );
+          responseData(
+            res,
+            "Mom created successfully:",
+            200,
+            true,
+            "",
+            update_mom
+          );
         }
       }
       if (check_project < 1) {
@@ -242,7 +231,6 @@ export const getAllMom = async (req, res) => {
     }
     if (check_project.length < 1) {
       responseData(res, "", 404, false, "Project Not Found.");
-      
     }
   } catch (error) {
     responseData(res, "", 400, false, error.message);
