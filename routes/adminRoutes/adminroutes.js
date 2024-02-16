@@ -31,10 +31,11 @@ import {
 import getQuotation, {getSingleTypeQuotation} from "../../controllers/adminControllers/quotationController/getQuotation.controller.js";
 import { createQuotation } from "../../controllers/adminControllers/quotationController/quotation.controller.js";
 import { updateQuotation } from "../../controllers/adminControllers/quotationController/update.quotation.controller.js";
-
+import { contractShare } from "../../controllers/adminControllers/fileUploadController/contract.controller.js";
 router.route("/fileupload").post(fileupload);
 router.route("/getfile").get(getFileData);
 router.route("/get/onefile").get(getSingleFileData);
+router.route("/send/contract").get(contractShare);
 
 
 

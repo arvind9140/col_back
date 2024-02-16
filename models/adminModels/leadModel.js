@@ -36,6 +36,12 @@ const lead = new mongoose.Schema({
     require:true,
 
   },
+  updated_date:{
+    type:String,
+    require:true,
+
+  },
+  files:[],
   notes: [
     {
       content: {
