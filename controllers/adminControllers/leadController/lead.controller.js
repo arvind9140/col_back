@@ -72,35 +72,37 @@ export const createLead = async (req, res) => {
       }
       if (check_email.length < 1) {
         const lead_id = generateSixDigitNumber();
-        const files = Array.isArray(req.files?.files)
-          ? req.files.files
-          : [];
-        const fileUploadPromises = [];
-        const filesToUpload = files.slice(0, 5);
-        // Limit the number of files to upload to at most 5
+         const files = req.files?.files;
+         const fileUploadPromises = [];
+         let successfullyUploadedFiles = [];
 
-        for (const file of filesToUpload) {
-          const fileName = Date.now() + file.name;
-          fileUploadPromises.push(uploadFile(file, fileName, lead_id));
-        }
+         if (files) {
+           const filesToUpload = Array.isArray(files)
+             ? files.slice(0, 5)
+             : [files];
 
-        const responses = await Promise.all(fileUploadPromises);
+           for (const file of filesToUpload) {
+             const fileName = Date.now() + file.name;
+             fileUploadPromises.push(uploadFile(file, fileName, lead_id));
+           }
 
-        const fileUploadResults = responses.map((response) => ({
-          status: response.Location ? true : false,
-          data: response ? response : response.err,
-        }));
+           const responses = await Promise.all(fileUploadPromises);
 
-        const successfullyUploadedFiles = fileUploadResults.filter(
-          async (result) => result.data
-        );
-        let file = [];
-        if (successfullyUploadedFiles.length > 0) {
-          const newfileuploads = successfullyUploadedFiles.map(
-            (result, index) => file.push(result.data.Location)
-          );
-          await Promise.all(newfileuploads);
-        }
+           const fileUploadResults = responses.map((response) => ({
+             status: response.Location ? true : false,
+             data: response ? response : response.err,
+           }));
+
+           successfullyUploadedFiles = fileUploadResults.filter(
+             (result) => result.status
+           );
+         }
+         let file = [];
+         if (successfullyUploadedFiles.length > 0) {
+           const newfileuploads = successfullyUploadedFiles.map(
+             (result, index) => file.push(result.data.Location)
+           );
+         }
         const lead = new leadModel({
           name: name,
           lead_id: lead_id,
@@ -184,35 +186,39 @@ export const updateLead = async (req, res) => {
     try {
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
-        const files = Array.isArray(req.files?.files)
-          ? req.files.files
-          : [req.files.files];
-        const fileUploadPromises = [];
-        const filesToUpload = files.slice(0, 5);
-        // Limit the number of files to upload to at most 5
+         const files = req.files?.files;
+         const fileUploadPromises = [];
+         let successfullyUploadedFiles = [];
 
-        for (const file of filesToUpload) {
-          const fileName = Date.now() + file.name;
-          fileUploadPromises.push(uploadFile(file, fileName, lead_id));
-        }
+         if (files) {
+           const filesToUpload = Array.isArray(files)
+             ? files.slice(0, 5)
+             : [files];
 
-        const responses = await Promise.all(fileUploadPromises);
+           for (const file of filesToUpload) {
+             const fileName = Date.now() + file.name;
+             fileUploadPromises.push(
+               uploadFile(file, fileName, lead_id)
+             );
+           }
 
-        const fileUploadResults = responses.map((response) => ({
-          status: response.Location ? true : false,
-          data: response ? response : response.err,
-        }));
+           const responses = await Promise.all(fileUploadPromises);
 
-        const successfullyUploadedFiles = fileUploadResults.filter(
-          async (result) => result.data
-        );
-        let file = [];
-        if (successfullyUploadedFiles.length > 0) {
-          const newfileuploads = successfullyUploadedFiles.map(
-            (result, index) => file.push(result.data.Location)
-          );
-          await Promise.all(newfileuploads);
-        }
+           const fileUploadResults = responses.map((response) => ({
+             status: response.Location ? true : false,
+             data: response ? response : response.err,
+           }));
+
+           successfullyUploadedFiles = fileUploadResults.filter(
+             (result) => result.status
+           );
+         }
+         let file = [];
+         if (successfullyUploadedFiles.length > 0) {
+           const newfileuploads = successfullyUploadedFiles.map(
+             (result, index) => file.push(result.data.Location)
+           );
+         }
 
         const update_Lead = await leadModel.findOneAndUpdate(
           { lead_id: lead_id },

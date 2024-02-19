@@ -6,7 +6,6 @@ import pdf from "html-pdf";
 import nodemailer from "nodemailer";
 import fs from "fs";
 
-
 function generateSixDigitNumber() {
   const min = 100000;
   const max = 999999;
@@ -109,42 +108,42 @@ export const createmom = async (req, res) => {
       if (check_project.length > 0) {
         const mom_id = `COl-M-${generateSixDigitNumber()}`; // generate meeting id
         let mom_data;
-        
-        const files = Array.isArray(req.files?.files)
-          ? req.files.files
-          : [req.files.files];
-          const fileUploadPromises = [];
-          const filesToUpload = files.slice(0, 5);
-        // Limit the number of files to upload to at most 5
-      
-        
 
-        for (const file of filesToUpload) {
-          const fileName = Date.now() + file.name;
-          fileUploadPromises.push(
-            uploadFile(file, fileName, project_id, mom_id)
+         const files = req.files?.files;
+        const fileUploadPromises = [];
+        let successfullyUploadedFiles = [];
+
+        if (files) {
+          const filesToUpload = Array.isArray(files)
+            ? files.slice(0, 5)
+            : [files];
+
+          for (const file of filesToUpload) {
+            const fileName = Date.now() + file.name;
+            fileUploadPromises.push(
+              uploadFile(file, fileName, project_id, mom_id)
+            );
+          }
+
+          const responses = await Promise.all(fileUploadPromises);
+
+          const fileUploadResults = responses.map((response) => ({
+            status: response.Location ? true : false,
+            data: response ? response : response.err,
+          }));
+
+          successfullyUploadedFiles = fileUploadResults.filter(
+            (result) => result.status
           );
         }
-
-        const responses = await Promise.all(fileUploadPromises);
-        
-
-        const fileUploadResults = responses.map((response) => ({
-          status: response.Location ? true : false,
-          data: response ? response : response.err,
-        }));
-
-        const successfullyUploadedFiles = fileUploadResults.filter(
-          async (result) => result.data
-        );
-        let file = [];
+        let file=[]
         if (successfullyUploadedFiles.length > 0) {
-          const newfileuploads = successfullyUploadedFiles.map(
-            (result, index) => file.push(result.data.Location)
-          );
+            const newfileuploads = successfullyUploadedFiles.map(
+              (result, index) => file.push(result.data.Location)
+            );
+        
           await Promise.all(newfileuploads);
-          
-         
+
           const update_mom = await projectModel.findOneAndUpdate(
             { project_id: project_id },
             {
@@ -594,7 +593,6 @@ export const sendPdf = async (req, res) => {
               });
             }
           });
-
       } else {
         responseData(res, "", 404, false, "MOM Not Found");
       }

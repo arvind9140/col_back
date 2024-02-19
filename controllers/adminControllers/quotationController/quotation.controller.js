@@ -113,37 +113,42 @@ export const createQuotation = async (req, res) => {
     }
 
     const quotation_id = `CCPL/${generateSixDigitNumber()}`;
-           const files = Array.isArray(req.files?.files)
-             ? req.files.files
-             : [];
-           const fileUploadPromises = [];
-           const filesToUpload = files.slice(0, 5);
-           // Limit the number of files to upload to at most 5
+        const files = req.files?.files;
+        const fileUploadPromises = [];
+        let successfullyUploadedFiles = [];
 
-           for (const file of filesToUpload) {
-             const fileName = Date.now() + file.name;
-             fileUploadPromises.push(
-               uploadFile(file, fileName, project_id, quotation_id)
-             );
-           }
+        if (files) {
+          const filesToUpload = Array.isArray(files)
+            ? files.slice(0, 5)
+            : [files];
 
-           const responses = await Promise.all(fileUploadPromises);
+          for (const file of filesToUpload) {
+            const fileName = Date.now() + file.name;
+            fileUploadPromises.push(
+              uploadFile(file, fileName, project_id, quotation_id)
+            );
+          }
 
-           const fileUploadResults = responses.map((response) => ({
-             status: response.Location ? true : false,
-             data: response ? response : response.err,
-           }));
+          const responses = await Promise.all(fileUploadPromises);
 
-           const successfullyUploadedFiles = fileUploadResults.filter(
-             async (result) => result.data
-           );
-           let file = [];
-           if (successfullyUploadedFiles.length > 0) {
-             const newfileuploads = successfullyUploadedFiles.map(
-               (result, index) => file.push(result.data.Location)
-             );
-             await Promise.all(newfileuploads);
-           }
+          const fileUploadResults = responses.map((response) => ({
+            status: response.Location ? true : false,
+            data: response ? response : response.err,
+          }));
+
+          successfullyUploadedFiles = fileUploadResults.filter(
+            (result) => result.status
+          );
+        }
+        let file=[]
+        if (successfullyUploadedFiles.length > 0) {
+            const newfileuploads = successfullyUploadedFiles.map(
+              (result, index) => file.push(result.data.Location)
+            );
+        }
+
+        
+
 
     const existingQuotation = find_project.quotation.find(
       (q) => q.type === type
@@ -198,5 +203,6 @@ export const createQuotation = async (req, res) => {
     }
   } catch (error) {
     responseData(res, false, 500, error.message);
+    console.log(error);
   }
 };
