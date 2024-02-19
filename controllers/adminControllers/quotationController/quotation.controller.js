@@ -115,7 +115,7 @@ export const createQuotation = async (req, res) => {
     const quotation_id = `CCPL/${generateSixDigitNumber()}`;
            const files = Array.isArray(req.files?.files)
              ? req.files.files
-             : [req.files.files];
+             : [];
            const fileUploadPromises = [];
            const filesToUpload = files.slice(0, 5);
            // Limit the number of files to upload to at most 5
