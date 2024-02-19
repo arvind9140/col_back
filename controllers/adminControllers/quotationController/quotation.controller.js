@@ -113,35 +113,37 @@ export const createQuotation = async (req, res) => {
     }
 
     const quotation_id = `CCPL/${generateSixDigitNumber()}`;
-     const files = req.files?.files;
-          const fileUploadPromises = [];
-          // Limit the number of files to upload to at most 5
-          const filesToUpload = Array.isArray(files) ? files.slice(0, 5) : [];
+           const files = Array.isArray(req.files?.files)
+             ? req.files.files
+             : [req.files.files];
+           const fileUploadPromises = [];
+           const filesToUpload = files.slice(0, 5);
+           // Limit the number of files to upload to at most 5
 
-        for (const file of filesToUpload) {
-          const fileName = Date.now() + file.name;
-          fileUploadPromises.push(
-            uploadFile(file, fileName, project_id, quotation_id)
-          );
-        }
+           for (const file of filesToUpload) {
+             const fileName = Date.now() + file.name;
+             fileUploadPromises.push(
+               uploadFile(file, fileName, project_id, quotation_id)
+             );
+           }
 
-        const responses = await Promise.all(fileUploadPromises);
+           const responses = await Promise.all(fileUploadPromises);
 
-        const fileUploadResults = responses.map((response) => ({
-          status: response.Location ? true : false,
-          data: response ? response : response.err,
-        }));
+           const fileUploadResults = responses.map((response) => ({
+             status: response.Location ? true : false,
+             data: response ? response : response.err,
+           }));
 
-        const successfullyUploadedFiles = fileUploadResults.filter(
-          async (result) => result.data
-        );
-        let file = [];
-        if (successfullyUploadedFiles.length > 0) {
-          const newfileuploads = successfullyUploadedFiles.map(
-            (result, index) => file.push(result.data.Location)
-          );
-          await Promise.all(newfileuploads);
-        }
+           const successfullyUploadedFiles = fileUploadResults.filter(
+             async (result) => result.data
+           );
+           let file = [];
+           if (successfullyUploadedFiles.length > 0) {
+             const newfileuploads = successfullyUploadedFiles.map(
+               (result, index) => file.push(result.data.Location)
+             );
+             await Promise.all(newfileuploads);
+           }
 
     const existingQuotation = find_project.quotation.find(
       (q) => q.type === type
