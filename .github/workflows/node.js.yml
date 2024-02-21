@@ -19,14 +19,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - name: Stop Previous Runner
-      run: |
-         ./svc.sh stop
-      continue-on-error: true  # Continue even if stopping the runner fails
-    - name: Start New Runner
-      run: |
-         ./svc.sh install
-         ./svc.sh start
+    
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
