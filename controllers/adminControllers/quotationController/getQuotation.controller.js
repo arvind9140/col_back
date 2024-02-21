@@ -37,9 +37,13 @@ const getQuotation = async (req, res) => {
       {
          total_price+=main_quotation[i].total_price 
       }
+      let gst = total_price * 18 / 100;
+
       const response = {
         main_quotation:main_quotation,
-        total_price:total_price
+        total_price:total_price,
+        gst:gst,
+        total_price_with_gst:total_price+ gst
       }
 
       
