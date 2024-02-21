@@ -35,7 +35,7 @@ import { contractShare } from "../../controllers/adminControllers/fileUploadCont
 router.route("/fileupload").post(fileupload);
 router.route("/getfile").get(getFileData);
 router.route("/get/onefile").get(getSingleFileData);
-router.route("/send/contract").get(contractShare);
+router.route("/send/contract").post(contractShare);
 
 
 

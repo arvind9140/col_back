@@ -16,10 +16,10 @@ const s3 = new AWS.S3({
   region: "ap-south-1",
 });
 
-const uploadFile = async (file, fileName, project_ID, quotation_id) => {
+const uploadFile = async (file, fileName, project_ID, quotation_id, item_id) => {
   return s3
     .upload({
-      Bucket: `interior-design1/${project_ID}/${quotation_id}`,
+      Bucket: `interior-design1/${project_ID}/${quotation_id}/${item_id}`,
       Key: fileName,
       Body: file.data,
       ContentType: file.mimetype,
@@ -113,6 +113,7 @@ export const createQuotation = async (req, res) => {
     }
 
     const quotation_id = `CCPL/${generateSixDigitNumber()}`;
+     const item_id = `ITM/${generateSixDigitNumber()}`;
         const files = req.files?.files;
         const fileUploadPromises = [];
         let successfullyUploadedFiles = [];
@@ -125,7 +126,7 @@ export const createQuotation = async (req, res) => {
           for (const file of filesToUpload) {
             const fileName = Date.now() + file.name;
             fileUploadPromises.push(
-              uploadFile(file, fileName, project_id, quotation_id)
+              uploadFile(file, fileName, project_id, quotation_id, item_id)
             );
           }
 
@@ -157,7 +158,7 @@ export const createQuotation = async (req, res) => {
     if (existingQuotation) {
       const existingQuotationData = [...existingQuotation.items];
       const newQuotationItem = {
-        item_id: `ITM/${generateSixDigitNumber()}`,
+        item_id: item_id,
         item: item,
         description: description,
         unit: unit,

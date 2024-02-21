@@ -1,17 +1,39 @@
 import mongoose from "mongoose";
 
+const itemSchema = new mongoose.Schema({
+  item_id: String,
+  item: String,
+  description: String,
+  unit: String,
+  quantity: String,
+  rate: String,
+  discount: String,
+  offer_price: String,
+  total_price: String,
+  files: [],
+  remark: String,
+  client_notes: String,
+});
+
+const quotationSchema = new mongoose.Schema({
+  project_id: String,
+  quotation_id: String,
+  type: String,
+  items: [itemSchema],
+});
+
 const projectSchema = new mongoose.Schema({
   project_name: {
     type: String,
     required: true,
   },
-  client:[],
+  client: [],
   project_id: {
     type: String,
     required: true,
   },
-  lead_id:{
-    type:String,
+  lead_id: {
+    type: String,
   },
 
   project_type: {
@@ -24,7 +46,7 @@ const projectSchema = new mongoose.Schema({
   },
   files: [],
   mom: [],
-  quotation:[],
+  quotation: [quotationSchema],
   leadmanager: {
     type: String,
     require: true,

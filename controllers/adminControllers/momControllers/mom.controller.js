@@ -109,7 +109,7 @@ export const createmom = async (req, res) => {
         const mom_id = `COl-M-${generateSixDigitNumber()}`; // generate meeting id
         let mom_data;
 
-         const files = req.files?.files;
+        const files = req.files?.files;
         const fileUploadPromises = [];
         let successfullyUploadedFiles = [];
 
@@ -136,12 +136,12 @@ export const createmom = async (req, res) => {
             (result) => result.status
           );
         }
-        let file=[]
+        let file = [];
         if (successfullyUploadedFiles.length > 0) {
-            const newfileuploads = successfullyUploadedFiles.map(
-              (result, index) => file.push(result.data.Location)
-            );
-        
+          const newfileuploads = successfullyUploadedFiles.map(
+            (result, index) => file.push(result.data.Location)
+          );
+
           await Promise.all(newfileuploads);
 
           const update_mom = await projectModel.findOneAndUpdate(
