@@ -1182,10 +1182,7 @@ export const contractShare = async (req, res) => {
         },
       };
     const contract_name = generateSixDigitNumber();
-    pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
-      if (err) {
-        res.status(500).send(err);
-      } else {
+ 
         
         pdf
           .create(htmlTemplate, pdfOptions)
@@ -1194,8 +1191,8 @@ export const contractShare = async (req, res) => {
               res.status(500).send(err);
             } else {
                 
-                 res.setHeader("Content-Type", "application/pdf");
-                 stream.pipe(res);
+                
+                
               const filePath = `contract/${contract_name}.pdf`;
               const fileName =  `${contract_name}.pdf`;
 
@@ -1242,9 +1239,7 @@ export const contractShare = async (req, res) => {
       }   
             }
           });
-       
-      }
-    });
+   
   } 
   
   else if (type === "residential") {
@@ -2799,18 +2794,15 @@ line-height:115%'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp
         },
       };
        const contract_name = generateSixDigitNumber();
-       pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
-         if (err) {
-           res.status(500).send(err);
-         } else {
+      
            pdf
              .create(htmlTemplate, pdfOptions)
              .toFile(`contract/${contract_name}.pdf`, async (err, pdfPath) => {
                if (err) {
                  res.status(500).send(err);
                } else {
-                 res.setHeader("Content-Type", "application/pdf");
-                 stream.pipe(res);
+                //  res.setHeader("Content-Type", "application/pdf");
+                
                  const filePath = `contract/${contract_name}.pdf`;
                  const fileName = `${contract_name}.pdf`;
 
@@ -2864,8 +2856,7 @@ line-height:115%'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp
                  }
                }
              });
-         }
-       });
+      
      
   } else {
     return responseData(res, "", 400, false, "Invalid type");
