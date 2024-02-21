@@ -46,7 +46,7 @@ const getQuotation = async (req, res) => {
         total_price_with_gst:total_price+ gst
       }
 
-      
+    
       return responseData(
         res,
         "Quotation details retrieved successfully",
