@@ -2803,7 +2803,7 @@ line-height:115%'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp
                } else {
                 //  res.setHeader("Content-Type", "application/pdf");
                 
-                 const filePath = `contract/${contract_name}.pdf`;
+                 const filePath = pdfPath;
                  const fileName = `${contract_name}.pdf`;
 
                  const response = await uploadImage(
