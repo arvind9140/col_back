@@ -322,6 +322,7 @@ export const updateProjectDetails = async (req, res) => {
   const timeline_date = req.body.timeline_date;
   const project_budget = req.body.project_budget;
   const description = req.body.description;
+  const designer = req.body.designer;
 
   if (!project_ID) {
     responseData(res, "", 400, false, " Project ID is required.", []);
@@ -331,6 +332,10 @@ export const updateProjectDetails = async (req, res) => {
     responseData(res, "", 400, false, " project_budget is required.", []);
   } else if (!project_status) {
     responseData(res, "", 400, false, "project status required.", []);
+  }
+  else if (!designer &&  onlyAlphabetsValidation(designer))
+  {
+    responseData(res, "", 400, false, "designer name is required.", []);
   }
 
   //  *********** add other validation **********//
@@ -342,10 +347,11 @@ export const updateProjectDetails = async (req, res) => {
           { project_id: project_ID },
           {
             $set: {
-              project_budget: `${project_budget} ₹`,
+              project_budget: project_budget,
               project_status: project_status,
               timeline_date: timeline_date,
               description: description,
+              designer:designer
             },
           },
           { new: true, useFindAndModify: false }
