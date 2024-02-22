@@ -61,7 +61,7 @@ export const createmom = async (req, res) => {
   try {
     const project_id = req.body.project_id;
     const meetingDate = req.body.meetingdate;
-    const source = req.body.source;
+    const location = req.body.location;
     // let client_name = req.body.client_name
     //   ? JSON.parse(req.body.client_name)
     //   : [];
@@ -71,11 +71,11 @@ export const createmom = async (req, res) => {
     //   ? JSON.parse(req.body.consultant_name)
     //   : [];
     const client_name = req.body.client_name;
-    const architect = req.body.architect;
+    const designer = req.body.designer;
     const organisor = req.body.organisor;
-    const consultant_name = req.body.consultant_name;
+    const attendees = req.body.attendees;
     const remark = req.body.remark;
-    const imaportant_note = req.body.imaportant_note;
+   
 
     // write here validation ///
     if (!project_id) {
@@ -86,23 +86,19 @@ export const createmom = async (req, res) => {
       return res
         .status(400)
         .send({ status: false, message: "meetingDate is required" });
-    } else if (!source) {
+    } else if (!location) {
       return res
         .status(400)
-        .send({ status: false, message: "source is required" });
+        .send({ status: false, message: "location is required" });
     } else if (!client_name && !onlyAlphabetsValidation(client_name)) {
-    } else if (!architect && !onlyAlphabetsValidation(architect)) {
+    } else if (!designer && !onlyAlphabetsValidation(designer)) {
       return res
         .status(400)
-        .send({ status: false, message: "architech is required" });
+        .send({ status: false, message: "designer is required" });
     } else if (!organisor && !onlyAlphabetsValidation(organisor)) {
       return res
         .status(400)
         .send({ status: false, message: "organiser is required" });
-    } else if (!consultant_name && !onlyAlphabetsValidation(consultant_name)) {
-      return res
-        .status(400)
-        .send({ status: false, message: "consultant_name is required" });
     } else {
       const check_project = await projectModel.find({ project_id: project_id });
       if (check_project.length > 0) {
@@ -153,15 +149,14 @@ export const createmom = async (req, res) => {
                     {
                       mom_id: mom_id,
                       meetingdate: meetingDate,
-                      source: source,
+                      location: location,
                       attendees: {
                         client_name: client_name,
                         organisor: organisor,
-                        architect: architect,
-                        consultant_name: consultant_name,
+                        designer: designer,
+                        attendees: attendees,
                       },
                       remark: remark,
-                      imaportant_note: imaportant_note,
                       files: file,
                     },
                   ],
@@ -189,15 +184,14 @@ export const createmom = async (req, res) => {
                     {
                       mom_id: mom_id,
                       meetingdate: meetingDate,
-                      source: source,
+                      location: location,
                       attendees: {
                         client_name: client_name,
                         organisor: organisor,
-                        architect: architect,
-                        consultant_name: consultant_name,
+                        designer: designer,
+                        attendees: attendees,
                       },
                       remark: remark,
-                      imaportant_note: imaportant_note,
                       files: file,
                     },
                   ],
