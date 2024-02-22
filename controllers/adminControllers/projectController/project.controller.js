@@ -171,7 +171,7 @@ export const createProject = async (req, res) => {
               project_start_date: project_start_date,
               timeline_date: timeline_date,
               project_end_date: timeline_date,
-              project_budget: `${project_budget} ₹`,
+              project_budget: project_budget,
               project_location: project_location,
               files: file,
               client: {
