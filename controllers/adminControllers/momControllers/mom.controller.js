@@ -393,7 +393,13 @@ export const generatePdf = async (req, res) => {
 `;
 
         const pdfOptions = {
-          format: "Letter",
+         format: "A4",
+          border: {
+            top: "1cm",
+            right: "1cm",
+            bottom: "1cm",
+            left: "1cm",
+          }
         };
 
         // Generate PDF
@@ -558,7 +564,7 @@ export const sendPdf = async (req, res) => {
               res.status(500).send(err);
             } else {
               const filePath = `momdata/${mom_id}.pdf`;
-
+console.log(filePath)
               const mailOptions = {
                 from: "a72302492@gmail.com",
                 to: check_project[0].client[0].client_email,
