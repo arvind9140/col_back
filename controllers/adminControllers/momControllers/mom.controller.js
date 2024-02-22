@@ -558,7 +558,7 @@ export const sendPdf = async (req, res) => {
               res.status(500).send(err);
             } else {
               const filePath = `momdata/${mom_id}.pdf`;
-console.log(filePath)
+
               const mailOptions = {
                 from: "a72302492@gmail.com",
                 to: check_project[0].client[0].client_email,
