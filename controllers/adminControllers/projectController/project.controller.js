@@ -44,9 +44,7 @@ export const createProject = async (req, res) => {
   const client_name = req.body.client_name;
   const description = req.body.description;
   const leadmanager = req.body.leadmanager;
-  const junior_designer = req.body.junior_designer;
-  const senior_designer = req.body.senior_designer;
-  const superviser = req.body.supervisor;
+  const designer = req.body.designer;
   const visualizer = req.body.visualizer;
   const project_status = req.body.project_status;
   const project_start_date = req.body.project_start_date;
@@ -66,17 +64,7 @@ export const createProject = async (req, res) => {
     responseData(res, "", 400, false, "client name required");
   } else if (!onlyAlphabetsValidation(leadmanager) && leadmanager.length >= 3) {
     responseData(res, "", 400, false, "lead manager required");
-  } else if (
-    !onlyAlphabetsValidation(junior_designer) &&
-    junior_designer.length >= 3
-  ) {
-    responseData(res, "", 400, false, "junior designer name required");
-  } else if (
-    !onlyAlphabetsValidation(senior_designer) &&
-    senior_designer.length >= 3
-  ) {
-    responseData(res, "", 400, false, "senior designer name  required");
-  } else if (!onlyAlphabetsValidation(superviser) && superviser.length >= 3) {
+  }  else if (!onlyAlphabetsValidation(designer) && designer.length >= 3) {
     responseData(res, "", 400, false, "superviser name  required");
   } else if (!onlyAlphabetsValidation(visualizer) && visualizer.length >= 3) {
     responseData(res, "", 400, false, "visualizer name  required");
@@ -145,25 +133,7 @@ export const createProject = async (req, res) => {
               project_type: project_type,
               description: description,
               leadmanager: leadmanager,
-              designers: [
-                {
-                  junior_designer: [
-                    {
-                      name: junior_designer,
-                      status: "working",
-                      id: generateSixDigitNumber(),
-                    },
-                  ],
-                  senior_designer: [
-                    {
-                      name: senior_designer,
-                      status: "working",
-                      id: generateSixDigitNumber(),
-                    },
-                  ],
-                },
-              ],
-              superviser: superviser,
+              designer:designer,
               visualizer: visualizer,
               project_status: project_status,
               project_start_date: project_start_date,
@@ -194,25 +164,7 @@ export const createProject = async (req, res) => {
               project_type: project_type,
               description: description,
               leadmanager: leadmanager,
-              designers: [
-                {
-                  junior_designer: [
-                    {
-                      name: junior_designer,
-                      status: "working",
-                      id: generateSixDigitNumber(),
-                    },
-                  ],
-                  senior_designer: [
-                    {
-                      name: senior_designer,
-                      status: "working",
-                      id: generateSixDigitNumber(),
-                    },
-                  ],
-                },
-              ],
-              superviser: superviser,
+              designer:designer,
               visualizer: visualizer,
               project_status: project_status,
               project_start_date: project_start_date,

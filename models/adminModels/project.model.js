@@ -51,9 +51,7 @@ const projectSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  designers: [],
-
-  superviser: {
+  designer: {
     type: String,
     require: true,
   },
