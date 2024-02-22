@@ -402,7 +402,7 @@ export const generatePdf = async (req, res) => {
           }
         };
 
-        // Generate PDF
+        // Generate PDF  using html-pdf library and send it as an attachment in the email 
         pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
           if (err) {
             res.status(500).send(err);
