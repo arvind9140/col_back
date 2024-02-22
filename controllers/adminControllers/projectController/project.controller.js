@@ -106,38 +106,36 @@ export const createProject = async (req, res) => {
       if (check_role.length > 0) {
         if (check_role[0].role == "ADMIN") {
           const files = req.files?.files;
-        const fileUploadPromises = [];
-        let successfullyUploadedFiles = [];
+          const fileUploadPromises = [];
+          let successfullyUploadedFiles = [];
 
-        if (files) {
-          const filesToUpload = Array.isArray(files)
-            ? files.slice(0, 5)
-            : [files];
+          if (files) {
+            const filesToUpload = Array.isArray(files)
+              ? files.slice(0, 5)
+              : [files];
 
-          for (const file of filesToUpload) {
-            const fileName = Date.now() + file.name;
-            fileUploadPromises.push(
-              uploadFile(file, fileName, project_ID)
+            for (const file of filesToUpload) {
+              const fileName = Date.now() + file.name;
+              fileUploadPromises.push(uploadFile(file, fileName, project_ID));
+            }
+
+            const responses = await Promise.all(fileUploadPromises);
+
+            const fileUploadResults = responses.map((response) => ({
+              status: response.Location ? true : false,
+              data: response ? response : response.err,
+            }));
+
+            successfullyUploadedFiles = fileUploadResults.filter(
+              (result) => result.status
             );
           }
-
-          const responses = await Promise.all(fileUploadPromises);
-
-          const fileUploadResults = responses.map((response) => ({
-            status: response.Location ? true : false,
-            data: response ? response : response.err,
-          }));
-
-          successfullyUploadedFiles = fileUploadResults.filter(
-            (result) => result.status
-          );
-        }
-        let file=[]
-        if (successfullyUploadedFiles.length > 0) {
+          let file = [];
+          if (successfullyUploadedFiles.length > 0) {
             const newfileuploads = successfullyUploadedFiles.map(
               (result, index) => file.push(result.data.Location)
             );
-        
+
             await Promise.all(newfileuploads);
 
             const project_data = await projectModel.create({
@@ -284,10 +282,10 @@ export const getAllProject = async (req, res) => {
           let archive = [];
           const projects = await projectModel.find({}).sort({ createdAt: -1 });
           for (let i = 0; i < projects.length; i++) {
-            if (projects[i].project_status == "execution") {
+            if (projects[i].project_status == "executing") {
               execution.push(projects[i]);
             }
-            if (projects[i].project_status == "design") {
+            if (projects[i].project_status == "designing") {
               design.push(projects[i]);
             }
             if (projects[i].project_status == "completed") {
