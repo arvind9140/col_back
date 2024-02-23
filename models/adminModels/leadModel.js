@@ -10,6 +10,11 @@ const lead = new mongoose.Schema({
     required: true,
   },
 
+  lead_manager: {
+    type: String,
+    required: true,
+  },
+
   email: {
     type: String,
     required: true,
@@ -31,17 +36,15 @@ const lead = new mongoose.Schema({
     type: String,
     // You can define specific sources based on your needs
   },
-  date:{
-    type:String,
-    require:true,
-
+  date: {
+    type: String,
+    require: true,
   },
-  updated_date:{
-    type:String,
-    require:true,
-
+  updated_date: {
+    type: String,
+    require: true,
   },
-  files:[],
+  files: [],
   notes: [
     {
       content: {
@@ -53,9 +56,8 @@ const lead = new mongoose.Schema({
       date: {
         type: String,
       },
-      status:{
-        type:String,
-
+      status: {
+        type: String,
       },
     },
   ],

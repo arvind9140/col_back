@@ -44,6 +44,7 @@ export const createLead = async (req, res) => {
   const createdBy = req.body.createdBy;
   const role = req.body.role;
   const date = req.body.date;
+  const lead_manager = req.body.lead_manager;
 
   // vaalidation all input
   if (!onlyAlphabetsValidation(name) && name.length >= 3) {
@@ -106,6 +107,7 @@ export const createLead = async (req, res) => {
         const lead = new leadModel({
           name: name,
           lead_id: lead_id,
+          lead_manager:lead_manager,
           email: email,
           phone: phone,
           location: location,

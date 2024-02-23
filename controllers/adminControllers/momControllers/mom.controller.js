@@ -282,10 +282,7 @@ export const generatePdf = async (req, res) => {
         const momRemarkHtml = momRemarkSplit
           .map((remark) => `<li>${remark.trim()}</li>`)
           .join("");
-        const momNoteSplit = momData.imaportant_note.split(".").filter(Boolean); // Filter to remove empty strings
-        const momImportant_noteHtml = momNoteSplit
-          .map((note) => `<li>${note.trim()}</li>`)
-          .join("");
+       
 
         const htmlTemplate = `
 <html>
@@ -337,20 +334,20 @@ export const generatePdf = async (req, res) => {
       <ul>
         <li><span class="label">MOM_ID:</span> ${momData.mom_id}</li>
         <li><span class="label">MOM_Date:</span> ${momData.meetingdate}</li>
-        <li><span class="label">MOM_Source:</span> ${momData.source}</li>
+        <li><span class="label">MOM_Location:</span> ${momData.location}</li>
         <li><span class="label">Attendees:</span>
           <ul>
             <li><span class="label">Client Name:</span> ${
               momData.attendees.client_name
             }</li>
-            <li><span class="label">Organisor:</span> ${
+            <li><span class="label">Organised By:</span> ${
               momData.attendees.organisor
             }</li>
             <li><span class="label">Architect:</span> ${
-              momData.attendees.architect
+              momData.attendees.designer
             }</li>
-            <li><span class="label">Consultant Name:</span> ${
-              momData.attendees.consultant_name
+            <li><span class="label">Other:</span> ${
+              momData.attendees.attendees
             }</li>
           </ul>
         </li>
@@ -362,10 +359,7 @@ export const generatePdf = async (req, res) => {
       </ol>
           </ul>
         </li>
-        <li><span class="label">MOM_Important_Notes:</span>
-        <ol>
-        ${momImportant_noteHtml}
-      </ol></li>
+        
         <li><span class="label">Files:</span>
           <ul>
             <ol>
