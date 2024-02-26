@@ -134,15 +134,5 @@ export { initializeSocketIO, emitSocketEvent };
 
 
 // websocketServer.js
-import WebSocket from 'ws';
 
-const wss = new WebSocket.Server({ port: 8080 });
-
-  export const broadcastNotification =  function(notification) {
-    wss.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(notification));
-      }
-    });
-  }
 

@@ -2,7 +2,7 @@ import Notification from "../../models/adminModels/notification.model.js";
 import projectModel from "../../models/adminModels/project.model.js";
 import leadModel from "../../models/adminModels/leadModel.js";
 import { responseData } from "../../utils/respounse.js";
-import { broadcastNotification } from "../../socket/index.js";
+
 import notificationModel from "../../models/adminModels/notification.model.js";
 import cron from "node-cron";
 
@@ -28,7 +28,7 @@ import cron from "node-cron";
       if (project.project_status !== "completed") {
         if (projectEndDate >= currentDate) {
           // Project end date is today or in the future
-          if (daysRemaining <= 7) {
+          if (daysRemaining <= 7 && daysRemaining >0) {
             // Project end date is approaching
             const approachingProjectNotification = new Notification({
               type: "project",
@@ -39,6 +39,20 @@ import cron from "node-cron";
             notificationData.approachingProjects.push(
               approachingProjectNotification
             );
+          }
+          else if(daysRemaining ==0)
+          {
+             const approachingProjectNotification = new Notification({
+               type: "project",
+               itemId: project.project_id,
+               message: `Approaching project: ${project.project_name} ( project end date today. Please check )`,
+               status: false,
+             });
+             notificationData.approachingProjects.push(
+               approachingProjectNotification
+             );
+
+
           }
         } else if (projectEndDate < currentDate) {
           
@@ -85,8 +99,7 @@ import cron from "node-cron";
     // Send notification data
     // responseData(res, "Notifications created successfully", 200, true, "");
 
-    // Broadcast notification to connected clients
-    broadcastNotification(notificationData);
+
   } catch (error) {
     console.error("Error fetching notification data:", error);
     responseData(res, "", 500, false, "Error fetching notification data");
