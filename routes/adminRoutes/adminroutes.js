@@ -33,6 +33,7 @@ import getQuotation, {
 import { createQuotation } from "../../controllers/adminControllers/quotationController/quotation.controller.js";
 import { updateQuotation } from "../../controllers/adminControllers/quotationController/update.quotation.controller.js";
 import { contractShare } from "../../controllers/adminControllers/fileUploadController/contract.controller.js";
+import { getNotification,  updateNotification } from "../../controllers/notification/notification.controller.js";
 router.route("/fileupload").post(fileupload);
 router.route("/getfile").get(getFileData);
 router.route("/get/onefile").get(getSingleFileData);
@@ -60,5 +61,12 @@ router.route("/create/quotation").post(createQuotation);
 router.route("/get/quotation").get(getQuotation);
 router.route("/getsingle/quotation").get(getSingleTypeQuotation);
 router.route("/update/quotation").put(updateQuotation);
+
+
+
+
+router.route("/get/notification").get(getNotification);
+router.route("/update/notification").put(updateNotification);
+
 
 export default router;
