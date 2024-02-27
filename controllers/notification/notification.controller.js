@@ -77,15 +77,26 @@ import cron from "node-cron";
       // Check if lead date is not updated after seven days
       const lastUpdated = new Date(lead.updated_date);
       const sevenDaysAgo = new Date(currentDate);
-      sevenDaysAgo.setDate(currentDate.getDate() - 7);
-      if (lastUpdated <= sevenDaysAgo) {
+      sevenDaysAgo.setDate(currentDate.getDate() - 1);
+      if (lastUpdated < sevenDaysAgo) {
         const outdatedLeadNotification = new Notification({
           type: "lead",
           itemId: lead.lead_id,
-          message: `Outdated lead:  please check this lead Id:${lead.lead_id} and name: ${lead.name} not updated past seven days.  `,
+          message: `Please check this lead named ${lead.name} for the next update. Only 1 day left.`,
           status: false,
         });
         notificationData.outdatedLeads.push(outdatedLeadNotification);
+      }
+      if (lastUpdated == sevenDaysAgo)
+      {
+         const outdatedLeadNotification = new Notification({
+           type: "lead",
+           itemId: lead.lead_id,
+           message: `Please check this lead named ${lead.name} for the next update. Today is the meeting date.`,
+           status: false,
+         });
+         notificationData.outdatedLeads.push(outdatedLeadNotification);
+
       }
     });
 

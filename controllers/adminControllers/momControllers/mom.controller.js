@@ -148,7 +148,6 @@ export const createmom = async (req, res) => {
                   $each: [
                     {
                       mom_id: mom_id,
-                      client_name:check_project[0].client[0].client_name,
                       meetingdate: meetingDate,
                       location: location,
                       attendees: {
@@ -230,8 +229,14 @@ export const getAllMom = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
+
+
     if (check_project.length > 0) {
-      responseData(res, "MOM Found", 200, true, "", check_project[0].mom);
+      const response = {
+        client_name: check_project[0].client[0].client_name,
+        mom_data: check_project[0].mom,
+      };
+      responseData(res, "MOM Found", 200, true, "", response);
     }
     if (check_project.length < 1) {
       responseData(res, "", 404, false, "Project Not Found.");
