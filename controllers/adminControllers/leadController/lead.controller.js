@@ -10,15 +10,7 @@ import {
 import AWS from "aws-sdk";
 
 
-function formatDate(date) {
-  // Get day, month, and year components from the date
-  const day = String(date.getDate()).padStart(2, "0"); // Ensure two digits
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based
-  const year = date.getFullYear();
 
-  // Concatenate the components in the desired format
-  return `${day}-${month}-${year}`;
-}
 
 
 function generateSixDigitNumber() {
@@ -279,7 +271,7 @@ export const updateLead = async (req, res) => {
              itemId: lead_id,
              message: `Lead status updated: Lead name ${
                find_lead[0].name
-             } status changed to ${status} on  ${formatDate(update)}.`,
+             } status changed to ${status} on  ${update}.`,
              status: false,
            });
            await newNotification.save();
