@@ -76,9 +76,12 @@ import cron from "node-cron";
     const outdatedLeads = leads.filter((lead) => {
       // Check if lead date is not updated after seven days
       const lastUpdated = new Date(lead.updated_date);
-      const sevenDaysAgo = new Date(currentDate);
-      sevenDaysAgo.setDate(currentDate.getDate() - 1);
-      if (lastUpdated < sevenDaysAgo) {
+      const currentDate = new Date();
+        const daysRemaining = Math.ceil(
+          (lastUpdated - currentDate) / (1000 * 60 * 60 * 24)
+        );
+      
+      if (daysRemaining ==1) {
         const outdatedLeadNotification = new Notification({
           type: "lead",
           itemId: lead.lead_id,
@@ -87,7 +90,7 @@ import cron from "node-cron";
         });
         notificationData.outdatedLeads.push(outdatedLeadNotification);
       }
-      if (lastUpdated == sevenDaysAgo)
+      if (daysRemaining ==0)
       {
          const outdatedLeadNotification = new Notification({
            type: "lead",
@@ -117,7 +120,7 @@ import cron from "node-cron";
   }
 };
 
-cron.schedule("0 0 * * *", async () => {
+cron.schedule(" 0 0 * * *", async () => {
   // This cron pattern runs the job at 00:00 every day
   try {
     // Call your notification function here
