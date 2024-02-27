@@ -148,6 +148,7 @@ export const createmom = async (req, res) => {
                   $each: [
                     {
                       mom_id: mom_id,
+                      client_name:check_project[0].client[0].client_name,
                       meetingdate: meetingDate,
                       location: location,
                       attendees: {

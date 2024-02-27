@@ -163,17 +163,17 @@ export const contractShare = async (req, res) => {
           left: "1cm",
         },
       };
-    const contract_name = generateSixDigitNumber();
+    const contract_name = new Date();
 
-    
-     pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
-       if (err) {
-         res.status(500).send(err);
-       } else {
-         res.setHeader("Content-Type", "application/pdf");
-         stream.pipe(res);
-       }
-     });
+
+    //  pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
+    //    if (err) {
+    //      res.status(500).send(err);
+    //    } else {
+    //      res.setHeader("Content-Type", "application/pdf");
+    //      stream.pipe(res);
+    //    }
+    //  });
  
         
         pdf
@@ -190,39 +190,10 @@ export const contractShare = async (req, res) => {
 
       const response = await uploadImage(filePath, fileName, `CCPL/${quotation}`);
       if (response.status) {
-         //  res.send({response})
-         const mailOptions = {
-           from: "a72302492@gmail.com",
-           to: client_email[0],
-           subject: "Contract  for your Designing",
-           attachments: [
-             {
-               filename: `${contract_name}.pdf`,
-               path: filePath, // Pass the file path directly
-             },
-           ],
-         };
+         //  res.send({response}
 
-         transporter.sendMail(mailOptions, (error, info) => {
-           if (error) {
-             responseData(res, "", 400, false, "Failed to send email");
-           } else {
-             fs.unlink(filePath, (err) => {
-               if (err) {
-                 console.error("Error deleting file:", err);
-               } else {
-                 console.log("File deleted successfully");
-               }
-             });
-             responseData(
-               res,
-               `Email has been sent successfully`,
-               200,
-               true,
-               ""
-             );
-           }
-         });
+         
+          responseData(res, `template store s3 bucket`, 200, true, "",response.Location);
        
          
       } else {
@@ -260,12 +231,6 @@ const terrace_and_balcony_total_charges_in_words = numberToWordsString(terrace_a
 
     
 
-
-       
-
-
-
-
  const htmlTemplate = residentialContract(
    project,
    city,
@@ -300,17 +265,10 @@ const terrace_and_balcony_total_charges_in_words = numberToWordsString(terrace_a
           left: "1cm",
         },
       };
-       const contract_name = generateSixDigitNumber();
+       const contract_name = new Date();
 
 
-      pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
-        if (err) {
-          res.status(500).send(err);
-        } else {
-          res.setHeader("Content-Type", "application/pdf");
-          stream.pipe(res);
-        }
-      });
+   
       
            pdf
              .create(htmlTemplate, pdfOptions)
@@ -326,48 +284,20 @@ const terrace_and_balcony_total_charges_in_words = numberToWordsString(terrace_a
                  const response = await uploadImage(
                    filePath,
                    fileName,
-                   `CCPL/${quotation}`
+                   `CCPL/${contract_name}`
                  );
                  if (response.status) {
                    //  res.send({response})
-                   const mailOptions = {
-                     from: "a72302492@gmail.com",
-                     to: client_email[0],
-                     subject: "Contract  for your Designing",
-                     attachments: [
-                       {
-                         filename: `${contract_name}.pdf`,
-                         path: filePath, // Pass the file path directly
-                       },
-                     ],
-                   };
+                  responseData(
+                    res,
+                    "Upload Contract Successfully",
 
-                   transporter.sendMail(mailOptions, (error, info) => {
-                     if (error) {
-                       responseData(
-                         res,
-                         "",
-                         400,
-                         false,
-                         "Failed to send email"
-                       );
-                     } else {
-                       fs.unlink(filePath, (err) => {
-                         if (err) {
-                           console.error("Error deleting file:", err);
-                         } else {
-                           console.log("File deleted successfully");
-                         }
-                       });
-                       responseData(
-                         res,
-                         `Email has been sent successfully`,
-                         200,
-                         true,
-                         ""
-                       );
-                     }
-                   });
+                    200,
+                    true,
+                    "",
+                    response.Location
+                  );
+               
                  } else {
                    res.send({ response });
                  }

@@ -1,5 +1,6 @@
 import leadModel from "../../../models/adminModels/leadModel.js";
 import projectModel from "../../../models/adminModels/project.model.js";
+import Notification from "../../../models/adminModels/notification.model.js";
 import { responseData } from "../../../utils/respounse.js";
 import {
   onlyAlphabetsValidation,
@@ -65,7 +66,19 @@ export const createLead = async (req, res) => {
     responseData(res, "", 401, false, "status is required.");
   } else if (!source) {
     responseData(res, "", 401, false, "source is required.");
-  } else {
+  }
+  else if (!onlyAlphabetsValidation(lead_manager) && lead_manager.length >= 3)
+  {
+    responseData(
+      res,
+      "",
+      401,
+      false,
+      "lead manager should be greater than 3 characters."
+    )
+      
+  }
+   else {
     try {
       const check_email = await leadModel.find({ email: email });
       if (check_email.length > 0) {
@@ -248,6 +261,14 @@ export const updateLead = async (req, res) => {
             useFindAndModify: false,
           }
         );
+        
+           const newNotification = new Notification({
+             type: "lead",
+             itemId: lead_id,
+             message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${update}.`,
+             status: false,
+           });
+           await newNotification.save();
 
         responseData(res, "Lead Data Updated", 200, true, "", update_Lead);
       }
