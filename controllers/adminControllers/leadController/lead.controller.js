@@ -206,7 +206,7 @@ export const updateLead = async (req, res) => {
     try {
       const utcDate = new Date(update);
 
-      const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000)); // IST is UTC+5.5
+      const istDate = new Date(utcDate.getTime()); // IST is UTC+5.5
 
 // Format the IST date as a string
 const formattedISTDate = istDate.toLocaleString('en-IN', {
