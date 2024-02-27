@@ -8,7 +8,7 @@ import {
   onlyPhoneNumberValidation,
 } from "../../../utils/validation.js";
 import AWS from "aws-sdk";
-
+import moment from "moment-timezone";
 
 
 
@@ -195,6 +195,7 @@ export const updateLead = async (req, res) => {
   const createdBy = req.body.createdBy;
   const update = req.body.date;
 
+
   if (!lead_id) {
     responseData(res, "", 400, false, "lead_id is required", []);
   } else if (!status) {
@@ -203,6 +204,20 @@ export const updateLead = async (req, res) => {
     responseData(res, "", 400, false, "createdBy is required", []);
   } else {
     try {
+      const utcDate = new Date(update);
+
+      const istDate = new Date(utcDate.getTime() + (5.5 * 60 * 60 * 1000)); // IST is UTC+5.5
+
+// Format the IST date as a string
+const formattedISTDate = istDate.toLocaleString('en-IN', {
+  timeZone: 'Asia/Kolkata',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+
+})
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
          const files = req.files?.files;
@@ -244,17 +259,17 @@ export const updateLead = async (req, res) => {
           {
             $set: {
               status: status,
-              updated_date:update,
+              updated_date: formattedISTDate,
             },
             $push: {
               notes: {
                 content: content,
                 createdBy: createdBy,
-                date: update,
+                date: formattedISTDate,
                 status: status,
               },
               files: {
-                date: update,
+                date: formattedISTDate,
                 files: file,
               },
             },
@@ -269,9 +284,7 @@ export const updateLead = async (req, res) => {
            const newNotification = new Notification({
              type: "lead",
              itemId: lead_id,
-             message: `Lead status updated: Lead name ${
-               find_lead[0].name
-             } status changed to ${status} on  ${update}.`,
+             message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${formattedISTDate}.`,
              status: false,
            });
            await newNotification.save();
