@@ -110,8 +110,9 @@ import cron from "node-cron";
       ...notificationData.outdatedLeads,
     ]);
 
-    // Send notification data
-    // responseData(res, "Notifications created successfully", 200, true, "");
+
+   
+
 
 
   } catch (error) {

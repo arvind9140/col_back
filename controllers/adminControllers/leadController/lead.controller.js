@@ -265,7 +265,7 @@ export const updateLead = async (req, res) => {
            const newNotification = new Notification({
              type: "lead",
              itemId: lead_id,
-             message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${update}.`,
+             message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${new Date(update)}.`,
              status: false,
            });
            await newNotification.save();
