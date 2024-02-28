@@ -3,7 +3,7 @@ const router = Router();
 
 import fileupload from "../../controllers/adminControllers/fileUploadController/fileuploadController.js";
 
-import getFileData from "../../controllers/adminControllers/fileUploadController/getFileController.js";
+import {getFileData, getleadData, getprojectData} from "../../controllers/adminControllers/fileUploadController/getFileController.js";
 import getSingleFileData from "../../controllers/adminControllers/fileUploadController/getSingleFileController.js";
 
 import {
@@ -34,10 +34,16 @@ import { createQuotation } from "../../controllers/adminControllers/quotationCon
 import { updateQuotation } from "../../controllers/adminControllers/quotationController/update.quotation.controller.js";
 import { contractShare } from "../../controllers/adminControllers/fileUploadController/contract.controller.js";
 import { getNotification,  updateNotification } from "../../controllers/notification/notification.controller.js";
+
+
+
 router.route("/fileupload").post(fileupload);
 router.route("/getfile").get(getFileData);
 router.route("/get/onefile").get(getSingleFileData);
+router.route("/lead/getfile").get(getleadData);
+router.route("/project/getfile").get(getprojectData);
 router.route("/send/contract").post(contractShare);
+
 
 router.route("/create/project").post(createProject);
 router.route("/getall/project").get(getAllProject);

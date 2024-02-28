@@ -1,21 +1,16 @@
 import  mongoose from"mongoose";
 
 const fileuploadSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
+ lead_id:{
+  type:String,
+  // required:true
+ },
+  files:[],
+  
+  project_id:{
+  type:String,
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  fileUrl: {
-    type: String,
-  },
-   fileID: {
-    type: String,
-    required: true,
-  },
+  
   createdAt: {
     type: Date,
     default: Date.now,

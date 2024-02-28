@@ -1,6 +1,9 @@
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
 import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
+import leadModel from "../../../models/adminModels/leadModel.js";
+import { responseData } from "../../../utils/respounse.js";
+
 dotenv.config();
 
 const s3 = new AWS.S3({
@@ -17,10 +20,10 @@ function generateSixDigitNumber() {
   return randomNumber;
 }
 
-const uploadFile = async (file, fileName) => {
+const uploadFile = async (file, fileName,lead_id, folder_name) => {
   return s3
     .upload({
-      Bucket: "interior-design1",
+      Bucket: `interior-design1/${lead_id}/${folder_name}`,
       Key: fileName,
       Body: file.data,
       ContentType: file.mimetype,
@@ -29,81 +32,175 @@ const uploadFile = async (file, fileName) => {
     .promise();
 };
 
-const fileupload = async (req, res) => {
-  const title = req.body.title;
-  const description = req.body.description;
 
-  if (!title && !description) {
-    res.send({
-      message: "",
-      statuscode: 400,
-      status: false,
-      errormessage: "Please provide the fields",
-      data: [],
-    });
-  } else {
-    try {
-      const files = Array.isArray(req.files.files)
-        ? req.files.files
-        : [req.files.files];// Assuming the client sends an array of files with the key 'files'
-      const fileUploadPromises = [];
-
-      if (!files || files.length === 0) {
-        return res.send({
-          message: "",
-          statuscode: 400,
-          status: false,
-          errormessage: "No files provided",
-          data: [],
-        });
-      }
-
-      // Limit the number of files to upload to at most 5
-      const filesToUpload = files.slice(0, 5);
-
-      for (const file of filesToUpload) {
-        const fileName = Date.now() + file.name;
-        fileUploadPromises.push(uploadFile(file, fileName));
-      }
-
-      const responses = await Promise.all(fileUploadPromises);
-// console.log(responses)
-      const fileUploadResults = responses.map((response) => ({
-        status: response.Location ? true : false,
-        data: response? response : response.err,
-      }));
-// console.log(fileUploadResults)
-      const successfullyUploadedFiles = fileUploadResults.filter(
-        (result) => result.data
+const saveFileUploadData = async (
+  res,
+  existingFileUploadData,
+  isFirst = false
+) => {
+  try {
+    if (isFirst) {
+      const firstFile = await fileuploadModel.create({
+        lead_id: existingFileUploadData.lead_id,
+        files: [
+          {
+            folder_name: existingFileUploadData.folder_name,
+            files: existingFileUploadData.files,
+          },
+        ],
+      });
+      responseData(res, "First file created successfully", 200, true);
+    } else {
+      // Use update query to push data
+      const updateResult = await fileuploadModel.updateOne(
+        {
+          lead_id: existingFileUploadData.lead_id,
+          "files.folder_name": existingFileUploadData.folder_name,
+        },
+        {
+          $push: {
+            "files.$.files": { $each: existingFileUploadData.files },
+          },
+        },
+        {
+          arrayFilters: [
+            { "folder.folder_name": existingFileUploadData.folder_name },
+          ],
+        }
       );
 
-      if (successfullyUploadedFiles.length > 0) {
-        const newfileuploads = successfullyUploadedFiles.map((result, index) =>
-          fileuploadModel.create({
-            title: title,
-            description: description,
-            fileUrl: result.data.Location,
-            fileID: generateSixDigitNumber(),
-          })
+      if (updateResult.modifiedCount === 1) {
+        responseData(res, "File data updated successfully", 200, true);
+      } else {
+        // If the folder does not exist, create a new folder object
+        const updateNewFolderResult = await fileuploadModel.updateOne(
+          { lead_id: existingFileUploadData.lead_id },
+          {
+            $push: {
+              files: {
+                folder_name: existingFileUploadData.folder_name,
+                files: existingFileUploadData.files,
+              },
+            },
+          }
         );
 
-        await Promise.all(newfileuploads);
+        if (updateNewFolderResult.modifiedCount === 1) {
+          responseData(res, "New folder created successfully", 200, true);
+        } else {
+          console.log("Lead not found or file data already updated");
+          responseData(
+            res,
+            "",
+            404,
+            false,
+            "Lead not found or file data already updated"
+          );
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error saving file upload data:", error);
+    responseData(
+      res,
+      "",
+      500,
+      false,
+      "Something went wrong. File data not updated"
+    );
+  }
+};
 
-        res.send({
-          message: "Data insert successfully!",
-          statuscode: 200,
-          status: true,
-          errormessage: "",
-          data: [],
-        });
-      } else {
-        res.send({
-          message: "Failed to upload files",
-          statuscode: 500,
-          status: false,
-          errormessage: "Error uploading files",
-          data: [],
-        });
+
+
+
+const fileupload = async (req, res) => {
+  const folder_name = req.body.folder_name;
+  const lead_id = req.body.lead_id;
+
+  if (!lead_id) {
+    responseData(res, "", 401, false, "lead Id required!", []);
+  } else {
+    try {
+      const find_lead = await leadModel.find({ lead_id: lead_id });
+      if (find_lead.length < 1) {
+        responseData(res, "", 404, false, "lead not found!", []);
+      }
+      if (find_lead.length > 0) {
+        const files = Array.isArray(req.files.files)
+          ? req.files.files
+          : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
+        const fileUploadPromises = [];
+
+        if (!files || files.length === 0) {
+          return res.send({
+            message: "",
+            statuscode: 400,
+            status: false,
+            errormessage: "No files provided",
+            data: [],
+          });
+        }
+
+        // Limit the number of files to upload to at most 5
+        const filesToUpload = files.slice(0, 5);
+
+        for (const file of filesToUpload) {
+          const fileName = Date.now() + file.name;
+          fileUploadPromises.push(uploadFile(file, fileName, lead_id,folder_name));
+        }
+
+        const responses = await Promise.all(fileUploadPromises);
+        // console.log(responses)
+        const fileUploadResults = responses.map((response) => ({
+          status: response.Location ? true : false,
+          data: response ? response : response.err,
+        }));
+        // console.log(fileUploadResults)
+        const successfullyUploadedFiles = fileUploadResults.filter(
+          (result) => result.data
+        );
+      
+       if (successfullyUploadedFiles.length > 0) {
+         let fileUrls = successfullyUploadedFiles.map((result) => ({
+           fileUrl: result.data.Location,
+           fileId: `FL-${generateSixDigitNumber()}`,
+         }));
+
+         const existingFile = await fileuploadModel.findOne({
+           lead_id: lead_id,
+         });
+
+         if (existingFile) {
+          
+         
+          
+
+           await saveFileUploadData(res, {
+             lead_id,
+             folder_name,
+             files: fileUrls, 
+           });
+         } else {
+           await saveFileUploadData(
+             res,
+             {
+               lead_id,
+               folder_name,
+               files: fileUrls,
+             },
+             true
+           );
+         }
+       } else {
+         res.send({
+           message: "",
+           statuscode: 500,
+           status: false,
+           errormessage: "Error uploading files",
+           data: [],
+         });
+       }
       }
     } catch (err) {
       res.send({

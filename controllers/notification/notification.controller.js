@@ -80,27 +80,29 @@ import cron from "node-cron";
         const daysRemaining = Math.ceil(
           (lastUpdated - currentDate) / (1000 * 60 * 60 * 24)
         );
-      
-      if (daysRemaining ==1) {
-        const outdatedLeadNotification = new Notification({
-          type: "lead",
-          itemId: lead.lead_id,
-          message: `Please check this lead named ${lead.name} for the next update. Only 1 day left.`,
-          status: false,
-        });
-        notificationData.outdatedLeads.push(outdatedLeadNotification);
-      }
-      if (daysRemaining ==0)
-      {
-         const outdatedLeadNotification = new Notification({
-           type: "lead",
-           itemId: lead.lead_id,
-           message: `Please check this lead named ${lead.name} for the next update. Today is the meeting date.`,
-           status: false,
-         });
-         notificationData.outdatedLeads.push(outdatedLeadNotification);
 
-      }
+        if(lead.status === "followUp")
+        {
+             if (daysRemaining == 1) {
+               const outdatedLeadNotification = new Notification({
+                 type: "lead",
+                 itemId: lead.lead_id,
+                 message: `Please check this lead named ${lead.name} for the next update. Only 1 day left.`,
+                 status: false,
+               });
+               notificationData.outdatedLeads.push(outdatedLeadNotification);
+             }
+             if (daysRemaining == 0) {
+               const outdatedLeadNotification = new Notification({
+                 type: "lead",
+                 itemId: lead.lead_id,
+                 message: `Please check this lead named ${lead.name} for the next update. Today is the meeting date.`,
+                 status: false,
+               });
+               notificationData.outdatedLeads.push(outdatedLeadNotification);
+             }
+        }
+     
     });
 
     // Save notifications in the database

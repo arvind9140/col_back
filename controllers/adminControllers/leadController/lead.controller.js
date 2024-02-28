@@ -1,6 +1,7 @@
 import leadModel from "../../../models/adminModels/leadModel.js";
 import projectModel from "../../../models/adminModels/project.model.js";
 import Notification from "../../../models/adminModels/notification.model.js";
+import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 import { responseData } from "../../../utils/respounse.js";
 import {
   onlyAlphabetsValidation,
@@ -8,7 +9,7 @@ import {
   onlyPhoneNumberValidation,
 } from "../../../utils/validation.js";
 import AWS from "aws-sdk";
-import moment from "moment-timezone";
+
 
 
 
@@ -322,11 +323,11 @@ export const leadToProject = async (req, res) => {
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
         const project_ID = generateSixDigitNumber();
-
+const projectID = `COL\P-${project_ID}`;
         const project_data = await projectModel.create({
           project_name: project_name,
           project_type: project_type,
-          project_id: `COL\P-${project_ID}`,
+          project_id: projectID,
           client: {
             client_name: client_name,
             client_email: client_email,
@@ -346,6 +347,12 @@ export const leadToProject = async (req, res) => {
           leadmanager: "",
         });
         project_data.save();
+        const lead_find_in_fileupload = await fileuploadModel.find({lead_id:lead_id});
+        if(lead_find_in_fileupload.length>0)
+        {
+          const lead_update_in_fileupload = await fileuploadModel.updateOne({lead_id:lead_id},{$set:{project_id:projectID}});
+
+        }
         responseData(
           res,
           "",
