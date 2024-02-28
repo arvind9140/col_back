@@ -6,13 +6,41 @@ import { responseData } from "../../../utils/respounse.js";
         try {
           const data = await fileuploadModel.find({});
           if (data.length > 0) {
+
+            // console.log(data[1].project_id)
+            let projectData =[]
+            let leadData = []
+            const filterData = data.forEach((element) => {
+              if(element.project_id !=null)
+              {
+                projectData.push({
+                  project_Name:element.project_name,
+                  project_id:element.project_id,
+                  files:element.files
+
+                })
+              }
+              if(element.lead_id !=null){
+                leadData.push({
+                  lead_id:element.lead_id,
+                  lead_Name:element.lead_name,
+                  files:element.files
+                  
+                })
+                }
+
+              })
+              const response  = {
+                leadData:leadData,
+                projectData:projectData
+              }
             responseData(
               res,
               `Get File  Data Successfully !`,
               200,
               true,
               "",
-              data
+              response
             );
           }
           if (data.length < 1) {
@@ -101,3 +129,5 @@ responseData(res,"",500,false,"Internal Server Error",error)
 }
 
 }
+
+

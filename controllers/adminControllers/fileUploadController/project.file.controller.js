@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
 import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
-import leadModel from "../../../models/adminModels/leadModel.js";
+import projectModel from "../../../models/adminModels/project.model.js";
 import { responseData } from "../../../utils/respounse.js";
 
 dotenv.config();
@@ -20,7 +20,7 @@ function generateSixDigitNumber() {
   return randomNumber;
 }
 
-const uploadFile = async (file, fileName,lead_id, folder_name) => {
+const uploadFile = async (file, fileName, lead_id, folder_name) => {
   return s3
     .upload({
       Bucket: `interior-design1/${lead_id}/${folder_name}`,
@@ -32,7 +32,6 @@ const uploadFile = async (file, fileName,lead_id, folder_name) => {
     .promise();
 };
 
-
 const saveFileUploadData = async (
   res,
   existingFileUploadData,
@@ -41,8 +40,8 @@ const saveFileUploadData = async (
   try {
     if (isFirst) {
       const firstFile = await fileuploadModel.create({
-        lead_id: existingFileUploadData.lead_id,
-        lead_name:existingFileUploadData.lead_Name,
+        project_id: existingFileUploadData.project_id,
+        project_name: existingFileUploadData.project_Name,
         files: [
           {
             folder_name: existingFileUploadData.folder_name,
@@ -55,7 +54,7 @@ const saveFileUploadData = async (
       // Use update query to push data
       const updateResult = await fileuploadModel.updateOne(
         {
-          lead_id: existingFileUploadData.lead_id,
+         project_id: existingFileUploadData.project_id,
           "files.folder_name": existingFileUploadData.folder_name,
         },
         {
@@ -75,7 +74,7 @@ const saveFileUploadData = async (
       } else {
         // If the folder does not exist, create a new folder object
         const updateNewFolderResult = await fileuploadModel.updateOne(
-          { lead_id: existingFileUploadData.lead_id },
+          { project_id: existingFileUploadData.project_id },
           {
             $push: {
               files: {
@@ -112,28 +111,22 @@ const saveFileUploadData = async (
   }
 };
 
-
-
-
-const fileupload = async (req, res) => {
+const projectFileUpload = async (req, res) => {
   const folder_name = req.body.folder_name;
-  const lead_id = req.body.lead_id;
+  const project_id = req.body.project_id;
 
-  if (!lead_id) {
-    responseData(res, "", 401, false, "lead Id required!", []);
-  }
-  else if(!folder_name)
-  {
+  if (!project_id) {
+    responseData(res, "", 401, false, "project Id required!", []);
+  } else if (!folder_name) {
     responseData(res, "", 401, false, "folder name required!", []);
-  }
-   else {
+  } else {
     try {
-      const find_lead = await leadModel.find({ lead_id: lead_id });
-      if (find_lead.length < 1) {
-        responseData(res, "", 404, false, "lead not found!", []);
+      const find_project = await projectModel.find({ project_id: project_id });
+      if (find_project.length < 1) {
+        responseData(res, "", 404, false, "project not found!", []);
       }
-      if (find_lead.length > 0) {
-        const lead_Name = find_lead[0].name;
+      if (find_project.length > 0) {
+        const project_Name = find_project[0].project_name;
         const files = Array.isArray(req.files.files)
           ? req.files.files
           : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
@@ -154,7 +147,9 @@ const fileupload = async (req, res) => {
 
         for (const file of filesToUpload) {
           const fileName = Date.now() + file.name;
-          fileUploadPromises.push(uploadFile(file, fileName, lead_id,folder_name));
+          fileUploadPromises.push(
+            uploadFile(file, fileName, project_id, folder_name)
+          );
         }
 
         const responses = await Promise.all(fileUploadPromises);
@@ -167,49 +162,45 @@ const fileupload = async (req, res) => {
         const successfullyUploadedFiles = fileUploadResults.filter(
           (result) => result.data
         );
-      
-       if (successfullyUploadedFiles.length > 0) {
-         let fileUrls = successfullyUploadedFiles.map((result) => ({
-           fileUrl: result.data.Location,
-           fileId: `FL-${generateSixDigitNumber()}`,
-         }));
 
-         const existingFile = await fileuploadModel.findOne({
-           lead_id: lead_id,
-         });
+        if (successfullyUploadedFiles.length > 0) {
+          let fileUrls = successfullyUploadedFiles.map((result) => ({
+            fileUrl: result.data.Location,
+            fileId: `FL-${generateSixDigitNumber()}`,
+          }));
 
-         if (existingFile) {
-          
-         
-          
+          const existingFile = await fileuploadModel.findOne({
+            project_id: project_id,
+          });
 
-           await saveFileUploadData(res, {
-             lead_id,
-             lead_Name,
-             folder_name,
-             files: fileUrls, 
-           });
-         } else {
-           await saveFileUploadData(
-             res,
-             {
-               lead_id,
-               lead_Name,
-               folder_name,
-               files: fileUrls,
-             },
-             true
-           );
-         }
-       } else {
-         res.send({
-           message: "",
-           statuscode: 500,
-           status: false,
-           errormessage: "Error uploading files",
-           data: [],
-         });
-       }
+          if (existingFile) {
+            await saveFileUploadData(res, {
+              project_id,
+              project_Name,
+              folder_name,
+              files: fileUrls,
+            });
+          } else {
+            await saveFileUploadData(
+              res,
+              {
+                project_id,
+                project_Name,
+                folder_name,
+                files: fileUrls,
+              },
+              true
+            );
+          }
+        } else {
+          res.send({
+            message: "",
+            statuscode: 500,
+            status: false,
+            errormessage: "Error uploading files",
+            data: [],
+          });
+        }
       }
     } catch (err) {
       res.send({
@@ -223,4 +214,4 @@ const fileupload = async (req, res) => {
   }
 };
 
-export default fileupload;
+export default projectFileUpload;

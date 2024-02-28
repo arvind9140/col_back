@@ -34,6 +34,7 @@ import { createQuotation } from "../../controllers/adminControllers/quotationCon
 import { updateQuotation } from "../../controllers/adminControllers/quotationController/update.quotation.controller.js";
 import { contractShare } from "../../controllers/adminControllers/fileUploadController/contract.controller.js";
 import { getNotification,  updateNotification } from "../../controllers/notification/notification.controller.js";
+import projectFileUpload from "../../controllers/adminControllers/fileUploadController/project.file.controller.js";
 
 
 
@@ -42,6 +43,7 @@ router.route("/getfile").get(getFileData);
 router.route("/get/onefile").get(getSingleFileData);
 router.route("/lead/getfile").get(getleadData);
 router.route("/project/getfile").get(getprojectData);
+router.route("/project/fileupload").post(projectFileUpload);
 router.route("/send/contract").post(contractShare);
 
 

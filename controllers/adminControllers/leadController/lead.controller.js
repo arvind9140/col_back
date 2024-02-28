@@ -350,7 +350,7 @@ const projectID = `COL\P-${project_ID}`;
         const lead_find_in_fileupload = await fileuploadModel.find({lead_id:lead_id});
         if(lead_find_in_fileupload.length>0)
         {
-          const lead_update_in_fileupload = await fileuploadModel.updateOne({lead_id:lead_id},{$set:{project_id:projectID}});
+          const lead_update_in_fileupload = await fileuploadModel.updateOne({lead_id:lead_id},{$set:{project_id:projectID, project_name:project_name}});
 
         }
         responseData(
