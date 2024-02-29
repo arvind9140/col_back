@@ -153,12 +153,14 @@ export const createLead = async (req, res) => {
         const fileUploadData =  new fileuploadModel({
           lead_id:lead_id,
           lead_name:name,
+          
           files:{
             folder_name:folder_name,
             files:fileUrls
           }
 
         })
+           
        await fileUploadData.save()
         responseData(
           res,
