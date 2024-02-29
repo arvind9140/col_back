@@ -88,10 +88,7 @@ export const createProject = async (req, res) => {
   } else if (!onlyEmailValidation(client_email)) {
     responseData(res, "", 400, false, "Please enter valid client email");
   }
-  else if (!folder_name)
-  {
-    responseData(res, "", 400, false, "folder name required");  
-  }
+ 
 
   /// ***** add validation here ****///
   else {
@@ -125,6 +122,7 @@ export const createProject = async (req, res) => {
             );
           }
           let file = [];
+          
           if (successfullyUploadedFiles.length > 0) {
             let fileUrls = successfullyUploadedFiles.map((result) => ({
               fileUrl: result.data.Location,
@@ -132,7 +130,9 @@ export const createProject = async (req, res) => {
               date: new Date(),
             }));
 
-           
+           if(!folder_name){
+            responseData(res,"", 400,false, "Folder name is required", null)
+           }
 
             const project_data = await projectModel.create({
               project_name: project_name,
