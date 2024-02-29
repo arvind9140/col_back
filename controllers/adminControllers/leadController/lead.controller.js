@@ -51,6 +51,7 @@ export const createLead = async (req, res) => {
   const role = req.body.role;
   const date = req.body.date;
   const lead_manager = req.body.lead_manager;
+  const folder_name = req.body.folder_name;
 
   // vaalidation all input
   if (!onlyAlphabetsValidation(name) && name.length >= 3) {
@@ -82,6 +83,10 @@ export const createLead = async (req, res) => {
       "lead manager should be greater than 3 characters."
     )
       
+  }
+  else if (!folder_name)
+  {
+    responseData(res, "", 401, false, "folder name is required.")
   }
    else {
     try {
@@ -116,12 +121,13 @@ export const createLead = async (req, res) => {
              (result) => result.status
            );
          }
-         let file = [];
          if (successfullyUploadedFiles.length > 0) {
-           const newfileuploads = successfullyUploadedFiles.map(
-             (result, index) => file.push(result.data.Location)
-           );
-         }
+           let fileUrls = successfullyUploadedFiles.map((result) => ({
+             fileUrl: result.data.Location,
+             fileId: `FL-${generateSixDigitNumber()}`,
+             date: date,
+           }));
+         
         const lead = new leadModel({
           name: name,
           lead_id: lead_id,
@@ -132,10 +138,7 @@ export const createLead = async (req, res) => {
           status: status,
           source: source,
           updated_date:date,
-          files: {
-            date:date,
-            files:file
-          },
+          files: fileUrls,
           date: date,
           notes: [
             {
@@ -147,6 +150,16 @@ export const createLead = async (req, res) => {
           ],
         });
         const lead_data = await lead.save();
+        const fileUploadData =  new fileuploadModel({
+          lead_id:lead_id,
+          lead_name:name,
+          files:{
+            folder_name:folder_name,
+            files:fileUrls
+          }
+
+        })
+       await fileUploadData.save()
         responseData(
           res,
           "lead created successfully.",
@@ -155,6 +168,7 @@ export const createLead = async (req, res) => {
           "",
           lead_data
         );
+         }
       }
     } catch (err) {
       console.log(err);
@@ -221,40 +235,6 @@ const formattedISTDate = istDate.toLocaleString('en-IN', {
 })
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
-         const files = req.files?.files;
-         const fileUploadPromises = [];
-         let successfullyUploadedFiles = [];
-
-         if (files) {
-           const filesToUpload = Array.isArray(files)
-             ? files.slice(0, 5)
-             : [files];
-
-           for (const file of filesToUpload) {
-             const fileName = Date.now() + file.name;
-             fileUploadPromises.push(
-               uploadFile(file, fileName, lead_id)
-             );
-           }
-
-           const responses = await Promise.all(fileUploadPromises);
-
-           const fileUploadResults = responses.map((response) => ({
-             status: response.Location ? true : false,
-             data: response ? response : response.err,
-           }));
-
-           successfullyUploadedFiles = fileUploadResults.filter(
-             (result) => result.status
-           );
-         }
-         let file = [];
-         if (successfullyUploadedFiles.length > 0) {
-           const newfileuploads = successfullyUploadedFiles.map(
-             (result, index) => file.push(result.data.Location)
-           );
-         }
-
         const update_Lead = await leadModel.findOneAndUpdate(
           { lead_id: lead_id },
           {
@@ -269,10 +249,6 @@ const formattedISTDate = istDate.toLocaleString('en-IN', {
                 date: formattedISTDate,
                 status: status,
               },
-              files: {
-                date: formattedISTDate,
-                files: file,
-              },
             },
           },
 
@@ -281,6 +257,8 @@ const formattedISTDate = istDate.toLocaleString('en-IN', {
             useFindAndModify: false,
           }
         );
+
+
         
            const newNotification = new Notification({
              type: "lead",
@@ -291,6 +269,7 @@ const formattedISTDate = istDate.toLocaleString('en-IN', {
            await newNotification.save();
 
         responseData(res, "Lead Data Updated", 200, true, "", update_Lead);
+          
       }
       if (find_lead.length < 1) {
         responseData(res, "", 404, false, "lead not found");

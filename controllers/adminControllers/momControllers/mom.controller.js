@@ -5,6 +5,7 @@ import { onlyAlphabetsValidation } from "../../../utils/validation.js";
 import pdf from "html-pdf";
 import nodemailer from "nodemailer";
 import fs from "fs";
+import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 
 function generateSixDigitNumber() {
   const min = 100000;
@@ -32,25 +33,110 @@ const uploadFile = async (file, fileName, project_id, mom_id) => {
     .promise();
 };
 
+const saveFileUploadData = async (
+  res,
+  existingFileUploadData,
+  isFirst = false
+) => {
+  try {
+    if (isFirst) {
+      const firstFile = await fileuploadModel.create({
+        project_id: existingFileUploadData.project_id,
+        project_name: existingFileUploadData.project_Name,
+        files: [
+          {
+            folder_name: existingFileUploadData.folder_name,
+            files: existingFileUploadData.files,
+          },
+        ],
+      });
+      console.log("first File created");
+    
+    } else {
+      // Use update query to push data
+      const updateResult = await fileuploadModel.updateOne(
+        {
+          project_id: existingFileUploadData.project_id,
+          "files.folder_name": existingFileUploadData.folder_name,
+        },
+        {
+          $push: {
+            "files.$.files": { $each: existingFileUploadData.files },
+          },
+        },
+        {
+          arrayFilters: [
+            { "folder.folder_name": existingFileUploadData.folder_name },
+          ],
+        }
+      );
+
+      if (updateResult.modifiedCount === 1) {
+        console.log("File Upload Data Updated Successfully");
+      } else {
+        // If the folder does not exist, create a new folder object
+        const updateNewFolderResult = await fileuploadModel.updateOne(
+          { project_id: existingFileUploadData.project_id },
+          {
+            $push: {
+              files: {
+                folder_name: existingFileUploadData.folder_name,
+                files: existingFileUploadData.files,
+              },
+            },
+          }
+        );
+
+        if (updateNewFolderResult.modifiedCount === 1) {
+          console.log("New Folder Created and File Upload Data Updated Successfully");
+        } else {
+          console.log("Lead not found or file data already updated");
+          responseData(
+            res,
+            "",
+            404,
+            false,
+            "Lead not found or file data already updated"
+          );
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error saving file upload data:", error);
+    responseData(
+      res,
+      "",
+      500,
+      false,
+      "Something went wrong. File data not updated"
+    );
+  }
+};
+
 export const getAllProjectMom = async (req, res) => {
   try {
     const find_project = await projectModel.find({}).sort({ createdAt: -1 });
-    // console.log(find_project)
+   
 
     let MomData = [];
     for (let i = 0; i < find_project.length; i++) {
-      // MomData.push(find_project[i].mom)
       if (find_project[i].mom.length !== 0) {
-        MomData.push({
-          project_id: find_project[i].project_id,
-          project_name: find_project[i].project_name,
-          mom: find_project[i].mom,
-        });
+        for(let j =0;j<find_project[i].mom.length;j++)
+        {
+          MomData.push({
+            project_id:find_project[i].project_id,
+            project_name:find_project[i].project_name,
+            mom_id:find_project[i].mom[j].mom_id,
+            client_name:find_project[i].client[0].client_name,
+            location:find_project[i].mom[j].location,
+            meetingDate:find_project[i].mom[j].meetingdate,
+          })
+        }
+        
       }
     }
 
     responseData(res, "all project mom", 200, true, "", MomData);
-    // }
   } catch (err) {
     responseData(res, "", 500, false, err.message);
     console.log(err.message);
@@ -134,11 +220,11 @@ export const createmom = async (req, res) => {
         }
         let file = [];
         if (successfullyUploadedFiles.length > 0) {
-          const newfileuploads = successfullyUploadedFiles.map(
-            (result, index) => file.push(result.data.Location)
-          );
-
-          await Promise.all(newfileuploads);
+          let fileUrls = successfullyUploadedFiles.map((result) => ({
+            fileUrl: result.data.Location,
+            fileId: `FL-${generateSixDigitNumber()}`,
+            date: meetingDate,
+          })); 
 
           const update_mom = await projectModel.findOneAndUpdate(
             { project_id: project_id },
@@ -157,7 +243,7 @@ export const createmom = async (req, res) => {
                         attendees: attendees,
                       },
                       remark: remark,
-                      files: file,
+                      files: fileUrls,
                     },
                   ],
                   $position: 0,
@@ -166,6 +252,33 @@ export const createmom = async (req, res) => {
             },
             { new: true }
           );
+          const existingFile = await fileuploadModel.findOne({
+            project_id: project_id,
+          });
+          const folder_name = `MOM`;
+          const project_Name = existingFile.project_name;
+
+          if (existingFile) {
+            await saveFileUploadData(res, {
+              project_id,
+              project_Name,
+              folder_name,
+              files: fileUrls,
+            });
+          } else {
+            await saveFileUploadData(
+              res,
+              {
+                project_id,
+                project_Name,
+                folder_name,
+                files: fileUrls,
+              },
+              true
+            );
+          }
+
+          
           responseData(
             res,
             "Mom created  successfully:",
@@ -201,6 +314,8 @@ export const createmom = async (req, res) => {
             },
             { new: true }
           );
+
+
           responseData(
             res,
             "Mom created successfully:",

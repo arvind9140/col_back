@@ -3,6 +3,7 @@ import { responseData } from "../../../utils/respounse.js";
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
 import registerModel from "../../../models/usersModels/register.model.js";
+import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 import {
   onlyAlphabetsValidation,
   onlyEmailValidation,
@@ -54,6 +55,7 @@ export const createProject = async (req, res) => {
   const client_contact = req.body.client_contact;
   const client_email = req.body.client_email;
   const project_ID = generateSixDigitNumber();
+  const folder_name = req.body.folder_name;
 
   // here we validate all fields
   if (!onlyAlphabetsValidation(project_name) && project_name.length > 2) {
@@ -85,6 +87,10 @@ export const createProject = async (req, res) => {
     );
   } else if (!onlyEmailValidation(client_email)) {
     responseData(res, "", 400, false, "Please enter valid client email");
+  }
+  else if (!folder_name)
+  {
+    responseData(res, "", 400, false, "folder name required");  
   }
 
   /// ***** add validation here ****///
@@ -120,11 +126,13 @@ export const createProject = async (req, res) => {
           }
           let file = [];
           if (successfullyUploadedFiles.length > 0) {
-            const newfileuploads = successfullyUploadedFiles.map(
-              (result, index) => file.push(result.data.Location)
-            );
+            let fileUrls = successfullyUploadedFiles.map((result) => ({
+              fileUrl: result.data.Location,
+              fileId: `FL-${generateSixDigitNumber()}`,
+              date: new Date(),
+            }));
 
-            await Promise.all(newfileuploads);
+           
 
             const project_data = await projectModel.create({
               project_name: project_name,
@@ -141,13 +149,24 @@ export const createProject = async (req, res) => {
               project_end_date: timeline_date,
               project_budget: project_budget,
               project_location: project_location,
-              files: file,
+              files: fileUrls,
               client: {
                 client_name: client_name,
                 client_contact: client_contact,
                 client_email: client_email,
               },
-            });
+            });const fileupload = new fileuploadModel({
+              project_id: `COL\P-${project_ID}`,
+              project_name:project_name,
+              files:{
+                folder_name:folder_name,
+                files:fileUrls
+              } 
+            }
+            )
+           await  fileupload.save();
+
+
             responseData(
               res,
               "Project Create Successfully!",
