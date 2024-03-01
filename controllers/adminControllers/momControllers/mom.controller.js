@@ -51,7 +51,7 @@ const saveFileUploadData = async (
         ],
       });
       console.log("first File created");
-    
+
     } else {
       // Use update query to push data
       const updateResult = await fileuploadModel.updateOne(
@@ -116,23 +116,22 @@ const saveFileUploadData = async (
 export const getAllProjectMom = async (req, res) => {
   try {
     const find_project = await projectModel.find({}).sort({ createdAt: -1 });
-   
+
 
     let MomData = [];
     for (let i = 0; i < find_project.length; i++) {
       if (find_project[i].mom.length !== 0) {
-        for(let j =0;j<find_project[i].mom.length;j++)
-        {
+        for (let j = 0; j < find_project[i].mom.length; j++) {
           MomData.push({
-            project_id:find_project[i].project_id,
-            project_name:find_project[i].project_name,
-            mom_id:find_project[i].mom[j].mom_id,
-            client_name:find_project[i].client[0].client_name,
-            location:find_project[i].mom[j].location,
-            meetingDate:find_project[i].mom[j].meetingdate,
+            project_id: find_project[i].project_id,
+            project_name: find_project[i].project_name,
+            mom_id: find_project[i].mom[j].mom_id,
+            client_name: find_project[i].client[0].client_name,
+            location: find_project[i].mom[j].location,
+            meetingDate: find_project[i].mom[j].meetingdate,
           })
         }
-        
+
       }
     }
 
@@ -161,7 +160,7 @@ export const createmom = async (req, res) => {
     const organisor = req.body.organisor;
     const attendees = req.body.attendees;
     const remark = req.body.remark;
-   
+
 
     // write here validation ///
     if (!project_id) {
@@ -201,7 +200,7 @@ export const createmom = async (req, res) => {
             : [files];
 
           for (const file of filesToUpload) {
-            const fileName =  file.name;
+            const fileName = file.name;
             fileUploadPromises.push(
               uploadFile(file, fileName, project_id, mom_id)
             );
@@ -219,7 +218,7 @@ export const createmom = async (req, res) => {
           );
         }
         let file = [];
-        
+
         if (successfullyUploadedFiles.length > 0) {
           let fileUrls = successfullyUploadedFiles.map((result) => ({
             fileUrl: result.data.Location,
@@ -281,7 +280,7 @@ export const createmom = async (req, res) => {
             );
           }
 
-          
+
           responseData(
             res,
             "Mom created  successfully:",
@@ -406,7 +405,7 @@ export const generatePdf = async (req, res) => {
         const momRemarkHtml = momRemarkSplit
           .map((remark) => `<li>${remark.trim()}</li>`)
           .join("");
-       
+
 
         const htmlTemplate = `
 <html>
@@ -461,18 +460,14 @@ export const generatePdf = async (req, res) => {
         <li><span class="label">MOM_Location:</span> ${momData.location}</li>
         <li><span class="label">Attendees:</span>
           <ul>
-            <li><span class="label">Client Name:</span> ${
-              momData.attendees.client_name
-            }</li>
-            <li><span class="label">Organised By:</span> ${
-              momData.attendees.organisor
-            }</li>
-            <li><span class="label">Architect:</span> ${
-              momData.attendees.designer
-            }</li>
-            <li><span class="label">Other:</span> ${
-              momData.attendees.attendees
-            }</li>
+            <li><span class="label">Client Name:</span> ${momData.attendees.client_name
+          }</li>
+            <li><span class="label">Organised By:</span> ${momData.attendees.organisor
+          }</li>
+            <li><span class="label">Architect:</span> ${momData.attendees.designer
+          }</li>
+            <li><span class="label">Other:</span> ${momData.attendees.attendees
+          }</li>
           </ul>
         </li>
         <li><span class="label">MOM_Remark:</span> 
@@ -488,8 +483,8 @@ export const generatePdf = async (req, res) => {
           <ul>
             <ol>
              ${momData.files
-               .map((image) => `<li><img src="${image}" alt="Image"></li>`)
-               .join("")}
+            .map((image) => `<li><img src="${image}" alt="Image"></li>`)
+            .join("")}
         </ol>
           </ul>
         </li>
@@ -505,7 +500,7 @@ export const generatePdf = async (req, res) => {
 `;
 
         const pdfOptions = {
-         format: "A4",
+          format: "A4",
           border: {
             top: "1cm",
             right: "1cm",
@@ -531,7 +526,7 @@ export const generatePdf = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    responseData(res, "", 400, false, err.message);
+    responseData(res, "", 500, false, err.message);
   }
 };
 
@@ -611,18 +606,14 @@ export const sendPdf = async (req, res) => {
         <li><span class="label">MOM_Source:</span> ${momData.source}</li>
         <li><span class="label">Attendees:</span>
           <ul>
-            <li><span class="label">Client Name:</span> ${
-              momData.attendees.client_name
-            }</li>
-            <li><span class="label">Organisor:</span> ${
-              momData.attendees.organisor
-            }</li>
-            <li><span class="label">Architect:</span> ${
-              momData.attendees.architect
-            }</li>
-            <li><span class="label">Consultant Name:</span> ${
-              momData.attendees.consultant_name
-            }</li>
+            <li><span class="label">Client Name:</span> ${momData.attendees.client_name
+          }</li>
+            <li><span class="label">Organisor:</span> ${momData.attendees.organisor
+          }</li>
+            <li><span class="label">Architect:</span> ${momData.attendees.architect
+          }</li>
+            <li><span class="label">Consultant Name:</span> ${momData.attendees.consultant_name
+          }</li>
           </ul>
         </li>
         <li><span class="label">MOM_Remark:</span> 
@@ -641,8 +632,8 @@ export const sendPdf = async (req, res) => {
           <ul>
            <ol>
              ${momData.files
-               .map((image) => `<li><img src="${image}" alt="Image"></li>`)
-               .join("")}
+            .map((image) => `<li><img src="${image}" alt="Image"></li>`)
+            .join("")}
         </ol>
           </ul>
         </li>
@@ -676,7 +667,7 @@ export const sendPdf = async (req, res) => {
               res.status(500).send(err);
             } else {
               const filePath = `momdata/${mom_id}.pdf`;
-console.log(filePath)
+              console.log(filePath)
               const mailOptions = {
                 from: "a72302492@gmail.com",
                 to: check_project[0].client[0].client_email,
