@@ -221,14 +221,17 @@ export const createmom = async (req, res) => {
           );
         }
         let file = [];
+        let fileUrls = []
         if (successfullyUploadedFiles.length > 0) {
-          let fileUrls = uploadfileName.map(async (data) => {
-            successfullyUploadedFiles.map((result) => ({
-              fileUrl: result.data.Location,
-              fileName: data,
-              fileId: `FL-${generateSixDigitNumber()}`,
-              date: meetingDate
-            }));
+          uploadfileName.map((data) => {
+            successfullyUploadedFiles.map((result) => {
+              fileUrls.push({
+                fileUrl: result.data.Location,
+                fileName: data,
+                fileId: `FL-${generateSixDigitNumber()}`,
+                date: new Date()
+              })
+            });
 
           })
 

@@ -169,17 +169,21 @@ const fileupload = async (req, res) => {
         const successfullyUploadedFiles = fileUploadResults.filter(
           (result) => result.data
         );
-
+        let fileUrls = []
         if (successfullyUploadedFiles.length > 0) {
-          let fileUrls = uploadfileName.map(async (data) => {
-             successfullyUploadedFiles.map((result) => ({
+           uploadfileName.map((data) => {
+             successfullyUploadedFiles.map((result) =>{
+fileUrls.push({
               fileUrl: result.data.Location,
               fileName: data,
               fileId: `FL-${generateSixDigitNumber()}`,
               date:new Date()
-            }));
+            })
+          });
 
           })
+          
+          
 
             const existingFile = await fileuploadModel.findOne({
               lead_id: lead_id,
