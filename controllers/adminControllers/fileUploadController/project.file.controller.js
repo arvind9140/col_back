@@ -146,7 +146,7 @@ const projectFileUpload = async (req, res) => {
         const filesToUpload = files.slice(0, 5);
 
         for (const file of filesToUpload) {
-          const fileName = Date.now() + file.name;
+          const fileName =  file.name;
           uploadfileName.push(file.name);
           fileUploadPromises.push(
             uploadFile(file, fileName, project_id, folder_name)
@@ -164,19 +164,15 @@ const projectFileUpload = async (req, res) => {
           (result) => result.data
         );
 
-        let fileUrls = []
+        
         if (successfullyUploadedFiles.length > 0) {
-          uploadfileName.map((data) => {
-            successfullyUploadedFiles.map((result) => {
-              fileUrls.push({
-                fileUrl: result.data.Location,
-                fileName: data,
-                fileId: `FL-${generateSixDigitNumber()}`,
-                date: new Date()
-              })
-            });
+          let fileUrls = successfullyUploadedFiles.map((result) => ({
+            fileUrl: result.data.Location,
+            fileName: result.data.Location.split('/').pop(),
+            fileId: `FL-${generateSixDigitNumber()}`,
+            date: new Date()
 
-          })
+          }));
 
           const existingFile = await fileuploadModel.findOne({
             project_id: project_id,

@@ -98,7 +98,6 @@ export const createLead = async (req, res) => {
         const lead_id = generateSixDigitNumber();
          const files = req.files?.files;
          const fileUploadPromises = [];
-        const uploadfileName = [];
          let successfullyUploadedFiles = [];
 
          if (files) {
@@ -107,8 +106,7 @@ export const createLead = async (req, res) => {
              : [files];
 
            for (const file of filesToUpload) {
-             const fileName = Date.now() + file.name;
-             uploadfileName.push(file.name);
+             const fileName =  file.name;
              fileUploadPromises.push(uploadFile(file, fileName, lead_id));
            }
 
@@ -123,19 +121,15 @@ export const createLead = async (req, res) => {
              (result) => result.status
            );
          }
-        let fileUrls = []
+       
         if (successfullyUploadedFiles.length > 0) {
-          uploadfileName.map((data) => {
-            successfullyUploadedFiles.map((result) => {
-              fileUrls.push({
-                fileUrl: result.data.Location,
-                fileName: data,
-                fileId: `FL-${generateSixDigitNumber()}`,
-                date: new Date()
-              })
-            });
+          let fileUrls = successfullyUploadedFiles.map((result) => ({
+            fileUrl: result.data.Location,
+            fileName: result.data.Location.split('/').pop(),
+            fileId: `FL-${generateSixDigitNumber()}`,
+            date: new Date()
 
-          })
+          }));
         const lead = new leadModel({
           name: name,
           lead_id: lead_id,

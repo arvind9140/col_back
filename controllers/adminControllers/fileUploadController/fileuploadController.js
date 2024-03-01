@@ -137,7 +137,7 @@ const fileupload = async (req, res) => {
           ? req.files.files
           : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
         const fileUploadPromises = [];
-        const uploadfileName = [];
+        
         
         if (!files || files.length === 0) {
           return res.send({
@@ -153,13 +153,13 @@ const fileupload = async (req, res) => {
         const filesToUpload = files.slice(0, 5);
 
         for (const file of filesToUpload) {
-          const fileName = Date.now() + file.name;
-          uploadfileName.push(file.name);
+          const fileName = file.name;
+        
           fileUploadPromises.push(uploadFile(file, fileName, lead_id, folder_name));
         }
 
         const responses = await Promise.all(fileUploadPromises);
-
+// console.log(responses)
        
         const fileUploadResults = responses.map((response) => ({
           status: response.Location ? true : false,
@@ -169,20 +169,15 @@ const fileupload = async (req, res) => {
         const successfullyUploadedFiles = fileUploadResults.filter(
           (result) => result.data
         );
-        let fileUrls = []
         if (successfullyUploadedFiles.length > 0) {
-           uploadfileName.map((data) => {
-             successfullyUploadedFiles.map((result) =>{
-fileUrls.push({
+          
+           let fileUrls =successfullyUploadedFiles.map((result) =>({
               fileUrl: result.data.Location,
-              fileName: data,
+             fileName: result.data.Location.split('/').pop(),
               fileId: `FL-${generateSixDigitNumber()}`,
               date:new Date()
-            })
-          });
-
-          })
           
+          }));
           
 
             const existingFile = await fileuploadModel.findOne({
