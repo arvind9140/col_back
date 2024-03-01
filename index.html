@@ -47,10 +47,7 @@
                                 if (response) {
                                         alert("Email sent successfully!");
                                         // Redirect to the specified URL
-                                        const attachments = responseData.data.map(url => url).join("\n");
-                                        const mailtoURI = `mailto:?subject=Email Subject&body=Email Body with attachments:\n${attachments}`;
-                                        window.open(mailtoURI);
-                                        
+                                        window.location.href = responseData.data;
                                 } else {
                                         alert("Error: " + responseData.message);
                                 }
