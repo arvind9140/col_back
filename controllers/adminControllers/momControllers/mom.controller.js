@@ -510,14 +510,44 @@ export const generatePdf = async (req, res) => {
         };
 
         // Generate PDF  using html-pdf library and send it as an attachment in the email 
-        pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
+        // pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
+        //   if (err) {
+        //     res.status(503).send(err);
+        //   } else {
+        //     res.setHeader("Content-Type", "application/pdf");
+        //     stream.pipe(res);
+        //   }
+        // });
+        const generatePdf = pdf.create(htmlTemplate, pdfOptions);
+
+        // Generate the PDF file on the file system
+        generatePdf.toFile(`momdata/${mom_id}.pdf`, (err, pdfPath) => {
           if (err) {
-            res.status(500).send(err);
-          } else {
-            res.setHeader("Content-Type", "application/pdf");
-            stream.pipe(res);
+            console.error('Error generating PDF:', err);
+            return res.status(500).send('Error generating PDF');
           }
+
+          // Send the generated PDF file as a response
+          res.sendFile(pdfPath.filename, (sendErr) => {
+            if (sendErr) {
+              console.error('Error sending PDF:', sendErr);
+              res.status(500).send('Error sending PDF');
+            } else {
+              // Optionally, delete the generated PDF file after sending
+              fs.unlink(pdfPath.filename, (unlinkErr) => {
+                if (unlinkErr) {
+                  console.error('Error deleting PDF file:', unlinkErr);
+                } else {
+                  console.log('PDF file deleted successfully');
+                }
+              });
+            }
+          });
         });
+
+
+
+
       } else {
         responseData(res, "", 404, false, "MOM Not Found");
       }
@@ -548,10 +578,8 @@ export const sendPdf = async (req, res) => {
         const momRemarkHtml = momRemarkSplit
           .map((remark) => `<li>${remark.trim()}</li>`)
           .join("");
-        const momNoteSplit = momData.imaportant_note.split(".").filter(Boolean); // Filter to remove empty strings
-        const momImportant_noteHtml = momNoteSplit
-          .map((note) => `<li>${note.trim()}</li>`)
-          .join("");
+     
+       
 
         const htmlTemplate = `
 <html>
@@ -624,10 +652,7 @@ export const sendPdf = async (req, res) => {
       </ol>
           </ul>
         </li>
-        <li><span class="label">MOM_Important_Notes:</span>
-        <ol>
-        ${momImportant_noteHtml}
-      </ol></li>
+        
         <li><span class="label">Files:</span>
           <ul>
            <ol>
