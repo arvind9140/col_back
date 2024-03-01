@@ -20,7 +20,7 @@ function generateSixDigitNumber() {
   return randomNumber;
 }
 
-const uploadFile = async (file, fileName,lead_id, folder_name) => {
+const uploadFile = async (file, fileName, lead_id, folder_name) => {
   return s3
     .upload({
       Bucket: `interior-design1/${lead_id}/${folder_name}`,
@@ -42,7 +42,7 @@ const saveFileUploadData = async (
     if (isFirst) {
       const firstFile = await fileuploadModel.create({
         lead_id: existingFileUploadData.lead_id,
-        lead_name:existingFileUploadData.lead_Name,
+        lead_name: existingFileUploadData.lead_Name,
         files: [
           {
             folder_name: existingFileUploadData.folder_name,
@@ -122,11 +122,10 @@ const fileupload = async (req, res) => {
   if (!lead_id) {
     responseData(res, "", 401, false, "lead Id required!", []);
   }
-  else if(!folder_name)
-  {
+  else if (!folder_name) {
     responseData(res, "", 401, false, "folder name required!", []);
   }
-   else {
+  else {
     try {
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length < 1) {
@@ -138,7 +137,8 @@ const fileupload = async (req, res) => {
           ? req.files.files
           : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
         const fileUploadPromises = [];
-
+        const uploadfileName = [];
+        
         if (!files || files.length === 0) {
           return res.send({
             message: "",
@@ -154,11 +154,13 @@ const fileupload = async (req, res) => {
 
         for (const file of filesToUpload) {
           const fileName = Date.now() + file.name;
-          fileUploadPromises.push(uploadFile(file, fileName, lead_id,folder_name));
+          uploadfileName.push(file.name);
+          fileUploadPromises.push(uploadFile(file, fileName, lead_id, folder_name));
         }
 
         const responses = await Promise.all(fileUploadPromises);
-        // console.log(responses)
+
+       
         const fileUploadResults = responses.map((response) => ({
           status: response.Location ? true : false,
           data: response ? response : response.err,
@@ -167,49 +169,56 @@ const fileupload = async (req, res) => {
         const successfullyUploadedFiles = fileUploadResults.filter(
           (result) => result.data
         );
-      
-       if (successfullyUploadedFiles.length > 0) {
-         let fileUrls = successfullyUploadedFiles.map((result) => ({
-           fileUrl: result.data.Location,
-           fileId: `FL-${generateSixDigitNumber()}`,
-         }));
 
-         const existingFile = await fileuploadModel.findOne({
-           lead_id: lead_id,
-         });
+        if (successfullyUploadedFiles.length > 0) {
+          let fileUrls = uploadfileName.map(async (data) => {
+             successfullyUploadedFiles.map((result) => ({
+              fileUrl: result.data.Location,
+              fileName: data,
+              fileId: `FL-${generateSixDigitNumber()}`,
+              date:new Date()
+            }));
 
-         if (existingFile) {
+          })
+
+            const existingFile = await fileuploadModel.findOne({
+              lead_id: lead_id,
+            });
+
+            if (existingFile) {
+
+
+
+
+              await saveFileUploadData(res, {
+                lead_id,
+                lead_Name,
+                folder_name,
+                files: fileUrls,
+              });
+            } else {
+              await saveFileUploadData(
+                res,
+                {
+                  lead_id,
+                  lead_Name,
+                  folder_name,
+                  files: fileUrls,
+                },
+                true
+              );
+            }
           
-         
-          
 
-           await saveFileUploadData(res, {
-             lead_id,
-             lead_Name,
-             folder_name,
-             files: fileUrls, 
-           });
-         } else {
-           await saveFileUploadData(
-             res,
-             {
-               lead_id,
-               lead_Name,
-               folder_name,
-               files: fileUrls,
-             },
-             true
-           );
-         }
-       } else {
-         res.send({
-           message: "",
-           statuscode: 500,
-           status: false,
-           errormessage: "Error uploading files",
-           data: [],
-         });
-       }
+        } else {
+          res.send({
+            message: "",
+            statuscode: 500,
+            status: false,
+            errormessage: "Error uploading files",
+            data: [],
+          });
+        }
       }
     } catch (err) {
       res.send({

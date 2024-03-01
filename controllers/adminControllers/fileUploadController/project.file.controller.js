@@ -131,7 +131,7 @@ const projectFileUpload = async (req, res) => {
           ? req.files.files
           : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
         const fileUploadPromises = [];
-
+        const uploadfileName = [];
         if (!files || files.length === 0) {
           return res.send({
             message: "",
@@ -147,6 +147,7 @@ const projectFileUpload = async (req, res) => {
 
         for (const file of filesToUpload) {
           const fileName = Date.now() + file.name;
+          uploadfileName.push(file.name);
           fileUploadPromises.push(
             uploadFile(file, fileName, project_id, folder_name)
           );
@@ -164,11 +165,15 @@ const projectFileUpload = async (req, res) => {
         );
 
         if (successfullyUploadedFiles.length > 0) {
-          let fileUrls = successfullyUploadedFiles.map((result) => ({
-            fileUrl: result.data.Location,
-            fileId: `FL-${generateSixDigitNumber()}`,
-            date:new Date()
-          }));
+          let fileUrls = uploadfileName.map(async (data) => {
+            successfullyUploadedFiles.map((result) => ({
+              fileUrl: result.data.Location,
+              fileName: data,
+              fileId: `FL-${generateSixDigitNumber()}`,
+              date:new Date()
+            }));
+
+          })
 
           const existingFile = await fileuploadModel.findOne({
             project_id: project_id,

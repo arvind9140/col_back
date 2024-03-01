@@ -98,6 +98,7 @@ export const createProject = async (req, res) => {
         if (check_role[0].role == "ADMIN") {
           const files = req.files?.files;
           const fileUploadPromises = [];
+          const uploadfileName = [];
           let successfullyUploadedFiles = [];
 
           if (files) {
@@ -107,6 +108,7 @@ export const createProject = async (req, res) => {
 
             for (const file of filesToUpload) {
               const fileName = Date.now() + file.name;
+              uploadfileName.push(file.name);
               fileUploadPromises.push(uploadFile(file, fileName, project_ID));
             }
 
@@ -124,11 +126,15 @@ export const createProject = async (req, res) => {
           let file = [];
           
           if (successfullyUploadedFiles.length > 0) {
-            let fileUrls = successfullyUploadedFiles.map((result) => ({
-              fileUrl: result.data.Location,
-              fileId: `FL-${generateSixDigitNumber()}`,
-              date: new Date(),
-            }));
+            let fileUrls = uploadfileName.map(async (data) => {
+              successfullyUploadedFiles.map((result) => ({
+                fileUrl: result.data.Location,
+                fileName: data,
+                fileId: `FL-${generateSixDigitNumber()}`,
+                date: new Date()
+              }));
+
+            })
 
            if(!folder_name){
             responseData(res,"", 400,false, "Folder name is required", null)
