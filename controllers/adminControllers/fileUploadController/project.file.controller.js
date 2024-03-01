@@ -167,6 +167,7 @@ const projectFileUpload = async (req, res) => {
           let fileUrls = successfullyUploadedFiles.map((result) => ({
             fileUrl: result.data.Location,
             fileId: `FL-${generateSixDigitNumber()}`,
+            date:new Date()
           }));
 
           const existingFile = await fileuploadModel.findOne({

@@ -1,48 +1,64 @@
-<!-- index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Real-time Notifications</title>
+        <title>Share File via Email</title>
 </head>
 
 <body>
-        <ul id="notifications"></ul>
+        <h1>Share File via Email</h1>
+        <form id="shareFileForm">
+                <label for="fileIds">File IDs (separated by commas, brackets, etc.):</label>
+                <textarea id="fileIds" name="file_id" required></textarea><br><br>
+
+                <label for="leadId">Lead ID:</label>
+                <input type="text" id="leadId" name="lead_id" required><br><br>
+
+                <label for="projectId">Project ID:</label>
+                <input type="text" id="projectId" name="project_id"><br><br>
+
+                <button type="submit">Share via Email</button>
+        </form>
 
         <script>
-                const ws = new WebSocket('ws://localhost:8080');
+                document.getElementById("shareFileForm").addEventListener("submit", async function (event) {
+                        event.preventDefault();
 
-                ws.onmessage = function (event) {
-                        const notificationData = JSON.parse(event.data);
-                        const notificationsList = document.getElementById('notifications');
-                        notificationsList.innerHTML = ''; // Clear existing notifications
+                        // Construct JSON payload
+                        const formData = {
+                                file_id: document.getElementById("fileIds").value.split(/[,\[\]\s]+/).filter(Boolean),
+                                lead_id: document.getElementById("leadId").value,
+                                project_id: document.getElementById("projectId").value
+                        };
 
-                        // Display approaching projects with days remaining
-                        notificationData.approachingProjects.forEach(project => {
-                                const li = document.createElement('li');
-                                const daysRemaining = project.daysRemaining;
-                                li.textContent = `Approaching project: ${project.project.project_name} (${daysRemaining} days remaining)`;
-                                notificationsList.appendChild(li);
-                        });
+                        const url = "http://localhost:8000/v1/api/admin/share/file";
+                        try {
+                                const response = await fetch(url, {
+                                        method: "POST",
+                                        headers: {
+                                                "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify(formData)
+                                });
+                                const responseData = await response.json();
 
-                        // Display overdue projects
-                        notificationData.overdueProjects.forEach(project => {
-                                const li = document.createElement('li');
-                                const daysRemaining = project.daysExceeded;
-                                li.textContent = `Overdue project: ${project.project.project_name} (${daysRemaining} days exceeded)`;
-                                notificationsList.appendChild(li);
-                        });
-
-                        // Display outdated leads
-                        notificationData.outdatedLeads.forEach(lead => {
-                                const li = document.createElement('li');
-                                li.textContent = `Outdated lead: ${lead.lead_id}`;
-                                notificationsList.appendChild(li);
-                        });
-                };
+                                if (response) {
+                                        alert("Email sent successfully!");
+                                        // Redirect to the specified URL
+                                        const attachments = responseData.data.map(url => url).join("\n");
+                                        const mailtoURI = `mailto:?subject=Email Subject&body=Email Body with attachments:\n${attachments}`;
+                                        window.open(mailtoURI);
+                                        
+                                } else {
+                                        alert("Error: " + responseData.message);
+                                }
+                        } catch (error) {
+                                console.error("Error:", error);
+                                alert("An error occurred. Please try again later.");
+                        }
+                });
         </script>
 </body>
 
