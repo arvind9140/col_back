@@ -118,15 +118,15 @@ export const createLead = async (req, res) => {
              (result) => result.status
            );
          }
-       
+        let fileUrls
         if (successfullyUploadedFiles.length > 0) {
-          let fileUrls = successfullyUploadedFiles.map((result) => ({
+           fileUrls = successfullyUploadedFiles.map((result) => ({
             fileUrl: result.data.Location,
             fileName: result.data.Location.split('/').pop(),
             fileId: `FL-${generateSixDigitNumber()}`,
             date: new Date()
 
-          }));
+          }));}
         const lead = new leadModel({
           name: name,
           lead_id: lead_id,
@@ -170,7 +170,7 @@ export const createLead = async (req, res) => {
           lead_data
         );
          }
-      }
+      
     } catch (err) {
       console.log(err);
       res.send(err);
