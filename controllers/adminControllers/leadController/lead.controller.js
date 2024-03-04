@@ -153,10 +153,19 @@ export const createLead = async (req, res) => {
           lead_id:lead_id,
           lead_name:name,
           
-          files:{
-            folder_name:folder_name,
+          files:[{
+            folder_name:"CLIENT BRIEF",
             files:fileUrls
-          }
+          },
+            {
+              folder_name: "DRAWING",
+              files: fileUrls
+            },
+            {
+              folder_name: "REVIEW",
+              files: fileUrls
+            },
+        ]
 
         })
            
