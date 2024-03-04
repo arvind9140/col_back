@@ -578,8 +578,8 @@ export const sendPdf = async (req, res) => {
         const momRemarkHtml = momRemarkSplit
           .map((remark) => `<li>${remark.trim()}</li>`)
           .join("");
-     
-       
+
+
 
         const htmlTemplate = `
 <html>

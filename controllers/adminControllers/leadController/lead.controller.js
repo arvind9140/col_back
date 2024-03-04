@@ -84,10 +84,7 @@ export const createLead = async (req, res) => {
     )
       
   }
-  else if (!folder_name)
-  {
-    responseData(res, "", 401, false, "folder name is required.")
-  }
+  
    else {
     try {
       const check_email = await leadModel.find({ email: email });
