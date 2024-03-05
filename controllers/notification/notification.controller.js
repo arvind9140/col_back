@@ -81,7 +81,7 @@ import cron from "node-cron";
           (lastUpdated - currentDate) / (1000 * 60 * 60 * 24)
         );
 
-        if(lead.status === "followUp")
+        if(lead.status === "followUp" || lead.status === "interested")
         {
              if (daysRemaining == 1) {
                const outdatedLeadNotification = new Notification({
@@ -123,6 +123,32 @@ import cron from "node-cron";
   }
 };
 
+const deleteNotification = async (req, res) => {
+  try {
+ 
+    const fourteenDaysAgo = new Date();
+    fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+    // Find notifications that meet the specified conditions
+    const notificationsToDelete = await Notification.find({
+      status: true,
+      createdAt: { $lt: fourteenDaysAgo },
+    }).lean();
+
+    const deletionResults = await Notification.deleteMany({
+      _id: { $in: notificationsToDelete.map(notification => notification._id) },
+    });
+
+    
+    console.log(`${deletionResults.deletedCount} notifications deleted successfully.`);
+
+  } catch (error) {
+  
+    console.error("Error deleting notifications:", error);
+    responseData(res, "", 500, false, "Error deleting notifications");
+  }
+};
+
 cron.schedule(" 0 0 * * *", async () => {
   // This cron pattern runs the job at 00:00 every day
   try {
@@ -133,6 +159,19 @@ cron.schedule(" 0 0 * * *", async () => {
     console.error("Error executing notification cron job:", error);
   }
 });
+cron.schedule("0 0 */14 * *", async () => {
+  // This cron pattern runs the job at 00:00 every day
+  try {
+    // Call your notification function here
+    await deleteNotification();
+    console.log("Notification cron job executed successfully");
+  } catch (error) {
+    console.error("Error executing notification cron job:", error);
+  }
+});
+
+
+
 
 
 export const getNotification = async(req,res) =>{

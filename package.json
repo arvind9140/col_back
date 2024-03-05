@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "export OPENSSL_CONF=/dev/null && nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -36,6 +36,7 @@
     "nodemailer": "^6.9.8",
     "nodemon": "^3.0.2",
     "passport": "^0.7.0",
+    "pdf-lib": "^1.17.1",
     "randomstring": "^1.3.0",
     "request-ip": "^3.3.0",
     "socket.io": "^4.7.4",

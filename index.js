@@ -12,11 +12,7 @@ import session from "express-session";
 import fileUpload from "express-fileupload";
 import { Server } from "socket.io";
 import adminRoutes from "./routes/adminRoutes/adminroutes.js";
-import chatRoutes from "./routes/chatRoutes/chat.routes.js";
-import userRoutes from "./routes/userRoutes/user.routes.js";
-import { initializeSocketIO } from "./socket/index.js";
 import { fileURLToPath } from "url";
-import messageRouter from "./routes/chatRoutes/message.routes.js";
 import usersRouter from "./routes/usersRoutes/users.route.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,16 +44,8 @@ mongoose.connection.on("disconnected", () => {
 });
 
 const httpServer = createServer(app);
-// app.use(cors());
-const io = new Server(httpServer, {
-  cors: {
-    origin: "http://localhost:5173",
-    credentials: true, // Adjust the origin to match your client URL
-    methods: ["GET", "POST"],
-  },
-});
 
-app.set("io", io); // using set method to mount the `io` instance on the app to avoid usage of `global`
+
 
 // global middlewares
 app.use(
@@ -84,20 +72,10 @@ const limiter = rateLimit({
 
 // Apply the rate limiting middleware to all requests
 app.use(limiter);
-app.use(
-  session({
-    secret: process.env.EXPRESS_SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-  })
-); // session secret // persistent
-initializeSocketIO(io);
+
 
 //*********/ write all routes here *********
 app.use("/v1/api/admin", adminRoutes);
-app.use("/v1/api/chats", chatRoutes);
-// app.use("/v1/api/users", userRoutes);
-app.use("/v1/api/chats/messages", messageRouter);
 app.use("/v1/api/users", usersRouter);
 
 httpServer.listen(8000, () => {

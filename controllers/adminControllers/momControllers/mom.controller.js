@@ -6,6 +6,8 @@ import pdf from "html-pdf";
 import nodemailer from "nodemailer";
 import fs from "fs";
 import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
+import pkg from 'pdf-lib';
+const { PDFDocument, rgb, PDFHelvetica } = pkg;
 
 function generateSixDigitNumber() {
   const min = 100000;
@@ -559,6 +561,7 @@ export const generatePdf = async (req, res) => {
     responseData(res, "", 500, false, err.message);
   }
 };
+
 
 export const sendPdf = async (req, res) => {
   try {
