@@ -44,7 +44,6 @@ const lead = new mongoose.Schema({
     type: String,
     require: true,
   },
-  files: [],
   notes: [
     {
       content: {

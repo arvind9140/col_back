@@ -10,6 +10,7 @@ import { responseData } from "../../../utils/respounse.js";
             // console.log(data[1].project_id)
             let projectData =[]
             let leadData = []
+            let templateData =[]
             const filterData = data.forEach((element) => {
               if(element.project_id !=null)
               {
@@ -29,11 +30,20 @@ import { responseData } from "../../../utils/respounse.js";
                   
                 })
                 }
+                if(element.lead_id ==null && element.project_id ==null)
+                {
+                  templateData.push({
+                   type:element.type,
+                    files:element.files
+
+                  })
+                }
 
               })
               const response  = {
                 leadData:leadData,
-                projectData:projectData
+                projectData:projectData,
+                templateData:templateData
               }
             responseData(
               res,

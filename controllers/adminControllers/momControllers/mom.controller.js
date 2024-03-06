@@ -6,8 +6,7 @@ import pdf from "html-pdf";
 import nodemailer from "nodemailer";
 import fs from "fs";
 import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
-import pkg from 'pdf-lib';
-const { PDFDocument, rgb, PDFHelvetica } = pkg;
+
 
 function generateSixDigitNumber() {
   const min = 100000;
@@ -512,40 +511,15 @@ export const generatePdf = async (req, res) => {
         };
 
         // Generate PDF  using html-pdf library and send it as an attachment in the email 
-        // pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
-        //   if (err) {
-        //     res.status(503).send(err);
-        //   } else {
-        //     res.setHeader("Content-Type", "application/pdf");
-        //     stream.pipe(res);
-        //   }
-        // });
-        const generatePdf = pdf.create(htmlTemplate, pdfOptions);
-
-        // Generate the PDF file on the file system
-        generatePdf.toFile(`momdata/${mom_id}.pdf`, (err, pdfPath) => {
+        pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
           if (err) {
-            console.error('Error generating PDF:', err);
-            return res.status(500).send('Error generating PDF');
+            res.status(503).send(err);
+          } else {
+            res.setHeader("Content-Type", "application/pdf");
+            stream.pipe(res);
           }
-
-          // Send the generated PDF file as a response
-          res.sendFile(pdfPath.filename, (sendErr) => {
-            if (sendErr) {
-              console.error('Error sending PDF:', sendErr);
-              res.status(500).send('Error sending PDF');
-            } else {
-              // Optionally, delete the generated PDF file after sending
-              fs.unlink(pdfPath.filename, (unlinkErr) => {
-                if (unlinkErr) {
-                  console.error('Error deleting PDF file:', unlinkErr);
-                } else {
-                  console.log('PDF file deleted successfully');
-                }
-              });
-            }
-          });
         });
+    
 
 
 

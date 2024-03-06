@@ -1,9 +1,14 @@
 import  mongoose from"mongoose";
 
+
+
 const fileuploadSchema = new mongoose.Schema({
+  type:{
+    type: String,
+    // require:true,
+  },
   lead_id: {
     type: String,
-    // required:true
     default: null,
   },
   lead_name: {

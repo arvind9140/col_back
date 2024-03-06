@@ -8,7 +8,7 @@ import {
   onlyEmailValidation,
   onlyPhoneNumberValidation,
 } from "../../../utils/validation.js";
-import AWS from "aws-sdk";
+
 
 
 
@@ -21,23 +21,9 @@ function generateSixDigitNumber() {
 
   return randomNumber;
 }
-const s3 = new AWS.S3({
-  accessKeyId: process.env.ACCESS_KEY,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY,
-  region: "ap-south-1",
-});
 
-const uploadFile = async (file, fileName, lead_id) => {
-  return s3
-    .upload({
-      Bucket: `interior-design1/${lead_id}`,
-      Key: fileName,
-      Body: file.data,
-      ContentType: file.mimetype,
-      // ACL: 'public-read'
-    })
-    .promise();
-};
+
+
 
 export const createLead = async (req, res) => {
   const name = req.body.name;
@@ -48,10 +34,9 @@ export const createLead = async (req, res) => {
   const source = req.body.source;
   const content = req.body.content;
   const createdBy = req.body.createdBy;
-  const role = req.body.role;
   const date = req.body.date;
   const lead_manager = req.body.lead_manager;
-  const folder_name = req.body.folder_name;
+
 
   // vaalidation all input
   if (!onlyAlphabetsValidation(name) && name.length >= 3) {
@@ -93,40 +78,9 @@ export const createLead = async (req, res) => {
       }
       if (check_email.length < 1) {
         const lead_id = generateSixDigitNumber();
-         const files = req.files?.files;
-         const fileUploadPromises = [];
-         let successfullyUploadedFiles = [];
-
-         if (files) {
-           const filesToUpload = Array.isArray(files)
-             ? files.slice(0, 5)
-             : [files];
-
-           for (const file of filesToUpload) {
-             const fileName =  file.name;
-             fileUploadPromises.push(uploadFile(file, fileName, lead_id));
-           }
-
-           const responses = await Promise.all(fileUploadPromises);
-
-           const fileUploadResults = responses.map((response) => ({
-             status: response.Location ? true : false,
-             data: response ? response : response.err,
-           }));
-
-           successfullyUploadedFiles = fileUploadResults.filter(
-             (result) => result.status
-           );
-         }
+         
         let fileUrls
-        if (successfullyUploadedFiles.length > 0) {
-           fileUrls = successfullyUploadedFiles.map((result) => ({
-            fileUrl: result.data.Location,
-            fileName: result.data.Location.split('/').pop(),
-            fileId: `FL-${generateSixDigitNumber()}`,
-            date: new Date()
-
-          }));}
+       
         const lead = new leadModel({
           name: name,
           lead_id: lead_id,
@@ -311,6 +265,15 @@ export const leadToProject = async (req, res) => {
     try {
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
+        const find_project = await projectModel.find({lead_id:lead_id})
+        if(find_project.length > 0)
+        {
+          responseData(res, "", 400, false, "project already exist for this lead", []);
+        }
+        if(find_project.length <1)
+        {
+
+        
         const project_ID = generateSixDigitNumber();
 const projectID = `COL\P-${project_ID}`;
         const project_data = await projectModel.create({
@@ -339,7 +302,8 @@ const projectID = `COL\P-${project_ID}`;
         const lead_find_in_fileupload = await fileuploadModel.find({lead_id:lead_id});
         if(lead_find_in_fileupload.length>0)
         {
-          const lead_update_in_fileupload = await fileuploadModel.updateOne({lead_id:lead_id},{$set:{project_id:projectID, project_name:project_name}});
+          const lead_update_in_fileupload = await fileuploadModel.updateOne({ lead_id: lead_id }, { $set: { project_id: projectID, project_name: project_name, lead_id:null}});
+
 
         }
         responseData(
@@ -350,6 +314,7 @@ const projectID = `COL\P-${project_ID}`;
           "project created successfully",
           project_data
         );
+        }
       }
       if (find_lead.length < 1) {
         responseData(res, "", 404, false, "lead not found", []);
@@ -361,54 +326,4 @@ const projectID = `COL\P-${project_ID}`;
   }
 };
 
-export const shareFileLead = async (req, res) => {
-  const lead_id = req.body.lead_id;
 
-  if (!lead_id) {
-    responseData(res, "", 400, false, "lead id is required");
-  } else {
-    try {
-      const find_lead = await lead.find({ lead_id: lead_id });
-      if (find_lead.length < 1) {
-        responseData(res, "", 404, false, "lead not found");
-      }
-      if (find_lead.length > 0) {
-        const files = Array.isArray(req.files?.files)
-          ? req.files.files
-          : [req.files.files];
-        const fileUploadPromises = [];
-        const filesToUpload = files.slice(0, 5);
-        // Limit the number of files to upload to at most 5
-
-        for (const file of filesToUpload) {
-          const fileName = Date.now() + file.name;
-          fileUploadPromises.push(
-            uploadFile(file, fileName, project_id, mom_id)
-          );
-        }
-
-        const responses = await Promise.all(fileUploadPromises);
-
-        const fileUploadResults = responses.map((response) => ({
-          status: response.Location ? true : false,
-          data: response ? response : response.err,
-        }));
-
-        const successfullyUploadedFiles = fileUploadResults.filter(
-          async (result) => result.data
-        );
-        let file = [];
-        if (successfullyUploadedFiles.length > 0) {
-          const newfileuploads = successfullyUploadedFiles.map(
-            (result, index) => file.push(result.data.Location)
-          );
-          await Promise.all(newfileuploads);
-        }
-        const update_Lead = await leadModel.updateOne({ lead_id: lead_id });
-      }
-    } catch (err) {
-      responseData(res, "", 500, false, "error", err.message);
-      console.log(err);
-    }
-  }
-};

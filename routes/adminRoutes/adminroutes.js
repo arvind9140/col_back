@@ -22,7 +22,6 @@ import {
   updateLead,
 } from "../../controllers/adminControllers/leadController/lead.controller.js";
 import {
-  createProject,
   getAllProject,
   getSingleProject,
   updateProjectDetails,
@@ -36,6 +35,7 @@ import { contractShare } from "../../controllers/adminControllers/fileUploadCont
 import { getNotification,  updateNotification } from "../../controllers/notification/notification.controller.js";
 import projectFileUpload from "../../controllers/adminControllers/fileUploadController/project.file.controller.js";
 import { shareFile } from "../../controllers/adminControllers/fileUploadController/share.files.controller.js";
+import { templateFileUpload } from "../../controllers/adminControllers/fileUploadController/template.controller.js";
 
 
 
@@ -46,10 +46,11 @@ router.route("/lead/getfile").get(getleadData);
 router.route("/project/getfile").get(getprojectData);
 router.route("/project/fileupload").post(projectFileUpload);
 router.route("/view/contract").get(contractShare);
-router.route("/share/file").post(shareFile)
+router.route("/share/file").post(shareFile);
+router.route("/template/fileupload").post(templateFileUpload)
 
 
-router.route("/create/project").post(createProject);
+
 router.route("/getall/project").get(getAllProject);
 router.route("/getsingle/project").get(getSingleProject);
 router.route("/update/project").put(updateProjectDetails);

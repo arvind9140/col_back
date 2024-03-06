@@ -3,7 +3,6 @@ import { responseData } from "../../../utils/respounse.js";
 import AWS from "aws-sdk";
 import dotenv from "dotenv";
 import registerModel from "../../../models/usersModels/register.model.js";
-import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 import {
   onlyAlphabetsValidation,
   onlyEmailValidation,
@@ -18,210 +17,190 @@ const s3 = new AWS.S3({
   region: "ap-south-1",
 });
 
-function generateSixDigitNumber() {
-  const min = 100000;
-  const max = 999999;
-  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
 
-  return randomNumber;
-}
+//   const id = req.body.id;
+//   const project_name = req.body.project_name;
+//   const project_type = req.body.project_type;
+//   const client_name = req.body.client_name;
+//   const description = req.body.description;
+//   const leadmanager = req.body.leadmanager;
+//   const designer = req.body.designer;
+//   const visualizer = req.body.visualizer;
+//   const project_status = req.body.project_status;
+//   const project_start_date = req.body.project_start_date;
+//   const timeline_date = req.body.timeline_date;
+//   const project_budget = req.body.project_budget;
+//   const project_location = req.body.project_location;
+//   const client_contact = req.body.client_contact;
+//   const client_email = req.body.client_email;
+//   const project_ID = generateSixDigitNumber();
+//   const folder_name = req.body.folder_name;
 
-const uploadFile = async (file, fileName, project_ID) => {
-  return s3
-    .upload({
-      Bucket: `interior-design1/${project_ID}`,
-      Key: fileName,
-      Body: file.data,
-      ContentType: file.mimetype,
-      // ACL: 'public-read'
-    })
-    .promise();
-};
-
-export const createProject = async (req, res) => {
-  const id = req.body.id;
-  const project_name = req.body.project_name;
-  const project_type = req.body.project_type;
-  const client_name = req.body.client_name;
-  const description = req.body.description;
-  const leadmanager = req.body.leadmanager;
-  const designer = req.body.designer;
-  const visualizer = req.body.visualizer;
-  const project_status = req.body.project_status;
-  const project_start_date = req.body.project_start_date;
-  const timeline_date = req.body.timeline_date;
-  const project_budget = req.body.project_budget;
-  const project_location = req.body.project_location;
-  const client_contact = req.body.client_contact;
-  const client_email = req.body.client_email;
-  const project_ID = generateSixDigitNumber();
-  const folder_name = req.body.folder_name;
-
-  // here we validate all fields
-  if (!onlyAlphabetsValidation(project_name) && project_name.length > 2) {
-    responseData(res, "", 400, false, "project name required");
-  } else if (!onlyAlphabetsValidation(project_type) && project_type > 2) {
-    responseData(res, "", 400, false, "project type required");
-  } else if (!onlyAlphabetsValidation(client_name) && client_name.length >= 3) {
-    responseData(res, "", 400, false, "client name required");
-  } else if (!onlyAlphabetsValidation(leadmanager) && leadmanager.length >= 3) {
-    responseData(res, "", 400, false, "lead manager required");
-  }  else if (!onlyAlphabetsValidation(designer) && designer.length >= 3) {
-    responseData(res, "", 400, false, "superviser name  required");
-  } else if (!onlyAlphabetsValidation(visualizer) && visualizer.length >= 3) {
-    responseData(res, "", 400, false, "visualizer name  required");
-  } else if (
-    !project_budget &&
-    !project_start_date &&
-    !timeline_date &&
-    !project_status
-  ) {
-    responseData(res, "", 400, false, "Please fill  required field ");
-  } else if (!onlyPhoneNumberValidation(client_contact)) {
-    responseData(
-      res,
-      "",
-      400,
-      false,
-      "Please enter valid client contact number"
-    );
-  } else if (!onlyEmailValidation(client_email)) {
-    responseData(res, "", 400, false, "Please enter valid client email");
-  }
+//   // here we validate all fields
+//   if (!onlyAlphabetsValidation(project_name) && project_name.length > 2) {
+//     responseData(res, "", 400, false, "project name required");
+//   } else if (!onlyAlphabetsValidation(project_type) && project_type > 2) {
+//     responseData(res, "", 400, false, "project type required");
+//   } else if (!onlyAlphabetsValidation(client_name) && client_name.length >= 3) {
+//     responseData(res, "", 400, false, "client name required");
+//   } else if (!onlyAlphabetsValidation(leadmanager) && leadmanager.length >= 3) {
+//     responseData(res, "", 400, false, "lead manager required");
+//   }  else if (!onlyAlphabetsValidation(designer) && designer.length >= 3) {
+//     responseData(res, "", 400, false, "superviser name  required");
+//   } else if (!onlyAlphabetsValidation(visualizer) && visualizer.length >= 3) {
+//     responseData(res, "", 400, false, "visualizer name  required");
+//   } else if (
+//     !project_budget &&
+//     !project_start_date &&
+//     !timeline_date &&
+//     !project_status
+//   ) {
+//     responseData(res, "", 400, false, "Please fill  required field ");
+//   } else if (!onlyPhoneNumberValidation(client_contact)) {
+//     responseData(
+//       res,
+//       "",
+//       400,
+//       false,
+//       "Please enter valid client contact number"
+//     );
+//   } else if (!onlyEmailValidation(client_email)) {
+//     responseData(res, "", 400, false, "Please enter valid client email");
+//   }
  
 
-  /// ***** add validation here ****///
-  else {
-    try {
-      const check_role = await registerModel.find({ _id: id });
-      if (check_role.length > 0) {
-        if (check_role[0].role == "ADMIN") {
-          const files = req.files?.files;
-          const fileUploadPromises = [];
-          let successfullyUploadedFiles = [];
+//   /// ***** add validation here ****///
+//   else {
+//     try {
+//       const check_role = await registerModel.find({ _id: id });
+//       if (check_role.length > 0) {
+//         if (check_role[0].role == "ADMIN") {
+//           const files = req.files?.files;
+//           const fileUploadPromises = [];
+//           let successfullyUploadedFiles = [];
 
-          if (files) {
-            const filesToUpload = Array.isArray(files)
-              ? files.slice(0, 5)
-              : [files];
+//           if (files) {
+//             const filesToUpload = Array.isArray(files)
+//               ? files.slice(0, 5)
+//               : [files];
 
-            for (const file of filesToUpload) {
-              const fileName = file.name;
-              fileUploadPromises.push(uploadFile(file, fileName, project_ID));
-            }
+//             for (const file of filesToUpload) {
+//               const fileName = file.name;
+//               fileUploadPromises.push(uploadFile(file, fileName, project_ID));
+//             }
 
-            const responses = await Promise.all(fileUploadPromises);
+//             const responses = await Promise.all(fileUploadPromises);
 
-            const fileUploadResults = responses.map((response) => ({
-              status: response.Location ? true : false,
-              data: response ? response : response.err,
-            }));
+//             const fileUploadResults = responses.map((response) => ({
+//               status: response.Location ? true : false,
+//               data: response ? response : response.err,
+//             }));
 
-            successfullyUploadedFiles = fileUploadResults.filter(
-              (result) => result.status
-            );
-          }
-          let file = [];
-          if (successfullyUploadedFiles.length > 0) {
-            let fileUrls = successfullyUploadedFiles.map((result) => ({
-              fileUrl: result.data.Location,
-              fileName: result.data.Location.split('/').pop(),
-              fileId: `FL-${generateSixDigitNumber()}`,
-              date: new Date()
+//             successfullyUploadedFiles = fileUploadResults.filter(
+//               (result) => result.status
+//             );
+//           }
+//           let file = [];
+//           if (successfullyUploadedFiles.length > 0) {
+//             let fileUrls = successfullyUploadedFiles.map((result) => ({
+//               fileUrl: result.data.Location,
+//               fileName: result.data.Location.split('/').pop(),
+//               fileId: `FL-${generateSixDigitNumber()}`,
+//               date: new Date()
 
-            }));
+//             }));
 
-           if(!folder_name){
-            responseData(res,"", 400,false, "Folder name is required", null)
-           }
+//            if(!folder_name){
+//             responseData(res,"", 400,false, "Folder name is required", null)
+//            }
 
-            const project_data = await projectModel.create({
-              project_name: project_name,
-              client_name: client_name,
-              project_id: `COL\P-${project_ID}`,
-              project_type: project_type,
-              description: description,
-              leadmanager: leadmanager,
-              designer:designer,
-              visualizer: visualizer,
-              project_status: project_status,
-              project_start_date: project_start_date,
-              timeline_date: timeline_date,
-              project_end_date: timeline_date,
-              project_budget: project_budget,
-              project_location: project_location,
-              files: fileUrls,
-              client: {
-                client_name: client_name,
-                client_contact: client_contact,
-                client_email: client_email,
-              },
-            });const fileupload = new fileuploadModel({
-              project_id: `COL\P-${project_ID}`,
-              project_name:project_name,
-              files:{
-                folder_name:folder_name,
-                files:fileUrls
-              } 
-            }
-            )
-           await  fileupload.save();
+//             const project_data = await projectModel.create({
+//               project_name: project_name,
+//               client_name: client_name,
+//               project_id: `COL\P-${project_ID}`,
+//               project_type: project_type,
+//               description: description,
+//               leadmanager: leadmanager,
+//               designer:designer,
+//               visualizer: visualizer,
+//               project_status: project_status,
+//               project_start_date: project_start_date,
+//               timeline_date: timeline_date,
+//               project_end_date: timeline_date,
+//               project_budget: project_budget,
+//               project_location: project_location,
+//               files: fileUrls,
+//               client: {
+//                 client_name: client_name,
+//                 client_contact: client_contact,
+//                 client_email: client_email,
+//               },
+//             });const fileupload = new fileuploadModel({
+//               project_id: `COL\P-${project_ID}`,
+//               project_name:project_name,
+//               files:{
+//                 folder_name:folder_name,
+//                 files:fileUrls
+//               } 
+//             }
+//             )
+//            await  fileupload.save();
 
 
-            responseData(
-              res,
-              "Project Create Successfully!",
-              200,
-              true,
-              "",
-              project_data
-            );
-          } else {
-            const project_data = await projectModel.create({
-              project_name: project_name,
-              client_name: client_name,
-              project_id: `COL\P-${project_ID}`,
-              project_type: project_type,
-              description: description,
-              leadmanager: leadmanager,
-              designer:designer,
-              visualizer: visualizer,
-              project_status: project_status,
-              project_start_date: project_start_date,
-              timeline_date: timeline_date,
-              project_end_date: timeline_date,
-              project_budget: `${project_budget} ₹`,
-              project_location: project_location,
-              files: file,
-              client: {
-                client_name: client_name,
-                client_contact: client_contact,
-                client_email: client_email,
-              },
-            });
-            responseData(
-              res,
-              "Project Create Successfully!",
-              200,
-              true,
-              "",
-              project_data
-            );
-          }
-        } else {
-          responseData(res, "", 404, false, " You are not admin!", []);
-        }
+//             responseData(
+//               res,
+//               "Project Create Successfully!",
+//               200,
+//               true,
+//               "",
+//               project_data
+//             );
+//           } else {
+//             const project_data = await projectModel.create({
+//               project_name: project_name,
+//               client_name: client_name,
+//               project_id: `COL\P-${project_ID}`,
+//               project_type: project_type,
+//               description: description,
+//               leadmanager: leadmanager,
+//               designer:designer,
+//               visualizer: visualizer,
+//               project_status: project_status,
+//               project_start_date: project_start_date,
+//               timeline_date: timeline_date,
+//               project_end_date: timeline_date,
+//               project_budget: `${project_budget} ₹`,
+//               project_location: project_location,
+//               files: file,
+//               client: {
+//                 client_name: client_name,
+//                 client_contact: client_contact,
+//                 client_email: client_email,
+//               },
+//             });
+//             responseData(
+//               res,
+//               "Project Create Successfully!",
+//               200,
+//               true,
+//               "",
+//               project_data
+//             );
+//           }
+//         } else {
+//           responseData(res, "", 404, false, " You are not admin!", []);
+//         }
 
-        if (check_role.length < 1) {
-          responseData(res, "", 404, false, " User not found.", []);
-        }
-      }
-    } catch (err) {
-      res.send(err);
-      console.log(err);
-    }
-  }
-};
+//         if (check_role.length < 1) {
+//           responseData(res, "", 404, false, " User not found.", []);
+//         }
+//       }
+//     } catch (err) {
+//       res.send(err);
+//       console.log(err);
+//     }
+//   }
+// };
 
 // Function to check if the project is older than 6 months
 function isProjectOlderThan6Months(createdDate) {
