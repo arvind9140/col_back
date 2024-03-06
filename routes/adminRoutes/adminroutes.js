@@ -35,7 +35,7 @@ import { contractShare } from "../../controllers/adminControllers/fileUploadCont
 import { getNotification,  updateNotification } from "../../controllers/notification/notification.controller.js";
 import projectFileUpload from "../../controllers/adminControllers/fileUploadController/project.file.controller.js";
 import { shareFile } from "../../controllers/adminControllers/fileUploadController/share.files.controller.js";
-import { templateFileUpload } from "../../controllers/adminControllers/fileUploadController/template.controller.js";
+import { getSingleTemplateFile, templateFileUpload } from "../../controllers/adminControllers/fileUploadController/template.controller.js";
 
 
 
@@ -47,7 +47,8 @@ router.route("/project/getfile").get(getprojectData);
 router.route("/project/fileupload").post(projectFileUpload);
 router.route("/view/contract").get(contractShare);
 router.route("/share/file").post(shareFile);
-router.route("/template/fileupload").post(templateFileUpload)
+router.route("/template/fileupload").post(templateFileUpload);
+router.route("/template/single/file").get(getSingleTemplateFile)
 
 
 

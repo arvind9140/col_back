@@ -44,7 +44,9 @@ const saveFileUploadData = async (
                         folder_name: existingFileUploadData.folder_name,
                         sub_folder_name_first:existingFileUploadData.sub_folder_name_first,
                         sub_folder_name_second:existingFileUploadData.sub_folder_name_second,
+                        folder_id:existingFileUploadData.folder_Id,
                         files: existingFileUploadData.files,
+
                     },
                 ],
             });
@@ -55,6 +57,8 @@ const saveFileUploadData = async (
                 {
                     type:existingFileUploadData.type,
                     "files.sub_folder_name_second": existingFileUploadData.sub_folder_name_second,
+                    "files.folder_name": existingFileUploadData.folder_name,
+                    "files.sub_folder_name_first": existingFileUploadData.sub_folder_name_first, 
                 },
                 {
                     $push: {
@@ -63,7 +67,7 @@ const saveFileUploadData = async (
                 },
                 {
                     arrayFilters: [
-                        { "folder.sub_folder_name_second": existingFileUploadData.sub_folder_name_second },
+                        { "folder.sub_folder_name_second": existingFileUploadData.sub_folder_name_second,},
                     ],
                 }
             );
@@ -244,6 +248,64 @@ else {
         });
     }
 }
+
+
+}
+
+
+export const getSingleTemplateFile = async(req,res) =>{
+const file_id = req.query.file_id;
+const folder_id = req.query.folder_id;
+
+if(!file_id)
+{
+    responseData(res, "", 400, false, "file_id is required");
+}
+else if (!folder_id)
+{
+    responseData(res, "", 400, false, "folder_id is required");
+}
+else{
+    try{
+        const find_data= await fileuploadModel.find({"files.folder_id":folder_id})
+        if(find_data.length>0)
+        {
+        
+            const find_folder = find_data[0].files.find((file)=>
+                file.folder_id  === folder_id
+                
+            )
+            if(find_folder){
+                
+                const find_file = find_folder.files.find((file)=>
+                    file.fileId  == file_id
+                    )
+                    if(find_file)
+                    {
+                        responseData(res, "file found", 200, true, "", find_file);
+                    }
+                    else{
+                        responseData(res, "", 404, false, "file not found");
+                    }     
+            }
+            else{
+                responseData(res, "", 404, false, "folder not found");
+            }
+         
+        }
+        if(find_data.length<1){
+            responseData(res, "", 404, false, "data not found");
+        }
+
+
+
+    }
+    catch(error){
+        console.log(error)
+        responseData(res,"",500,false,"something went wrong",error.msg)
+    }
+}
+
 
 
 }
