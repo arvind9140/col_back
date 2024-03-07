@@ -258,6 +258,7 @@ export const leadToProject = async (req, res) => {
   const timeline_date = req.body.timeline_date;
   const project_start_date = req.body.project_start_date;
   const project_budget = req.body.project_budget;
+  const designer= req.body.designer; 
 
   if (!lead_id) {
     responseData(res, "", 400, false, "lead_id is required", []);
@@ -294,8 +295,9 @@ const projectID = `COL\P-${project_ID}`;
           timeline_date: timeline_date,
           project_start_date: project_start_date,
           project_status: project_status,
+          designer:designer,
           visualizer: "",
-          superviser: "",
+          supervisor: "",
           leadmanager: "",
         });
         project_data.save();
