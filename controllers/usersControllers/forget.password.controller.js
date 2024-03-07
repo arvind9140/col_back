@@ -61,7 +61,7 @@ export const sendotpforgetpassword = async (req, res) => {
       const mailOptions = {
         from: "a72302492@gmail.com",
         to: email,
-        subject: "email varification",
+        subject: "Email Verification",
         html: `<p>  Your varrification code is :-  ${OTP}</p>`,
       };
       transporter.sendMail(mailOptions, (error, info) => {

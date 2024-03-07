@@ -78,7 +78,7 @@ export const sendOtp = async (req, res) => {
               const mailOptions = {
                 from: "a72302492@gmail.com",
                 to: email,
-                subject: "email varification",
+                subject: "Email Verification",
                 html: `<p>  Your varrification code is :-  ${otp}</p>`,
               };
               transporter.sendMail(mailOptions, (error, info) => {
@@ -232,10 +232,10 @@ export const registerUser = async (req, res) => {
 
                 responseData(
                   res,
-                  "",
+                  "Registration successful",
                   200,
                   true,
-                  "Registration successful",
+                  "",
                   result
                 );
               } else {

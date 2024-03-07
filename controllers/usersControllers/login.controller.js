@@ -25,7 +25,7 @@ const insertLogInData = async (res, user) => {
   loginUserData
     .save()
     .then((_result) => {
-      responseData(res, "", 200, true, "login successfully", {
+      responseData(res, "login successfully", 200, true, "", {
         userID: user[0]._id,
         token,
         role: user[0].role,
@@ -38,24 +38,14 @@ const insertLogInData = async (res, user) => {
 export const login = async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const confirm_password = req.body.confirmpassword;
+  
   if (!email) {
     responseData(res, "", 400, false, "Email is required");
   } else if (!validator.isEmail(email)) {
     responseData(res, "", 400, false, "Invalid email");
   } else if (!password) {
     responseData(res, "", 400, false, "Password is required");
-  } else if (!confirm_password) {
-    responseData(res, "", 400, false, "Confirm password is required");
-  } else if (password != confirm_password) {
-    responseData(
-      res,
-      "",
-      400,
-      false,
-      "Password and confirm password does not match"
-    );
-  } else {
+  }  else {
     try {
       const user = await registerModel.find({ email: email });
       if (user.length < 1) {
