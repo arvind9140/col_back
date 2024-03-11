@@ -6,9 +6,8 @@ import validator from "validator";
 import Jwt from "jsonwebtoken";
 
 const insertLogInData = async (res, user) => {
-  // console.log("hello from the usertype1",userType)
   const token = Jwt.sign(
-    { email: user[0].email },
+    { id: user[0]._id },
     process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn: "7d",
@@ -48,8 +47,9 @@ export const login = async (req, res) => {
   }  else {
     try {
       const user = await registerModel.find({ email: email });
+
       if (user.length < 1) {
-        responseData(res, "", 400, false, "User not found");
+        responseData(res, "", 404, false, "User not found");
       }
       if (user.length > 0) {
         bcrypt.compare(password, user[0].password, (_err, result) => {

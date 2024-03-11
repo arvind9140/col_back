@@ -138,8 +138,8 @@ export const templateFileUpload = async (req, res) => {
                 date: new Date()
             }));
 
-            if (folder_name === "commercial" || folder_name === "residential") {
-                if (sub_folder_name_first === "designing" || sub_folder_name_first === "executing") {
+            if (folder_name === "commercial" || folder_name === "residential" || folder_name === "miscellaneous")  {
+                if (sub_folder_name_first === "designing" || sub_folder_name_first === "executing" || sub_folder_name_first === "miscellaneous" ) {
                     const folder_Id = `FOL_ID${generateSixDigitNumber()}`;
                     const check_type = await fileuploadModel.findOne({
                         type: type,

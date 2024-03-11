@@ -79,7 +79,7 @@ export const sendOtp = async (req, res) => {
                 from: "a72302492@gmail.com",
                 to: email,
                 subject: "Email Verification",
-                html: `<p>  Your varrification code is :-  ${otp}</p>`,
+                html: `<p>  Your verrification code is :-  ${otp}</p>`,
               };
               transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
@@ -140,7 +140,7 @@ export const verifyOtp = async (req, res) => {
               email: email,
             });
 
-            responseData(res, `OTP Varify successfully !`, 200, true, "");
+            responseData(res, `OTP Verify successfully !`, 200, true, "");
           }
           if (updatestatus.length < 1) {
             responseData(res, "", 404, false, "not found email");

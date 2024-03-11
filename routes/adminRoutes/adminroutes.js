@@ -37,9 +37,13 @@ import projectFileUpload from "../../controllers/adminControllers/fileUploadCont
 import { shareFile } from "../../controllers/adminControllers/fileUploadController/share.files.controller.js";
 import { getSingleTemplateFile, templateFileUpload } from "../../controllers/adminControllers/fileUploadController/template.controller.js";
 import { deleteFile } from "../../controllers/adminControllers/fileUploadController/delete.file.controller.js";
+import { shareQuotation } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
 
 
-router.route("/fileupload").post(fileupload);
+// import { verifyJWT } from "../../middlewares/auth.middlewares.js";
+// router.use(verifyJWT)
+
+router.route("/fileupload").post( fileupload);
 router.route("/getfile").get(getFileData);
 router.route("/get/onefile").get(getSingleFileData);
 router.route("/lead/getfile").get(getleadData);
@@ -74,6 +78,7 @@ router.route("/create/quotation").post(createQuotation);
 router.route("/get/quotation").get(getQuotation);
 router.route("/getsingle/quotation").get(getSingleTypeQuotation);
 router.route("/update/quotation").put(updateQuotation);
+router.route("/share/quotation").post(shareQuotation);
 
 
 

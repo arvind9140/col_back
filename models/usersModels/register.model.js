@@ -27,9 +27,10 @@ const signUp = new mongoose.Schema({
     type: String,
     // required:true,
   },
+  data: [],
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
-export default mongoose.model("signUp", signUp, "signUp");
+export default mongoose.model("users", signUp, "users");
