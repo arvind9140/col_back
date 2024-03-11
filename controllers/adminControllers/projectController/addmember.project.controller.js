@@ -33,27 +33,48 @@ export const addMember = async (req, res) => {
                 const find_user_name = await registerModel.findOne({username:user_name});
                 if(find_user_name)
                 {
+                
+                const find_data = find_user_name.data.find((item)=>
+                item.project_id === project_id )
+                console.log(find_data)
+                if(find_data)
+                {
+                    responseData(res, "", 400, false, "user already exist in this project");
+                }
+                else{
+
                     const add_project_in_user = await registerModel.findOneAndUpdate(
-                      { username:user_name},
-                      {$push:{
-                        data:{
-                          project_id:project_id,
-                          role:role,
+                        { username: user_name },
+                        {
+                            $push: {
+                                data: {
+                                    project_id: project_id,
+                                    role: role,
+                                }
+                            }
                         }
-                      }}
                     )
 
                     const add_member_in_project = await projectModel.findOneAndUpdate(
                         { project_id: project_id },
-                         { $push: 
-                            { data:{ 
-                                name:user_name,
-                                role:role,
-                                id:find_user_name._id
+                        {
+                            $push:
+                            {
+                                data: {
+                                    name: user_name,
+                                    role: role,
+                                    id: find_user_name._id
+
+                                }
+                            }
+                        }, { new: true });
+
+                    responseData(res, "Member added successfully", 200, true, "");
+
+                }
                     
-                    } } },{new:true});
                 
-                     responseData(res, "Member added successfully", 200, true, "");
+
 
 
                 }

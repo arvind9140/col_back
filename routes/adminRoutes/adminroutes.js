@@ -38,8 +38,9 @@ import { shareFile } from "../../controllers/adminControllers/fileUploadControll
 import { getSingleTemplateFile, templateFileUpload } from "../../controllers/adminControllers/fileUploadController/template.controller.js";
 import { deleteFile } from "../../controllers/adminControllers/fileUploadController/delete.file.controller.js";
 import { shareQuotation } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
-import { createUser } from "../../controllers/adminControllers/createuser.controllers/createuser.controller.js";
+import { createUser, getUser } from "../../controllers/adminControllers/createuser.controllers/createuser.controller.js";
 import { addMember } from "../../controllers/adminControllers/projectController/addmember.project.controller.js";
+import {  checkAvailableUserIsAdmin, checkAvailableUserIsNotAdmin } from "../../middlewares/auth.middlewares.js";
 
 
 // import { verifyJWT } from "../../middlewares/auth.middlewares.js";
@@ -47,6 +48,7 @@ import { addMember } from "../../controllers/adminControllers/projectController/
 
 router.route("/create/user").post(createUser);
 router.route("/add/member").post(addMember);
+router.route("/get/alluser").get(checkAvailableUserIsNotAdmin,getUser);
 
 
 router.route("/fileupload").post( fileupload);

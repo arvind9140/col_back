@@ -20,16 +20,19 @@ const insertLogInData = async (res, user) => {
     token: token,
     logInDate: new Date(),
   });
+  
 
   loginUserData
     .save()
     .then((_result) => {
+
       responseData(res, "login successfully", 200, true, "", {
         userID: user[0]._id,
         token,
         role: user[0].role,
       });
     })
+   
     .catch((_err) => {
       responseData(res, "", 500, false, "Something is wrong please try again");
     });
@@ -44,7 +47,7 @@ export const login = async (req, res) => {
     responseData(res, "", 400, false, "Password is required");
   }  else {
     try {
-      const user = await registerModel.find({ user_name: user_name });
+      const user = await registerModel.find({ username: user_name });
 
       if (user.length < 1) {
         responseData(res, "", 404, false, "User not found");

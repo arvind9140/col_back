@@ -52,7 +52,7 @@ export const createUser = async (req, res) => {
                     
                     if (!check_email_or_user_name) {
                         const password = generateStrongPassword();
-
+                       
                         bcrypt.hash(password, 10, async function (err, hash) {
                             if(err)
                             {
@@ -141,5 +141,35 @@ export const createUser = async (req, res) => {
             return responseData(res, "", 500, false, err.message);
         }
     }
+
+}
+
+
+export const getUser = async(req, res) =>{
+try{
+    const users = await registerModel.find({})
+    if(users)
+    {
+        const filteredUsers = users.reduce((acc, user) => {
+            if (user) {
+                acc.push({ username: user.username, role: user.role });
+            }
+            return acc;
+        }, []);
+
+       
+        return responseData(res, "all user found", 200, true, "", filteredUsers);
+
+    }
+    else{
+        return responseData(res, "", 404, false, "No User Found");
+    }
+
+
+}
+catch(err)
+{
+    return responseData(res, "", 500, false, err.message);
+}
 
 }

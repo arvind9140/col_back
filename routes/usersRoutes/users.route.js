@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { registerUser, sendOtp, verifyOtp } from "../../controllers/usersControllers/register.controller.js";
-import { verifyJWT } from "../../middlewares/auth.middlewares.js";
+import {  checkAvailableUserIsNotAdmin, verifyJWT } from "../../middlewares/auth.middlewares.js";
 import { login } from "../../controllers/usersControllers/login.controller.js";
 import { logout } from "../../controllers/usersControllers/logout.controller.js";
 import { changePassController, otpVerification, sendotpforgetpassword } from "../../controllers/usersControllers/forget.password.controller.js";
@@ -22,6 +22,8 @@ router.route("/reset/password").post(changePassController);
 
 router.route("/getdata").get(getUserData)
 router.route("/profileurl").post(profileupload)
+
+router.route("/").get(checkAvailableUserIsNotAdmin)
 
 
 export default router;
