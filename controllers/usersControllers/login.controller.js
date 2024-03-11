@@ -35,18 +35,16 @@ const insertLogInData = async (res, user) => {
     });
 };
 export const login = async (req, res) => {
-  const email = req.body.email;
+  const user_name = req.body.user_name;
   const password = req.body.password;
   
-  if (!email) {
-    responseData(res, "", 400, false, "Email is required");
-  } else if (!validator.isEmail(email)) {
-    responseData(res, "", 400, false, "Invalid email");
+  if (!user_name) {
+    responseData(res, "", 400, false, "user_name is required");
   } else if (!password) {
     responseData(res, "", 400, false, "Password is required");
   }  else {
     try {
-      const user = await registerModel.find({ email: email });
+      const user = await registerModel.find({ user_name: user_name });
 
       if (user.length < 1) {
         responseData(res, "", 404, false, "User not found");

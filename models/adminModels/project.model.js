@@ -54,6 +54,7 @@ const projectSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  data:[],
   visualizer: {
     type: String,
     require: true,

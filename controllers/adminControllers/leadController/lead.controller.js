@@ -295,7 +295,7 @@ const projectID = `COL\P-${project_ID}`;
           timeline_date: timeline_date,
           project_start_date: project_start_date,
           project_status: project_status,
-          designer:designer,
+          project_incharge:designer,
           visualizer: "",
           supervisor: "",
           leadmanager: "",
@@ -310,10 +310,10 @@ const projectID = `COL\P-${project_ID}`;
         }
         responseData(
           res,
-          "",
+          "project created successfully",
           200,
           true,
-          "project created successfully",
+          "",
           project_data
         );
         }
