@@ -48,7 +48,7 @@ import {  checkAvailableUserIsAdmin, checkAvailableUserIsNotAdmin } from "../../
 
 router.route("/create/user").post(createUser);
 router.route("/add/member").post(addMember);
-router.route("/get/alluser").get(checkAvailableUserIsNotAdmin,getUser);
+router.route("/get/alluser").get(getUser);
 
 
 router.route("/fileupload").post( fileupload);
