@@ -48,9 +48,8 @@ export const createUser = async (req, res) => {
             }
             else {
                 if (user.role === 'ADMIN') {
-                    const check_email_or_user_name = await registerModel.findOne({ $or: [{ email: email }, { username: user_name }] })
-                    
-                    if (!check_email_or_user_name) {
+                    const check_email_or_user_name = await registerModel.find({ $or: [{ email: email }, { username: user_name }] })
+                    if (check_email_or_user_name.length < 1) {
                         const password = generateStrongPassword();
                        
                         bcrypt.hash(password, 10, async function (err, hash) {
@@ -67,7 +66,12 @@ export const createUser = async (req, res) => {
                             role: role,
                             status: true,
                             userProfile: "",
-                            password: hash
+                            password: hash,
+                            data:{
+                                projectData:[],
+                                quotationData:[],
+                                notificationData:[]
+                            }
                         })
                         newUser.save();
                             const mailOptions = {
@@ -123,7 +127,7 @@ export const createUser = async (req, res) => {
                         })
                        
                     }
-                    else {
+                    if(check_email_or_user_name.length >0) {
 
                         responseData(res, "", 400, false, "User Already Exist");
                     }

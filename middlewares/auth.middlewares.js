@@ -5,6 +5,7 @@ import registerModel from "../models/usersModels/register.model.js";
 import loginModel from "../models/usersModels/login.model.js";
 import projectModel from "../models/adminModels/project.model.js";
 import fileuploadModel from "../models/adminModels/fileuploadModel.js";
+import notificationModel from "../models/adminModels/notification.model.js";
 
 
 export const verifyJWT = async (req, res, next) => {
@@ -96,17 +97,36 @@ export const checkAvailableUserIsNotAdmin = async (req, res, next) => {
     
     if (user.role !== 'ADMIN') {
       let userData = [];
-      let projectData =[];
-      let fileData =[];
+      let ProjectData =[];
+      let FileData =[];
+      let NotificationData=[];
 
-      for (const item of user.data) {
+      for (const item of user.data[0].projectData) {
         let find_project = await projectModel.findOne({ project_id: item.project_id });
-        let find_file = await fileuploadModel.findOne({project_id:item.project_id});
-        projectData.push(find_project);
-        fileData.push(find_file);
+        if(find_project)
+        {
+          let find_file = await fileuploadModel.findOne({ project_id: item.project_id });
+          if(find_file)
+          {
+            FileData.push(find_file);
+          }
+          let find_notification = await notificationModel.findOne({ itemId: item.project_id });
+          if(find_notification)
+          {
+            NotificationData.push(find_notification);
+          }
+          ProjectData.push(find_project);
+          
+        
+        }
+       
       }
+      let notification_push = await user.data[0].notificationData.forEach(element => {
+        NotificationData.push(element)
+        
+      });
 
-      userData.push({ projectData, fileData });
+      userData.push({ ProjectData, FileData,NotificationData });
       // console.log(userData)
       responseData(res, "user data found", 200, true,"", userData)
 
