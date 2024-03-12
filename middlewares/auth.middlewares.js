@@ -100,6 +100,25 @@ export const checkAvailableUserIsNotAdmin = async (req, res, next) => {
       let ProjectData =[];
       let FileData =[];
       let NotificationData=[];
+      let execution = [];
+      let design = [];
+      let completed = [];
+      let archive = [];
+      let MomData = [];
+      const projects = await projectModel.find({}).sort({ createdAt: -1 });
+      for (let i = 0; i < projects.length; i++) {
+        if (projects[i].project_status == "executing") {
+          execution.push(projects[i]);
+        }
+        if (projects[i].project_status == "designing") {
+          design.push(projects[i]);
+        }
+        if (projects[i].project_status == "completed") {
+          completed.push(projects[i]);
+        }
+      }
+
+    
 
       for (const item of user.data[0].projectData) {
         let find_project = await projectModel.findOne({ project_id: item.project_id });
@@ -115,6 +134,25 @@ export const checkAvailableUserIsNotAdmin = async (req, res, next) => {
           {
             NotificationData.push(find_notification);
           }
+        
+          if(find_project.mom.length!==0)
+          {
+            // console.log(find_project.mom)
+           
+          
+            
+                for (let j = 0; j < find_project.mom.length; j++) {
+                  MomData.push({
+                    project_id: find_project.project_id,
+                    project_name: find_project.project_name,
+                    mom_id: find_project.mom[j].mom_id,
+                    client_name: find_project.client[0].client_name,
+                    location: find_project.mom[j].location,
+                    meetingDate: find_project.mom[j].meetingdate,
+                  })
+                
+            }
+          }
           ProjectData.push(find_project);
           
         
@@ -127,8 +165,19 @@ export const checkAvailableUserIsNotAdmin = async (req, res, next) => {
       });
 
       userData.push({ ProjectData, FileData,NotificationData });
+      const response = {
+        total_Project: projects.length,
+        Execution_Phase: execution.length,
+        Design_Phase: design.length,
+        completed: completed.length,
+        active_Project: projects.length - completed.length,
+        ProjectData,
+        FileData,
+        NotificationData,
+        MomData
+      };
       // console.log(userData)
-      responseData(res, "user data found", 200, true,"", userData)
+      responseData(res, "user data found", 200, true,"", response)
 
 
     }
