@@ -135,11 +135,11 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
 
        
         const response = {
-          total_Project: projects.length,
+          total_Project: Projects.length,
           Execution_Phase: execution.length,
           Design_Phase: design.length,
           completed: completed.length,
-          active_Project: projects.length - completed.length,
+          active_Project: Projects.length - completed.length,
           projects,
           projectData,
           NotificationData,
