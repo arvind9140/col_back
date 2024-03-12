@@ -203,7 +203,7 @@ export const getNotification = async(req,res) =>{
 
     try{
         const find_notification = await notificationModel.find({})
-        if(find_nitification.length>0)
+        if(find_notification.length>0)
         {
 const response ={
   NotificationData:find_notification

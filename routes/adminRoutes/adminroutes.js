@@ -44,7 +44,7 @@ import {  checkAvailableUserIsAdmin } from "../../middlewares/auth.middlewares.j
 
 
 // import { verifyJWT } from "../../middlewares/auth.middlewares.js";
-router.use(checkAvailableUserIsAdmin)
+// router.use(checkAvailableUserIsAdmin)
 
 router.route("/create/user").post(createUser);
 router.route("/add/member").post(addMember);
@@ -65,7 +65,7 @@ router.route("/delete/file").delete(deleteFile);
 
 
 
-router.route("/getall/project").get(getAllProject);
+router.route("/getall/project").get(checkAvailableUserIsAdmin,getAllProject);
 router.route("/getsingle/project").get(getSingleProject);
 router.route("/update/project").put(updateProjectDetails);
 
