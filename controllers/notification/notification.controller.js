@@ -5,6 +5,32 @@ import { responseData } from "../../utils/respounse.js";
 
 import notificationModel from "../../models/adminModels/notification.model.js";
 import cron from "node-cron";
+import registerModel from "../../models/usersModels/register.model.js";
+
+
+
+
+
+export const notificationByUser = async (req, res, user_name) => {
+  try {
+    const find_user = await registerModel.findOne({ username: user_name });
+    if(find_user)
+    {
+      console.log(find_user)
+    }
+    
+  }
+  catch (error) {
+    
+  }
+  
+}
+
+
+
+
+
+
 
  const notification = async (req, res) => {
   try {
@@ -152,7 +178,7 @@ const deleteNotification = async (req, res) => {
 cron.schedule(" 0 0 * * *", async () => {
   // This cron pattern runs the job at 00:00 every day
   try {
-    // Call your notification function here
+   
     await notification();
     console.log("Notification cron job executed successfully");
   } catch (error) {
@@ -160,9 +186,8 @@ cron.schedule(" 0 0 * * *", async () => {
   }
 });
 cron.schedule("0 0 */14 * *", async () => {
-  // This cron pattern runs the job at 00:00 every day
+  // This cron pattern runs the job at 00:00 every  14 days
   try {
-    // Call your notification function here
     await deleteNotification();
     console.log("Notification cron job executed successfully");
   } catch (error) {
@@ -177,11 +202,13 @@ cron.schedule("0 0 */14 * *", async () => {
 export const getNotification = async(req,res) =>{
 
     try{
-        const find_nitification = await notificationModel.find({})
+        const find_notification = await notificationModel.find({})
         if(find_nitification.length>0)
         {
-
-            responseData(res,"notification Data", 200, true,"", find_nitification)
+const response ={
+  NotificationData:find_notification
+}
+            responseData(res,"notification Data", 200, true,"", response)
         }
         else
         {

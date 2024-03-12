@@ -135,8 +135,11 @@ export const getAllProjectMom = async (req, res) => {
 
       }
     }
+    const response  ={
+      MomData:MomData
+    }
 
-    responseData(res, "all project mom", 200, true, "", MomData);
+    responseData(res, "all project mom", 200, true, "", response);
   } catch (err) {
     responseData(res, "", 500, false, err.message);
     console.log(err.message);

@@ -40,11 +40,11 @@ import { deleteFile } from "../../controllers/adminControllers/fileUploadControl
 import { shareQuotation } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
 import { createUser, getUser } from "../../controllers/adminControllers/createuser.controllers/createuser.controller.js";
 import { addMember } from "../../controllers/adminControllers/projectController/addmember.project.controller.js";
-import {  checkAvailableUserIsAdmin, checkAvailableUserIsNotAdmin } from "../../middlewares/auth.middlewares.js";
+import {  checkAvailableUserIsAdmin } from "../../middlewares/auth.middlewares.js";
 
 
 // import { verifyJWT } from "../../middlewares/auth.middlewares.js";
-// router.use(verifyJWT)
+router.use(checkAvailableUserIsAdmin)
 
 router.route("/create/user").post(createUser);
 router.route("/add/member").post(addMember);
