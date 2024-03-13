@@ -130,7 +130,6 @@ export const createLead = async (req, res) => {
           200,
           true,
           "",
-          lead_data
         );
          }
       

@@ -291,7 +291,6 @@ export const createmom = async (req, res) => {
             200,
             true,
             "",
-            update_mom
           );
         } else {
           const update_mom = await projectModel.findOneAndUpdate(
@@ -328,7 +327,6 @@ export const createmom = async (req, res) => {
             200,
             true,
             "",
-            update_mom
           );
         }
       }

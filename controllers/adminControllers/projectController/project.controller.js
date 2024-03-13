@@ -305,7 +305,16 @@ export const getSingleProject = async (req, res) => {
             responseData(res, "", 404, false, "project not found", []);
           }
         } else {
-          responseData(res, "", 404, false, " You are not admin!", []);
+          const find_project = await projectModel.find({
+            project_id: project_ID,
+          });
+          if (find_project.length > 0) {
+            responseData(res, "project found", 200, true, "", find_project);
+          }
+          if (find_project < 1) {
+            responseData(res, "", 404, false, "project not found", []);
+          }
+      
         }
       }
     } catch (err) {
