@@ -2,12 +2,10 @@
 import jwt from "jsonwebtoken";
 import { responseData } from "../utils/respounse.js";
 import registerModel from "../models/usersModels/register.model.js";
-import loginModel from "../models/usersModels/login.model.js";
 import projectModel from "../models/adminModels/project.model.js";
 import fileuploadModel from "../models/adminModels/fileuploadModel.js";
-import notificationModel from "../models/adminModels/notification.model.js";
 import { notificationForUser } from "../controllers/notification/notification.controller.js";
-
+import cron from "node-cron";
 
 export const verifyJWT = async (req, res, next) => {
   try {
@@ -65,6 +63,16 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
       next();
     }
     else{
+      cron.schedule(" 0 0 * * *", async () => {
+        // This cron pattern runs the job at 00:00 every day
+        try {
+
+          await notificationForUser(req, res, user.username)
+          console.log("Notification cron job executed successfully");
+        } catch (error) {
+          console.error("Error executing notification cron job:", error);
+        }
+      });
     
       
         let userData = [];
@@ -100,16 +108,8 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
             if (find_file) {
               projectData.push(find_file);
             }
-            let find_notification = await notificationModel.findOne({ itemId: item.project_id });
-            if (find_notification) {
-              NotificationData.push(find_notification);
-            }
-
             if (find_project.mom.length !== 0) {
               // console.log(find_project.mom)
-
-
-
               for (let j = 0; j < find_project.mom.length; j++) {
                 MomData.push({
                   project_id: find_project.project_id,
@@ -128,6 +128,7 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
           }
 
         }
+      
         let notification_push = await user.data[0].notificationData.forEach(element => {
           NotificationData.push(element)
 
@@ -146,7 +147,7 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
           MomData
         };
         // console.log(userData)
-        notificationForUser(req,res,user.username)
+        
         responseData(res, "user data found", 200, true, "", response)
     
     }
@@ -158,6 +159,8 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
   }
 
 }
+
+
 
 
 

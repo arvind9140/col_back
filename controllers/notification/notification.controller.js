@@ -16,21 +16,28 @@ export const notificationForUser = async (req, res, user_name) => {
     const find_user = await registerModel.findOne({ username: user_name });
     if (find_user) {
       for (const item of find_user.data[0].projectData) {
-        let find_notification = await notificationModel.findOne({ itemId: item.project_id });
-        if(find_notification)
+        let find_notification = await notificationModel.find({ itemId: item.project_id });
+       
+        if(find_notification.length >0)
         {
-          const add_notification_in_user = await registerModel.findOneAndUpdate(
-            { username: user_name },
-            {
-              $push: {
-                "data.$[outer].notificationData": {
-                 find_notification
+         
+          for(let  i =0;i<find_notification.length;i++)
+          {
+            const add_notification_in_user = await registerModel.findOneAndUpdate(
+              { username: user_name },
+              {
+                $push: {
+                  "data.$[outer].notificationData": find_notification[i]
                 }
+              },
+              {
+                arrayFilters: [{ "outer.notificationData": { $exists: true } }],
+                new: true // Return the modified document
               }
-            },
-            {
-              arrayFilters: [{ "outer.notificationData": { $exists: true } }]
-            })
+            );
+
+          }
+         
         }
 
        
