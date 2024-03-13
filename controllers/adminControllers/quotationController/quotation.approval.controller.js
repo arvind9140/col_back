@@ -77,10 +77,12 @@ export const shareQuotation = async (req, res) => {
                                             approval_status: false
                                         },
                                         "data.$[elem].notificationData": {
+                                            _id: new mongoose.Types.ObjectId(),
                                             itemId: project_id,
                                             type: "quotation",
                                             status: false,
-                                            message: "Quotation file shared with you for approval. Please check"
+                                            message: "Quotation file shared with you for approval. Please check",
+                                            createdAt:new Date()
                                         }
                                     }
                                 },

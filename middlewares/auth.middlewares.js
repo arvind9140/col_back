@@ -6,7 +6,7 @@ import loginModel from "../models/usersModels/login.model.js";
 import projectModel from "../models/adminModels/project.model.js";
 import fileuploadModel from "../models/adminModels/fileuploadModel.js";
 import notificationModel from "../models/adminModels/notification.model.js";
-import { notificationByUser } from "../controllers/notification/notification.controller.js";
+import { notificationForUser } from "../controllers/notification/notification.controller.js";
 
 
 export const verifyJWT = async (req, res, next) => {
@@ -146,6 +146,7 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
           MomData
         };
         // console.log(userData)
+        notificationForUser(req,res,user.username)
         responseData(res, "user data found", 200, true, "", response)
     
     }

@@ -43,8 +43,9 @@ import { addMember } from "../../controllers/adminControllers/projectController/
 import {  checkAvailableUserIsAdmin } from "../../middlewares/auth.middlewares.js";
 
 
-// import { verifyJWT } from "../../middlewares/auth.middlewares.js";
-router.use(checkAvailableUserIsAdmin)
+import { verifyJWT } from "../../middlewares/auth.middlewares.js";
+// router.use(checkAvailableUserIsAdmin)
+router.use(verifyJWT)
 
 router.route("/create/user").post(createUser);
 router.route("/add/member").post(addMember);
@@ -52,7 +53,7 @@ router.route("/get/alluser").get(getUser);
 
 
 router.route("/fileupload").post( fileupload);
-router.route("/getfile").get(getFileData);
+router.route("/getfile").get(checkAvailableUserIsAdmin,getFileData);
 router.route("/get/onefile").get(getSingleFileData);
 router.route("/lead/getfile").get(getleadData);
 router.route("/project/getfile").get(getprojectData);
@@ -65,9 +66,9 @@ router.route("/delete/file").delete(deleteFile);
 
 
 
-router.route("/getall/project").get(getAllProject);
+router.route("/getall/project").get(checkAvailableUserIsAdmin,getAllProject);
 router.route("/getsingle/project").get(getSingleProject);
-router.route("/update/project").put(updateProjectDetails);
+router.route("/update/project").put(checkAvailableUserIsAdmin,updateProjectDetails);
 
 router.route("/create/lead").post(createLead);
 router.route("/getall/lead").get(getAllLead);
@@ -75,11 +76,11 @@ router.route("/getsingle/lead").get(getSingleLead);
 router.route("/update/lead").put(updateLead);
 router.route("/create/lead/project").post(leadToProject);
 
-router.route("/create/mom").post(createmom);
+router.route("/create/mom").post(checkAvailableUserIsAdmin,createmom);
 router.route("/getall/mom").get(getAllMom);
 router.route("/getsingle/mom").get(getSingleMom);
 router.route("/generate/pdf").get(generatePdf);
-router.route("/getall/project/mom").get(getAllProjectMom);
+router.route("/getall/project/mom").get(checkAvailableUserIsAdmin,getAllProjectMom);
 router.route("/send/momdata").get(sendPdf);
 
 router.route("/create/quotation").post(createQuotation);
@@ -91,7 +92,7 @@ router.route("/share/quotation").post(shareQuotation);
 
 
 
-router.route("/get/notification").get(getNotification);
+router.route("/get/notification").get(checkAvailableUserIsAdmin,getNotification);
 router.route("/update/notification").put(updateNotification);
 
 
