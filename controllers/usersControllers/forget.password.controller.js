@@ -29,11 +29,12 @@ export const sendotpforgetpassword = async (req, res) => {
 
   try {
     //checking email is registered or not
-    const user = await registerModel.find({ email });
+    const user = await registerModel.find({ email:email });
     if (user.length < 1) {
       return responseData(res, 404, "Email not registered");
     }
     if (user.length > 0) {
+     const delete_otp = await otpForForgetpassModel.findOneAndDelete({ email:email });
       const OTP = Randomstring.generate({
         length: 6,
         charset: "numeric",
@@ -62,7 +63,7 @@ export const sendotpforgetpassword = async (req, res) => {
         from: "a72302492@gmail.com",
         to: email,
         subject: "Email Verification",
-        html: `<p>  Your varrification code is :-  ${OTP}</p>`,
+        html: `<p>  Your verification code is :-  ${OTP}</p>`,
       };
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
