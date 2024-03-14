@@ -40,16 +40,16 @@ import { deleteFile } from "../../controllers/adminControllers/fileUploadControl
 import { shareQuotation } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
 import { createUser, getUser } from "../../controllers/adminControllers/createuser.controllers/createuser.controller.js";
 import { addMember } from "../../controllers/adminControllers/projectController/addmember.project.controller.js";
-import {  checkAvailableUserIsAdmin } from "../../middlewares/auth.middlewares.js";
+import {  checkAvailableUserIsAdmin, isAdmin } from "../../middlewares/auth.middlewares.js";
 
 
 import { verifyJWT } from "../../middlewares/auth.middlewares.js";
 // router.use(checkAvailableUserIsAdmin)
 router.use(verifyJWT)
 
-router.route("/create/user").post(createUser);
-router.route("/add/member").post(addMember);
-router.route("/get/alluser").get(getUser);
+router.route("/create/user").post(isAdmin,createUser);
+router.route("/add/member").post(isAdmin, addMember);
+router.route("/get/alluser").get(isAdmin, getUser);
 
 
 router.route("/fileupload").post( fileupload);
@@ -68,15 +68,15 @@ router.route("/delete/file").delete(deleteFile);
 
 router.route("/getall/project").get(checkAvailableUserIsAdmin,getAllProject);
 router.route("/getsingle/project").get(getSingleProject);
-router.route("/update/project").put(checkAvailableUserIsAdmin,updateProjectDetails);
+router.route("/update/project").put(updateProjectDetails);
 
-router.route("/create/lead").post(createLead);
-router.route("/getall/lead").get(getAllLead);
-router.route("/getsingle/lead").get(getSingleLead);
-router.route("/update/lead").put(updateLead);
-router.route("/create/lead/project").post(leadToProject);
+router.route("/create/lead").post(isAdmin, createLead);
+router.route("/getall/lead").get(isAdmin, getAllLead);
+router.route("/getsingle/lead").get(isAdmin, getSingleLead);
+router.route("/update/lead").put(isAdmin, updateLead);
+router.route("/create/lead/project").post(isAdmin, leadToProject);
 
-router.route("/create/mom").post(checkAvailableUserIsAdmin,createmom);
+router.route("/create/mom").post(createmom);
 router.route("/getall/mom").get(getAllMom);
 router.route("/getsingle/mom").get(getSingleMom);
 router.route("/generate/pdf").get(generatePdf);
