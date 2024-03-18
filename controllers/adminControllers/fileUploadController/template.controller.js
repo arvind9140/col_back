@@ -45,21 +45,12 @@ const saveFileUploadData = async (res, existingFileUploadData, isFirst = false) 
             responseData(res, "First file created successfully", 200, true);
         } else {
             let updateQuery = {};
-
-            if (existingFileUploadData.folder_name === existingFileUploadData.sub_folder_name_first &&
-                existingFileUploadData.sub_folder_name_first === existingFileUploadData.sub_folder_name_second) {
-                updateQuery = {
-                    $push: {
-                        "files.0.files": { $each: existingFileUploadData.files },
-                    },
-                };
-            } else {
                 updateQuery = {
                     $push: {
                         "files.$.files": { $each: existingFileUploadData.files },
                     },
                 };
-            }
+            
 
             const updateResult = await fileuploadModel.updateOne(
                 {
@@ -79,8 +70,22 @@ const saveFileUploadData = async (res, existingFileUploadData, isFirst = false) 
             if (updateResult.modifiedCount === 1) {
                 responseData(res, "File data updated successfully", 200, true);
             } else {
-                console.log("Folder not found or file data already updated");
-                responseData(res, "", 404, false, "Folder not found or file data already updated");
+                const firstFile = await fileuploadModel.create({
+                    type: existingFileUploadData.type,
+                    files: [
+                        {
+                            folder_name: existingFileUploadData.folder_name,
+                            sub_folder_name_first: existingFileUploadData.sub_folder_name_first,
+                            sub_folder_name_second: existingFileUploadData.sub_folder_name_second,
+                            folder_id: existingFileUploadData.folder_Id,
+                            files: existingFileUploadData.files,
+                        },
+                    ],
+                });
+
+                responseData(res, "File data updated successfully", 200, true);
+               
+
             }
         }
     } catch (error) {
