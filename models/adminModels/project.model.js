@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const quotationSchema = new mongoose.Schema({
   admin_status:String,
   client_status:String,
-  item_id: String,
+  itemId: String,
   file_name: String,
   files: [],
   remark: String,

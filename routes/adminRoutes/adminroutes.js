@@ -27,6 +27,7 @@ import {
   updateProjectDetails,
 } from "../../controllers/adminControllers/projectController/project.controller.js";
 import getQuotation, {
+  getQuotationData,
   getSingleTypeQuotation,
 } from "../../controllers/adminControllers/quotationController/getQuotation.controller.js";
 import { createQuotation } from "../../controllers/adminControllers/quotationController/quotation.controller.js";
@@ -88,12 +89,16 @@ router.route("/get/quotation").get(getQuotation);
 router.route("/getsingle/quotation").get(getSingleTypeQuotation);
 router.route("/update/quotation").put(updateQuotation);
 router.route("/share/quotation").post(shareQuotation);
+router.route("/get/quotationdata").get(getQuotationData);
 
 
 
 
 router.route("/get/notification").get(checkAvailableUserIsAdmin,getNotification);
 router.route("/update/notification").put(updateNotification);
+
+
+
 
 
 export default router;
