@@ -424,7 +424,7 @@ export const shareQuotation = async (req, res) => {
                                         itemId: project_id,
                                         type: "quotation",
                                         status: false,
-                                        message: "Quotation file shared with you for approval. Please check",
+                                        message: `Quotation file shared with you for approval in ${findProject.project_name}  . Please check`,
                                         createdAt: new Date()
                                     }
                                 }

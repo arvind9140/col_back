@@ -334,7 +334,7 @@ else{
     return responseData(res, "", 404, false, "User not found");
   }
   else{
-    if(find_user.role === "ADMIN")
+    if(find_user.role === "ADMIN" || find_user.role === "PROCUREMENT")
     {
       if (type === "One") {
         const notification = await Notification.findByIdAndUpdate(
@@ -344,6 +344,21 @@ else{
         );
 
         if (!notification) {
+          const User_notification = await registerModel.findOneAndUpdate(
+            { "_id": userId, "data.notificationData._id": notification_id },
+            { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
+            {
+              arrayFilters: [
+                { "elem.notificationData": { $exists: true } },
+                { "inner._id": notification_id }
+              ],
+              new: true // return the updated document
+            }
+          );
+          if(!User_notification)
+          {
+            return responseData(res, "", 404, false, "Notification not found");
+          }
           responseData(res, "Notification updated successfully", 200, true, "");
         }
 
@@ -351,6 +366,17 @@ else{
         responseData(res, "Notification updated successfully", 200, true, "");
       } else if (type === "All") {
         // Update status for all notifications
+        const user_notification = await registerModel.findOneAndUpdate(
+          { "_id": userId },
+          { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
+          {
+            arrayFilters: [
+              { "elem.notificationData": { $exists: true } },
+              { "inner.status": false }
+            ],
+            new: true // return the updated document
+          }
+        );
         const notification = await registerModel.findOneAndUpdate(
           { "_id": userId },
           { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
