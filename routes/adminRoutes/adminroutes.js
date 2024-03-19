@@ -3,7 +3,7 @@ const router = Router();
 
 import fileupload from "../../controllers/adminControllers/fileUploadController/fileuploadController.js";
 
-import {getFileData, getleadData, getprojectData} from "../../controllers/adminControllers/fileUploadController/getFileController.js";
+import { getFileData, getleadData, getprojectData } from "../../controllers/adminControllers/fileUploadController/getFileController.js";
 import getSingleFileData from "../../controllers/adminControllers/fileUploadController/getSingleFileController.js";
 
 import {
@@ -33,28 +33,28 @@ import getQuotation, {
 import { createQuotation } from "../../controllers/adminControllers/quotationController/quotation.controller.js";
 import { updateQuotation } from "../../controllers/adminControllers/quotationController/update.quotation.controller.js";
 import { contractShare } from "../../controllers/adminControllers/fileUploadController/contract.controller.js";
-import { getNotification,  updateNotification } from "../../controllers/notification/notification.controller.js";
+import { getNotification, updateNotification } from "../../controllers/notification/notification.controller.js";
 import projectFileUpload from "../../controllers/adminControllers/fileUploadController/project.file.controller.js";
 import { shareFile } from "../../controllers/adminControllers/fileUploadController/share.files.controller.js";
 import { getSingleTemplateFile, templateFileUpload } from "../../controllers/adminControllers/fileUploadController/template.controller.js";
 import { deleteFile } from "../../controllers/adminControllers/fileUploadController/delete.file.controller.js";
-import { shareQuotation } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
+import { shareQuotation, updateStatus, updateStatusAdmin } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
 import { createUser, getUser } from "../../controllers/adminControllers/createuser.controllers/createuser.controller.js";
 import { addMember } from "../../controllers/adminControllers/projectController/addmember.project.controller.js";
-import {  checkAvailableUserIsAdmin, isAdmin } from "../../middlewares/auth.middlewares.js";
+import { checkAvailableUserIsAdmin, isAdmin } from "../../middlewares/auth.middlewares.js";
 
 
 import { verifyJWT } from "../../middlewares/auth.middlewares.js";
 // router.use(checkAvailableUserIsAdmin)
 router.use(verifyJWT)
 
-router.route("/create/user").post(isAdmin,createUser);
+router.route("/create/user").post(isAdmin, createUser);
 router.route("/add/member").post(isAdmin, addMember);
 router.route("/get/alluser").get(isAdmin, getUser);
 
 
-router.route("/fileupload").post( fileupload);
-router.route("/getfile").get(checkAvailableUserIsAdmin,getFileData);
+router.route("/fileupload").post(fileupload);
+router.route("/getfile").get(checkAvailableUserIsAdmin, getFileData);
 router.route("/get/onefile").get(getSingleFileData);
 router.route("/lead/getfile").get(getleadData);
 router.route("/project/getfile").get(getprojectData);
@@ -67,7 +67,7 @@ router.route("/delete/file").delete(deleteFile);
 
 
 
-router.route("/getall/project").get(checkAvailableUserIsAdmin,getAllProject);
+router.route("/getall/project").get(checkAvailableUserIsAdmin, getAllProject);
 router.route("/getsingle/project").get(getSingleProject);
 router.route("/update/project").put(updateProjectDetails);
 
@@ -81,7 +81,7 @@ router.route("/create/mom").post(createmom);
 router.route("/getall/mom").get(getAllMom);
 router.route("/getsingle/mom").get(getSingleMom);
 router.route("/generate/pdf").get(generatePdf);
-router.route("/getall/project/mom").get(checkAvailableUserIsAdmin,getAllProjectMom);
+router.route("/getall/project/mom").get(checkAvailableUserIsAdmin, getAllProjectMom);
 router.route("/send/momdata").get(sendPdf);
 
 router.route("/create/quotation").post(createQuotation);
@@ -90,11 +90,12 @@ router.route("/getsingle/quotation").get(getSingleTypeQuotation);
 router.route("/update/quotation").put(updateQuotation);
 router.route("/share/quotation").post(shareQuotation);
 router.route("/get/quotationdata").get(getQuotationData);
+router.route("/quotation/approval").post(updateStatusAdmin)
 
 
 
 
-router.route("/get/notification").get(checkAvailableUserIsAdmin,getNotification);
+router.route("/get/notification").get(checkAvailableUserIsAdmin, getNotification);
 router.route("/update/notification").put(updateNotification);
 
 

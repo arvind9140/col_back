@@ -33,6 +33,7 @@ const storeOrUpdateQuotations = async (res, existingQuotationData, isFirst = fal
                 },
                 { new: true } // Return the updated document
             );
+            return responseData(res, `Quotation shared successfully`, 200, true, "");
 
             updatedQuotationData = updatedProject.quotation;
 
@@ -60,6 +61,7 @@ const storeOrUpdateQuotations = async (res, existingQuotationData, isFirst = fal
                             new: true // Return the updated document
                         }
                     );
+                    return responseData(res, `Quotation shared successfully`, 200, true, "");
                 }
                 if (existingQuotationData.admin === "admin") {
 
@@ -79,6 +81,7 @@ const storeOrUpdateQuotations = async (res, existingQuotationData, isFirst = fal
                             new: true // Return the updated document
                         }
                     );
+                    return responseData(res, `Quotation shared successfully`, 200, true, "");
                 }
 
 
@@ -92,18 +95,22 @@ const storeOrUpdateQuotations = async (res, existingQuotationData, isFirst = fal
                         },
                         { new: true } // Return the updated document
                     );
-
+                    return responseData(res, `Quotation shared successfully`, 200, true, "");
                     updatedQuotationData = updatedProject.quotation;
                 }
 
             } else {
-                responseData(res, "", 404, false, "Project not found");
+                const updatedProject = await projectModel.findOneAndUpdate(
+                    { project_id: existingQuotationData.project_id },
+                    {
+                        $push: { "quotation": existingQuotationData.quotationsData }
+                    },
+                    { new: true } // Return the updated document
+                );
+                return responseData(res, `Quotation shared successfully`, 200, true, "");
                 return; // Exit early if project not found
             }
         }
-
-        // Respond with success message and updated quotation data
-        // responseData(res, updatedQuotationData, 200, true, "Quotation stored or updated successfully");
 
     } catch (error) {
         // Log and respond with error message
@@ -246,8 +253,7 @@ export const shareQuotation = async (req, res) => {
                                 client: "client"
                             }
                             await storeOrUpdateQuotations(res, createObj);
-                            responseData(res, "Quotation share successfully", 200, true, "");
-                            // return responseData(res, `Quotation shared successfully`, 200, true, "");
+                           
                         }
                     });
 
@@ -279,8 +285,7 @@ export const shareQuotation = async (req, res) => {
 
                         }
                         await storeOrUpdateQuotations(res, createObj, true);
-                        responseData(res, "Quotation share successfully", 200, true, "");
-                        // return responseData(res, `Quotation shared successfully`, 200, true, "");
+                       
                     }
                 });
 
@@ -438,7 +443,7 @@ export const shareQuotation = async (req, res) => {
 
                             }
                             await storeOrUpdateQuotations(res, createObj);
-                            return responseData(res, `Quotation shared successfully`, 200, true, "");
+                            // return responseData(res, `Quotation shared successfully`, 200, true, "");
                         }
                         else {
                             const createObj = {
@@ -446,7 +451,7 @@ export const shareQuotation = async (req, res) => {
                                 quotationsData,
                             }
                             await storeOrUpdateQuotations(res, createObj, true);
-                            return responseData(res, `Quotation shared successfully`, 200, true, "");
+                            // return responseData(res, `Quotation shared successfully`, 200, true, "");
                         }
 
                     }
@@ -620,6 +625,99 @@ export const updateStatusClient = async (req, res) => {
                     }
                 }
             }
+        }
+
+    }
+    catch (err) {
+        console.error(err);
+        return responseData(res, "", 500, false, "Something went wrong while approving the quotation");
+    }
+}
+
+
+export const updateStatusAdmin = async (req, res) => {
+    try {
+        const status = req.body.status;
+        const project_id = req.body.project_id;
+        const itemId = req.body.file_id;
+        const remark = req.body.remark;
+        const check_status = await projectModel.findOne({
+            project_id: project_id,
+            "quotation.$.itemId": itemId
+        })
+        for (let i = 0; i < check_status.quotation.length; i++) {
+            if (check_status.quotation[i].itemId == itemId) {
+                if (check_status.quotation[i].admin_status !== "pending") {
+                    res.send('you are already submit your response')
+                }
+                else {
+                    try {
+                        const filter = { "data.quotationData.quotation_file_id": itemId };
+                        const update = {
+                            $set: { "data.$[outerElem].quotationData.$[innerElem].approval_status": status }
+                        };
+                        const options = {
+                            arrayFilters: [
+                                { "outerElem.quotationData": { $exists: true } },
+                                { "innerElem.quotation_file_id": itemId }
+                            ],
+                            new: true
+                        };
+
+                        const userUpdate = await registerModel.findOneAndUpdate(filter, update, options);
+
+
+                    } catch (error) {
+                        console.error("Error updating document:", error);
+                    }
+
+
+
+                    if (status === 'approved') {
+                        // If the item exists, update its admin_status and client_status
+                        await projectModel.findOneAndUpdate(
+                            {
+                                project_id: project_id,
+                                "quotation.$.itemId": itemId
+                            },
+                            {
+                                $set: {
+                                    "quotation.$[elem].admin_status": status
+                                   
+
+                                }
+                            },
+                            {
+                                arrayFilters: [{ "elem.itemId": itemId }],
+                                new: true
+                            }
+
+                        );
+                        res.send('Quotation approved successfully!');
+
+                    } if (status === 'rejected') {
+                        await projectModel.findOneAndUpdate(
+                            {
+                                project_id: project_id,
+                                "quotation.$.itemId": itemId
+                            },
+                            {
+                                $set: {
+                                    "quotation.$[elem].admin_status": status,
+                                    "quotation.$[elem].remark": remark
+
+                                }
+                            },
+                            {
+                                arrayFilters: [{ "elem.itemId": itemId }],
+                                new: true
+                            }
+                        );
+                        res.send('Quotation rejected successfully!');
+                    }
+                }
+            }
+
         }
 
     }
