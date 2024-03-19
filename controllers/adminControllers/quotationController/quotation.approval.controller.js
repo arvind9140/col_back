@@ -648,7 +648,8 @@ export const updateStatusAdmin = async (req, res) => {
         for (let i = 0; i < check_status.quotation.length; i++) {
             if (check_status.quotation[i].itemId == itemId) {
                 if (check_status.quotation[i].admin_status !== "pending") {
-                    res.send('you are already submit your response')
+
+                    return responseData(res, "", 400, false, "you are already submit your response");
                 }
                 else {
                     try {
@@ -693,7 +694,8 @@ export const updateStatusAdmin = async (req, res) => {
                             }
 
                         );
-                        res.send('Quotation approved successfully!');
+                        // res.send('Quotation approved successfully!');
+                        responseData(res,"Quotation approved successfully!",200,true,"")
 
                     } if (status === 'rejected') {
                         await projectModel.findOneAndUpdate(
@@ -713,7 +715,8 @@ export const updateStatusAdmin = async (req, res) => {
                                 new: true
                             }
                         );
-                        res.send('Quotation rejected successfully!');
+                        // res.send('Quotation rejected successfully!');
+                        responseData(res, "Quotation rejected successfully!", 200, true, "")
                     }
                 }
             }
