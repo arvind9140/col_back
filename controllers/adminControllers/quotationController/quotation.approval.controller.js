@@ -317,11 +317,11 @@ export const shareQuotation = async (req, res) => {
                 }
                 const checkApproval = await registerModel.findOne({
                     username: user_name,
-                    "data.quotationData.quotation_file_id": file_id,
+                    "data.quotationData.project_id": project_id,
                     "data.quotationData.approval_status": "pending"
                 });
                 if (checkApproval) {
-                    return responseData(res, "", 401, false, "Previous quotation not approved");
+                    return responseData(res, "", 401, false, "Previous quotation not approved or rejected");
                 }
                 const findFile = findQuotation.files.find(folder => folder.folder_name === folder_name)?.files.find(file => file.fileId === file_id);
                 if (!findFile) {
