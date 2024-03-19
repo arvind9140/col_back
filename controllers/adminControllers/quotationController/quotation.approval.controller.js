@@ -243,7 +243,10 @@ export const shareQuotation = async (req, res) => {
                                 client_status: "pending",
                                 file_name: findFile.fileName,
                                 files: findFile,
-                                remark: ""
+                                remark: "",
+                                admin_status:"",
+                                client_remark:""
+                                
                             };
 
 
@@ -275,7 +278,8 @@ export const shareQuotation = async (req, res) => {
                             file_name: findFile.fileName,
                             files: findFile,
                             remark: "",
-                            admin_status: ""
+                            admin_status: "",
+                            client_remark:""
                         };
 
 
@@ -433,7 +437,8 @@ export const shareQuotation = async (req, res) => {
                             file_name: findFile.fileName,
                             files: findFile,
                             remark: "",
-                            client_status: ""
+                            client_status: "",
+                            client_remark:"",
                         };
                         if (findProject.quotation.length > 0) {
                             const createObj = {
