@@ -251,17 +251,57 @@ cron.schedule("0 0 */14 * *", async () => {
 
 export const getNotification = async (req, res) => {
 
+
   try {
-    const find_notification = await notificationModel.find({})
-    if (find_notification.length > 0) {
-      const response = {
-        NotificationData: find_notification
+    const userId = req.query.userId;
+    const find_user = await registerModel.findOne({_id:userId})
+    if(find_user)
+    {
+
+    
+    if(find_user.role ==="PROCUREMENT")
+    {
+      let notificaltionData =[]
+      const find_notification_user = await registerModel.findOne({ _id: userId })
+      for (let i = 0; i < find_notification_user.data[0].notificationData.length; i++) {
+        notificaltionData.push(find_notification_user.data[0].notificationData[i])
       }
-      responseData(res, "notification Data", 200, true, "", response)
+      const find_notification = await notificationModel.find({})
+      
+      for(let i=0;i<find_notification.length;i++)
+      {
+        notificaltionData.push(find_notification[i])
+      }
+
+    
+
+     
+
+    
+
+        const response = {
+          NotificationData: notificaltionData
+        }
+        responseData(res, "notification Data", 200, true, "", response)
+      
     }
-    else {
-      responseData(res, "", 404, false, "No notification found")
+    if(find_user.role ==="ADMIN")
+    {
+      const find_notification = await notificationModel.find({})
+      if (find_notification.length > 0) {
+        const response = {
+          NotificationData: find_notification
+        }
+        responseData(res, "notification Data", 200, true, "", response)
+      }
+      else {
+        responseData(res, "", 404, false, "No notification found")
+      }
     }
+  }
+  else{
+    responseData(res,"",404,false,"User not found")
+  }
 
   }
   catch (error) {
@@ -294,7 +334,7 @@ else{
     return responseData(res, "", 404, false, "User not found");
   }
   else{
-    if(find_user.role === "ADMIN")
+    if(find_user.role === "ADMIN" || find_user.role === "PROCUREMENT")
     {
       if (type === "One") {
         const notification = await Notification.findByIdAndUpdate(

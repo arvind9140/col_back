@@ -4,7 +4,7 @@ import { responseData } from "../utils/respounse.js";
 import registerModel from "../models/usersModels/register.model.js";
 import projectModel from "../models/adminModels/project.model.js";
 import fileuploadModel from "../models/adminModels/fileuploadModel.js";
-import { notificationForUser } from "../controllers/notification/notification.controller.js";
+import { notificationForUser ,getNotification} from "../controllers/notification/notification.controller.js";
 import cron from "node-cron";
 
 export const verifyJWT = async (req, res, next) => {
@@ -186,7 +186,7 @@ export const isAdmin = async(req,res,next) =>{
       return responseData(res, "", 401, false, "Unauthorized: User not found");
     }
 
-    if (user.role === "ADMIN" || user.role === "PROCUREMENT")
+    if (user.role === "ADMIN")
   {
     next(); // Proceed to the next 
   }
@@ -199,6 +199,8 @@ export const isAdmin = async(req,res,next) =>{
     return responseData(res, "", 401, false, "Unauthorized: Invalid token");
   }
 }
+
+
 
 
 
