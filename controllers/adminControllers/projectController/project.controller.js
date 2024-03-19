@@ -226,7 +226,7 @@ export const getAllProject = async (req, res) => {
     } else {
       const check_role = await registerModel.find({ _id: id });
       if (check_role.length > 0) {
-        if (check_role[0].role == "ADMIN") {
+       
           let execution = [];
           let design = [];
           let completed = [];
@@ -266,9 +266,7 @@ export const getAllProject = async (req, res) => {
             "",
             response
           );
-        } else {
-          responseData(res, "", 404, false, " You are not admin!", []);
-        }
+      
       }
       if (check_role.length < 1) {
         responseData(res, "", 404, false, " User not found.", []);
@@ -294,7 +292,7 @@ export const getSingleProject = async (req, res) => {
         responseData(res, "", 404, false, " User not found.", []);
       }
       if (check_role.length > 0) {
-        if (check_role[0].role == "ADMIN") {
+       
           const find_project = await projectModel.find({
             project_id: project_ID,
           });
@@ -304,9 +302,7 @@ export const getSingleProject = async (req, res) => {
           if (find_project < 1) {
             responseData(res, "", 404, false, "project not found", []);
           }
-        } else {
-          responseData(res, "", 404, false, " You are not admin!", []);
-        }
+       
       }
     } catch (err) {
       responseData(res, "", 500, false, "error in fetching projects", err);
