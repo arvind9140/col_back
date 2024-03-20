@@ -217,7 +217,7 @@ export const shareQuotation = async (req, res) => {
             };
             let check_status = 0;
             const check_data = await projectModel.findOne({
-                project_id:project_id,
+                project_id: project_id,
                 "quotation.$.itemId": file_id
             })
             if (check_data.quotation.length > 0) {
@@ -235,6 +235,7 @@ export const shareQuotation = async (req, res) => {
                 if (check_status == 0) {
                     transporter.sendMail(mailOptions, async (error, info) => {
                         if (error) {
+                            console.log(error)
                             return responseData(res, "", 400, false, "Failed to send email");
                         } else {
 
@@ -244,9 +245,9 @@ export const shareQuotation = async (req, res) => {
                                 file_name: findFile.fileName,
                                 files: findFile,
                                 remark: "",
-                                admin_status:"",
-                                client_remark:""
-                                
+                                admin_status: "",
+                                client_remark: ""
+
                             };
 
 
@@ -256,7 +257,7 @@ export const shareQuotation = async (req, res) => {
                                 client: "client"
                             }
                             await storeOrUpdateQuotations(res, createObj);
-                           
+
                         }
                     });
 
@@ -269,6 +270,7 @@ export const shareQuotation = async (req, res) => {
             if (check_data.quotation.length < 1) {
                 transporter.sendMail(mailOptions, async (error, info) => {
                     if (error) {
+                        console.log(error)
                         return responseData(res, "", 400, false, "Failed to send email");
                     } else {
 
@@ -279,7 +281,7 @@ export const shareQuotation = async (req, res) => {
                             files: findFile,
                             remark: "",
                             admin_status: "",
-                            client_remark:""
+                            client_remark: ""
                         };
 
 
@@ -289,7 +291,7 @@ export const shareQuotation = async (req, res) => {
 
                         }
                         await storeOrUpdateQuotations(res, createObj, true);
-                       
+
                     }
                 });
 
@@ -438,7 +440,7 @@ export const shareQuotation = async (req, res) => {
                             files: findFile,
                             remark: "",
                             client_status: "",
-                            client_remark:"",
+                            client_remark: "",
                         };
                         if (findProject.quotation.length > 0) {
                             const createObj = {
@@ -585,7 +587,7 @@ export const updateStatusClient = async (req, res) => {
         for (let i = 0; i < check_status.quotation.length; i++) {
             if (check_status.quotation[i].itemId == itemId) {
                 if (check_status.quotation[i].client_status !== "pending") {
-                    res.send("You are already submit your response")
+                    res.send(`<h1>asfdghjmnbvcdsretyuikjhnbvc</h1>`)
                 }
                 else {
                     if (status === 'approved') {
@@ -689,7 +691,7 @@ export const updateStatusAdmin = async (req, res) => {
                             {
                                 $set: {
                                     "quotation.$[elem].admin_status": status
-                                   
+
 
                                 }
                             },
@@ -700,7 +702,7 @@ export const updateStatusAdmin = async (req, res) => {
 
                         );
                         // res.send('Quotation approved successfully!');
-                        responseData(res,"Quotation approved successfully!",200,true,"")
+                        responseData(res, "Quotation approved successfully!", 200, true, "")
 
                     } if (status === 'rejected') {
                         await projectModel.findOneAndUpdate(

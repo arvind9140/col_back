@@ -27,6 +27,8 @@ dotenv.config({
   path: "./.env",
 });
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 mongoose.set("strictQuery", true);
 const connect = async () => {
   try {
