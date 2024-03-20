@@ -23,15 +23,17 @@ const transporter = nodemailer.createTransport({
 export const sendotpforgetpassword = async (req, res) => {
   const email = req.body.email;
 
+
   if (!onlyEmailValidation(email)) {
     responseData(res, "", 401, false, "Invalid email address");
   }
 
   try {
+    
     //checking email is registered or not
     const user = await registerModel.find({ email:email });
     if (user.length < 1) {
-      return responseData(res, 404, "Email not registered");
+      return responseData(res,"", 404,false, "Email not registered");
     }
     if (user.length > 0) {
      const delete_otp = await otpForForgetpassModel.findOneAndDelete({ email:email });
