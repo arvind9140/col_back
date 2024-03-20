@@ -44,11 +44,19 @@ export const shareFile = async (req, res) => {
             return responseData(res, "", 400, false, "Invalid email address", null);
         } else {
             let findfiles;
+            let attachments = [];
 
             if (type === 'template') {
                 findfiles = await fileuploadModel.findOne({
                     "files.folder_id": folderId,
                 });
+                for (let i = 0; i < findfiles.files.length; i++) {
+                    for (let j = 0; j < findfiles.files[i].files.length; j++) {
+                        if (fileId.includes(findfiles.files[i].files[j].fileId)) {
+                            attachments.push({ path: findfiles.files[i].files[j].fileUrl });
+                        }
+                    }
+                }
             } else {
                 findfiles = await fileuploadModel.findOne({
                     $or: [
@@ -56,19 +64,25 @@ export const shareFile = async (req, res) => {
                         { lead_id: leadId },
                     ]
                 });
+                if (findfiles && findfiles.files) {
+                    for (let i = 0; i < findfiles.files.length; i++) {
+                        if (findfiles.files[i].files) {
+                            for (let j = 0; j < findfiles.files[i].files.length; j++) {
+                                if (fileId.includes(findfiles.files[i].files[j].fileId)) {
+                                    attachments.push({ path: findfiles.files[i].files[j].fileUrl });
+                                }
+                            }
+                        }
+                    }
+                }
             }
+
 
             if (!findfiles) {
                 return responseData(res, "", 404, false, "Data Not Found", null);
             }
-            const attachments = [];
-            for (let i = 0; i < findfiles.files.length; i++) {
-                for (let j = 0; j < findfiles.files[i].files.length; j++) {
-                    if (fileId.includes(findfiles.files[i].files[j].fileId)) {
-                        attachments.push({ path: findfiles.files[i].files[j].fileUrl });
-                    }
-                }
-            }
+           
+          
             const mailOptions = {
                 from: "a72302492@gmail.com",
                 to: email,
