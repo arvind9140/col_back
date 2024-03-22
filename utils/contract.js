@@ -233,14 +233,14 @@ font-family:"Times New Roman",serif'>&nbsp;</span></p>
 
                 <p class=MsoNormal align=center style='margin-top:11.85pt;margin-right:5.05pt;
 margin-bottom:0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><b><u><span
-                                                style='font-size:12.0pt;background:yellow'>${project}, ${city}</span></u></b></p>
+                                                style='font-size:12.0pt;'>${project}, ${city}</span></u></b></p>
 
                 <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
                 <p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:10.5pt'>&nbsp;</span></b></p>
 
                 <h1 style='margin-left:5.0pt'>Client                   –<span style='letter-spacing:
--.15pt'> </span><span style='background:yellow'>${client_name[0]}</span></h1>
+-.15pt'> </span><span style=''>${client_name[0]}</span></h1>
 
                 <p class=MsoBodyText style='margin-top:.5pt'><b><span style='font-size:9.5pt'>&nbsp;</span></b></p>
 
@@ -253,27 +253,27 @@ margin-bottom:0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><b>
 
                 <p class=MsoBodyText style='margin-top:.05pt;margin-right:247.55pt;margin-bottom:
 0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:200%'>Date                      -
-                        <span style='background:yellow'>${date}</span>
+                        <span style=''>${date}</span>
                 </p>
                 <pclass=MsoBodyText style='margin-top:.05pt;margin-right:247.55pt;margin-bottom:
 0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:200%>
                 <span style='letter-spacing:
 .05pt'> </span><span style='letter-spacing:-.05pt;margin-right:40.55pt;'>Quotation No. </span> -<span
                                 style='letter-spacing:-.25pt'> </span>CCPL<span style='letter-spacing:-.3pt'>
-                        </span>/<span style='background:yellow'>${quotation}</span></p>
+                        </span>/<span style=''>${quotation}</span></p>
 
                 <p class=MsoBodyText style='margin-left:5.0pt;line-height:150%'>Site Address          -
-                        <span style='background:yellow'>${site_address}</span>
+                        <span style=''>${site_address}</span>
                 </p>
 
                 <p class=MsoBodyText style='margin-top:.05pt'>&nbsp;</p>
 
                 <p class=MsoBodyText style='margin-left:5.0pt'>Client<span style='letter-spacing:
--.15pt'> </span>Contact        - <span style='background:yellow'>${client_name[0]}</span>;</p>
+-.15pt'> </span>Contact        - <span style=''>${client_name[0]}</span>;</p>
 
                 <p class=MsoBodyText style='margin-top:.25pt'>&nbsp;</p>
 
-                <p class=MsoBodyText style='margin-left:120.6pt'><span style='background:yellow'>+91${client_phone[0]},  <span class=MsoHyperlink>${client_email[0]}</span></span> </p>
+                <p class=MsoBodyText style='margin-left:120.6pt'><span >+91${client_phone[0]},  <span class=MsoHyperlink>${client_email[0]}</span></span> </p>
 
                 <p class=MsoBodyText style='margin-top:.2pt'><span style='font-size:8.0pt'>&nbsp;</span></p>
 
@@ -311,8 +311,7 @@ margin-bottom:0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><b>
                                 designs by the Colonelz Team, in<span style='letter-spacing:-.3pt'> </span>the<span
                                         style='letter-spacing:-.3pt'> </span>apartment<span
                                         style='letter-spacing:-.4pt'>
-                                </span>of<span style='letter-spacing:-.3pt'> </span><span style='background:
-yellow'>${client_name[0]},<span style='letter-spacing:-.25pt'> r/o </span>${site_address}</span><span
+                                </span>of<span style='letter-spacing:-.3pt'> </span><span >${client_name[0]},<span style='letter-spacing:-.25pt'> r/o </span>${site_address}</span><span
                                         style='letter-spacing:-.25pt'> </span>(hereinafter known as <b>The Client</b>).
                                 Design scope shall also cover<span style='letter-spacing:.05pt'> </span>periodic<span
                                         style='letter-spacing:-.4pt'> </span>supervision<span style='letter-spacing:
@@ -780,10 +779,10 @@ Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nb
                 <h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:0in;margin-left:
 41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-.25in;line-height:
 115%'><span style='font-weight:normal'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Design charges @ ₹<span style='background:yellow'>${design_charges_per_sft}</span>/ Sft
-                        x Covered area @<span style='background:yellow'>${cover_area_in_sft}</span> Sft = ₹<span
-                                style='background:yellow'>${design_total_charges}</span>/-<span style='letter-spacing:.05pt;
-font-weight:normal'> </span><span style='font-weight:normal'>(Rupees <span style='background:yellow'> ${design_total_charges_in_words}
+                                </span></span>Design charges @ ₹<span style=''>${design_charges_per_sft}</span>/ Sft
+                        x Covered area @<span style=''>${cover_area_in_sft}</span> Sft = ₹<span
+                                style=''>${design_total_charges}</span>/-<span style='letter-spacing:.05pt;
+font-weight:normal'> </span><span style='font-weight:normal'>(Rupees <span style=''> ${design_total_charges_in_words}
                                 </span> Only) excl. of<span style='letter-spacing:.05pt'> </span>taxes and
                                 Terrace &amp; Balcony area.</span></h1>
 
@@ -794,9 +793,9 @@ font-weight:normal'> </span><span style='font-weight:normal'>(Rupees <span style
 41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-.25in;line-height:
 115%'><span style='font-weight:normal'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
                                 </span></span>Design charges after Special Armed Forces Discount (20% i.e. ₹<span
-                                style='background:yellow'>${design_discount}</span>/-) = ₹<span
-                                style='background:yellow'>${design_total_charges_after_discount}</span>/-<span style='font-weight:normal'> (Rupees <span
-                                        style='background:yellow'>${design_total_charges_after_discount_in_words}
+                                style=''>${design_discount}</span>/-) = ₹<span
+                                style=''>${design_total_charges_after_discount}</span>/-<span style='font-weight:normal'> (Rupees <span
+                                        style=''>${design_total_charges_after_discount_in_words}
         </span> Only) excl. of<span style='letter-spacing:.05pt'>
                                 </span>taxes.</span></h1>
 
@@ -806,11 +805,11 @@ font-weight:normal'> </span><span style='font-weight:normal'>(Rupees <span style
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
 -.25in;line-height:115%'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
                         </span><b>Balconies / Terrace at 60% of the discounted rate (₹<span
-                                        style='background:yellow'>${terrace_and_balcony_charges_per_sft}</span>/Sft) ie @ ₹<span
-                                        style='background:yellow'>${terrace_and_balcony_total_charges_discount}</span>/
-                                Sft x Terrace &amp; Balcony area @<span style='background:yellow'>${terrace_and_balcony_area_in_sft}</span>
-                                Sft = ₹<span style='background:yellow'> ${terrace_and_balcony_total_charges}</span> /-</b> (Rupees <b><span
-                                        style='background:yellow'>${terrace_and_balcony_total_charges_in_words}</span></b> Only) excl. of<span
+                                        style=''>${terrace_and_balcony_charges_per_sft}</span>/Sft) ie @ ₹<span
+                                        style=''>${terrace_and_balcony_total_charges_discount}</span>/
+                                Sft x Terrace &amp; Balcony area @<span style=''>${terrace_and_balcony_area_in_sft}</span>
+                                Sft = ₹<span style=''> ${terrace_and_balcony_total_charges}</span> /-</b> (Rupees <b><span
+                                        style=''>${terrace_and_balcony_total_charges_in_words}</span></b> Only) excl. of<span
                                 style='letter-spacing:.05pt'> </span>taxes.</p>
 
                 <p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
@@ -820,10 +819,10 @@ font-weight:normal'> </span><span style='font-weight:normal'>(Rupees <span style
 41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-.25in;line-height:
 115%'><span style='font-weight:normal'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
                                 </span></span>Final Design charges as per the site areas mentioned above are ₹<span
-                                style='background:yellow;font-weight:normal'> ${design_total_charges_after_discount}</span> /- (Covered area) + ₹<span
-                                style='background:yellow;font-weight:normal'> ${terrace_and_balcony_total_charges}</span> /- (Terrace &amp;
-                        Balcony area) = ₹<span style='background:yellow;font-weight:normal'> ${total_design_charges}</span>
-                        /- <span style='font-weight:normal'>(Rupees <span style='background:yellow'>${total_design_charges_in_words}
+                                style=';font-weight:normal'> ${design_total_charges_after_discount}</span> /- (Covered area) + ₹<span
+                                style=';font-weight:normal'> ${terrace_and_balcony_total_charges}</span> /- (Terrace &amp;
+                        Balcony area) = ₹<span style=';font-weight:normal'> ${total_design_charges}</span>
+                        /- <span style='font-weight:normal'>(Rupees <span style=''>${total_design_charges_in_words}
                                     </span> Only) excl. of<span style='letter-spacing:.05pt'>
                                 </span>taxes.</span></h1>
 
@@ -1337,7 +1336,7 @@ Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nb
                                 </span></span>As detailed above, W shall be deemed to commence from the Date of
                         Signing of the finalised BoQ, Finalised Furniture and other Plans and receipt
                         of Project Implementation Mobilization Advance. All delays due to whatsoever
-                        reason shall be communicated on the <b>“ <span style='background:yellow'>${project}</span>”</b>
+                        reason shall be communicated on the <b>“ <span style=''>${project}</span>”</b>
                         group and preferably on the emails as in this document. After accounting and
                         adjusting for all delays, the Final Completion Date shall be arrived at.</p>
 
@@ -1575,7 +1574,7 @@ line-height:115%'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp
                 <p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:6.0pt'>&nbsp;</span></b></p>
 
                 <p class=MsoBodyText style='margin-top:5.05pt;margin-right:0in;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt'><span style='background:yellow'>${client_name[0]}</span>                                                                 Ms
+0in;margin-left:5.0pt;margin-bottom:.0001pt'><span style=''>${client_name[0]}</span>                                                                 Ms
                         Naomi<span style='letter-spacing:.05pt'> </span>Sahay</p>
 
                 <p class=MsoBodyText>&nbsp;</p>
@@ -1641,13 +1640,183 @@ export function commercialContract(
   franchises
 ) {
   const htmlTemplate = `
-   <html>
+  <html>
 
 <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv="Content-Style-Type" content="text/css">
-        <meta name="generator" content="Aspose.Words for .NET 17.1.0.0">
-        <title></title>
+        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
+        <meta name=Generator content="Microsoft Word 15 (filtered)">
+        <title>Microsoft Word - Int Design</title>
+        <style>
+                <!--
+                /* Font Definitions */
+                @font-face {
+                        font-family: Wingdings;
+                        panose-1: 5 0 0 0 0 0 0 0 0 0;
+                }
+
+                @font-face {
+                        font-family: "Cambria Math";
+                        panose-1: 2 4 5 3 5 4 6 3 2 4;
+                }
+
+                @font-face {
+                        font-family: Verdana;
+                        panose-1: 2 11 6 4 3 5 4 4 2 4;
+                }
+
+                @font-face {
+                        font-family: Tahoma;
+                        panose-1: 2 11 6 4 3 5 4 4 2 4;
+                }
+
+                /* Style Definitions */
+                p.MsoNormal,
+                li.MsoNormal,
+                div.MsoNormal {
+                        margin: 0in;
+                        text-autospace: none;
+                        font-size: 11.0pt;
+                        font-family: "Verdana", sans-serif;
+                }
+
+                h1 {
+                        mso-style-link: "Heading 1 Char";
+                        margin-top: 0in;
+                        margin-right: 0in;
+                        margin-bottom: 0in;
+                        margin-left: 4.2pt;
+                        text-autospace: none;
+                        font-size: 11.0pt;
+                        font-family: "Verdana", sans-serif;
+                }
+
+                p.MsoTitle,
+                li.MsoTitle,
+                div.MsoTitle {
+                        margin-top: 13.25pt;
+                        margin-right: 5.05pt;
+                        margin-bottom: 0in;
+                        margin-left: 4.2pt;
+                        text-align: center;
+                        text-autospace: none;
+                        font-size: 14.0pt;
+                        font-family: "Verdana", sans-serif;
+                        font-weight: bold;
+                        text-decoration: underline;
+                }
+
+                p.MsoBodyText,
+                li.MsoBodyText,
+                div.MsoBodyText {
+                        mso-style-link: "Body Text Char";
+                        margin: 0in;
+                        text-autospace: none;
+                        font-size: 11.0pt;
+                        font-family: "Verdana", sans-serif;
+                }
+
+                a:link,
+                span.MsoHyperlink {
+                        color: blue;
+                        text-decoration: underline;
+                }
+
+                a:visited,
+                span.MsoHyperlinkFollowed {
+                        color: purple;
+                        text-decoration: underline;
+                }
+
+                p.MsoAcetate,
+                li.MsoAcetate,
+                div.MsoAcetate {
+                        mso-style-link: "Balloon Text Char";
+                        margin: 0in;
+                        text-autospace: none;
+                        font-size: 8.0pt;
+                        font-family: "Tahoma", sans-serif;
+                }
+
+                p.MsoListParagraph,
+                li.MsoListParagraph,
+                div.MsoListParagraph {
+                        margin-top: 0in;
+                        margin-right: 0in;
+                        margin-bottom: 0in;
+                        margin-left: 90.05pt;
+                        text-indent: -28.5pt;
+                        text-autospace: none;
+                        font-size: 11.0pt;
+                        font-family: "Verdana", sans-serif;
+                }
+
+                p.TableParagraph,
+                li.TableParagraph,
+                div.TableParagraph {
+                        mso-style-name: "Table Paragraph";
+                        margin: 0in;
+                        text-autospace: none;
+                        font-size: 11.0pt;
+                        font-family: "Verdana", sans-serif;
+                }
+
+                span.BodyTextChar {
+                        mso-style-name: "Body Text Char";
+                        mso-style-link: "Body Text";
+                        font-family: "Verdana", sans-serif;
+                }
+
+                span.BalloonTextChar {
+                        mso-style-name: "Balloon Text Char";
+                        mso-style-link: "Balloon Text";
+                        font-family: "Tahoma", sans-serif;
+                }
+
+                span.Heading1Char {
+                        mso-style-name: "Heading 1 Char";
+                        mso-style-link: "Heading 1";
+                        font-family: "Verdana", sans-serif;
+                        font-weight: bold;
+                }
+
+                .MsoChpDefault {
+                        font-family: "Calibri", sans-serif;
+                }
+
+                .MsoPapDefault {
+                        text-autospace: none;
+                }
+
+                /* Page Definitions */
+                @page WordSection1 {
+                        size: 595.5pt 842.0pt;
+                        margin: 79.0pt 66.0pt 37.0pt 67.0pt;
+                }
+
+                div.WordSection1 {
+                        page: WordSection1;
+                }
+
+                @page WordSection2 {
+                        size: 595.5pt 842.0pt;
+                        margin: 69.0pt 66.0pt 37.0pt 67.0pt;
+                }
+
+                div.WordSection2 {
+                        page: WordSection2;
+                }
+
+                /* List Definitions */
+                ol {
+                        margin-bottom: 0in;
+                }
+
+                ul {
+                        margin-bottom: 0in;
+                }
+                -->
+        </style>
+
 </head>
 
 <body>
@@ -1671,8 +1840,8 @@ export function commercialContract(
                                 style="font-family:Verdana; font-weight:bold; text-decoration:underline">CONTRACT</span>
                 </p>
                 <p style="margin-top:0pt; margin-bottom:12pt; text-align:center; font-size:11pt"><span
-                                style="font-family:Verdana; font-weight:bold; text-decoration:underline; background-color:#ffff00"></span><span
-                                style="font-family:Verdana; font-weight:bold; text-decoration:underline; background-color:#ffff00">${client}</span><span
+                                style="font-family:Verdana; font-weight:bold; text-decoration:underline; "></span><span
+                                style="font-family:Verdana; font-weight:bold; text-decoration:underline; ">${client}</span><span
                                 style="font-family:Verdana; font-weight:bold; text-decoration:underline">,
                                 ${city}</span></p>
                 <p style="margin-top:0pt; margin-bottom:12pt; font-size:11pt"><span
@@ -1685,9 +1854,9 @@ export function commercialContract(
                                 style="width:36pt; display:inline-block">&nbsp;</span><span
                                 style="width:36pt; display:inline-block">&nbsp;</span><span
                                 style="font-family:Verdana; font-weight:bold">- </span><span
-                                style="font-family:Verdana; font-weight:bold; background-color:#ffff00">${client}</span><span style="font-family:Verdana; font-weight:bold; background-color:#ffff00">
+                                style="font-family:Verdana; font-weight:bold; ">${client}</span><span style="font-family:Verdana; font-weight:bold; ">
                                 by </span><span
-                                style="font-family:Verdana; font-weight:bold; background-color:#ffff00">Company/${franchises}</span></p>
+                                style="font-family:Verdana; font-weight:bold; ">Company/${franchises}</span></p>
                 <p style="margin-top:0pt; margin-bottom:12pt; font-size:11pt"><span
                                 style="font-family:Verdana; font-weight:bold">Designer</span><span
                                 style="width:16.98pt; display:inline-block">&nbsp;</span><span
@@ -1699,7 +1868,7 @@ export function commercialContract(
                                 style="width:36pt; display:inline-block">&nbsp;</span><span
                                 style="width:36pt; display:inline-block">&nbsp;</span><span
                                 style="font-family:Verdana">- </span><span
-                                style="font-family:Verdana; background-color:#ffff00">${date}</span>
+                                style="font-family:Verdana; ">${date}</span>
                 <p style="margin-top:0pt; margin-bottom:12pt; font-size:11pt"><span
                                 style="font-family:Verdana">Quotation No</span><span
                                 style="width:35pt; display:inline-block">&nbsp;</span><span
@@ -1710,7 +1879,7 @@ export function commercialContract(
                         <span style="font-family:Verdana">Site Address</span><span
                                 style="width:37.27pt; text-indent:0pt; display:inline-block">&nbsp;</span><span
                                 style="font-family:Verdana">- </span><span
-                                style="font-family:Verdana; background-color:#ffff00">${site_address}</span></p>
+                                style="font-family:Verdana; ">${site_address}</span></p>
                 <p style="margin-top:0pt; margin-left:108pt; margin-bottom:0pt; text-indent:-106.5pt; line-height:15pt">
                         <span style="font-family:Verdana; font-size:11pt">Client Contact </span>
                         
@@ -1722,16 +1891,16 @@ export function commercialContract(
                                 style="font-family:Verdana; font-size:11pt">-</span><span
                                 style="font-family:Verdana; font-size:11pt"> </span>
                                 <span
-                                style="font-family:Verdana; font-size:11pt; background-color:#ffff00">${client_name[index]}</span><span
-                                style="font-family:Verdana; font-size:11pt; background-color:#ffff00"> </span><span
-                                style="font-family:Verdana; font-size:11pt; background-color:#ffff00">: +91 </span><span
-                                style="font-family:Verdana; font-size:11pt; background-color:#ffff00">${client_phone[index]}; </span><a
+                                style="font-family:Verdana; font-size:11pt; ">${client_name[index]}</span><span
+                                style="font-family:Verdana; font-size:11pt; "> </span><span
+                                style="font-family:Verdana; font-size:11pt; ">: +91 </span><span
+                                style="font-family:Verdana; font-size:11pt; ">${client_phone[index]}; </span><a
                                 href="mailto:${client_email[index]}" style="text-decoration:none"><span
-                                        style="font-family:'Times New Roman'; font-size:10pt; color:#000000; background-color:#ffff00">&nbsp;</span><span
-                                        style="font-family:Verdana; font-size:11pt; text-decoration:underline; color:#0000ff; background-color:#ffff00">${client_email[index]}</span></a><span
-                                style="font-family:Verdana; font-size:11pt; background-color:#ffff00"> </span></p>
+                                        style="font-family:'Times New Roman'; font-size:10pt; color:#000000; ">&nbsp;</span><span
+                                        style="font-family:Verdana; font-size:11pt; text-decoration:underline; color:#0000ff; ">${client_email[index]}</span></a><span
+                                style="font-family:Verdana; font-size:11pt; "> </span></p>
                 <p style="margin-top:0pt; margin-left:108pt; margin-bottom:0pt; line-height:15pt"><span
-                                style="font-family:Verdana; font-size:11pt; background-color:#ffff00">&nbsp; </span>
+                                style="font-family:Verdana; font-size:11pt; ">&nbsp; </span>
                        
                             `
                            )
@@ -1779,13 +1948,13 @@ export function commercialContract(
                                 of all drawings for the execution of </span><span
                                 style="font-family:Verdana">w</span><span style="font-family:Verdana">orks
                                 for</span><span style="font-family:Verdana"> the </span><span
-                                style="font-family:Verdana; background-color:#ffff00"> ${client}</span><span
-                                style="font-family:Verdana; background-color:#ffff00"> of </span><span
-                                style="font-family:Verdana; background-color:#ffff00">Company/</span><span
-                                style="font-family:Verdana; background-color:#ffff00">${franchises}</span><span
-                                style="font-family:Verdana; background-color:#ffff00">,</span><span
-                                style="font-family:Verdana; background-color:#ffff00"> at </span><span
-                                style="font-family:Verdana; background-color:#ffff00"> ${site_address}</span><span
+                                style="font-family:Verdana; "> ${client}</span><span
+                                style="font-family:Verdana; "> of </span><span
+                                style="font-family:Verdana; ">Company/</span><span
+                                style="font-family:Verdana; ">${franchises}</span><span
+                                style="font-family:Verdana; ">,</span><span
+                                style="font-family:Verdana; "> at </span><span
+                                style="font-family:Verdana; "> ${site_address}</span><span
                                 style="font-family:Verdana">,</span><span style="font-family:Verdana"> represented by
                                 its Director, </span><span style="font-family:Verdana">${
                                   client_name[0]
@@ -2148,30 +2317,30 @@ export function commercialContract(
                                 style="font-family:Verdana">Total </span><span style="font-family:Verdana">cost for
                         </span><span style="font-family:Verdana">Designing and Supervision shall be</span><span
                                 style="font-family:Verdana; color:#202124; background-color:#ffffff"> </span><span
-                                style="font-family:Verdana; font-weight:bold; background-color:#ffff00">INR</span><span
-                                style="font-family:Verdana; font-weight:bold; background-color:#ffff00"> </span><span
-                                style="font-family:Verdana; font-weight:bold; background-color:#ffff00">${cost}</span><span
+                                style="font-family:Verdana; font-weight:bold; ">INR</span><span
+                                style="font-family:Verdana; font-weight:bold; "> </span><span
+                                style="font-family:Verdana; font-weight:bold; ">${cost}</span><span
                                 style="font-family:Verdana; font-weight:bold">/</span><span
                                 style="font-family:Verdana; font-weight:bold">excl</span><span
                                 style="font-family:Verdana; font-weight:bold">.</span><span
                                 style="font-family:Verdana; font-weight:bold"> taxes</span><span
                                 style="font-family:Verdana; font-weight:bold"> (</span><span
                                 style="font-family:Verdana; font-weight:bold">Rupees </span><span
-                                style="font-family:Verdana; font-weight:bold; background-color:#ffff00">${cost_in_word} 
+                                style="font-family:Verdana; font-weight:bold; ">${cost_in_word} 
                                </span><span style="font-family:Verdana; font-weight:bold"> </span><span
                                 style="font-family:Verdana; font-weight:bold">Only)</span><span
                                 style="font-family:Verdana; font-weight:bold"> </span><span
                                 style="font-family:Verdana">applicable solely to the </span><span
                                 style="font-family:Verdana">“</span><span
-                                style="font-family:Verdana; background-color:#ffff00">${client}</span><span
-                                style="font-family:Verdana; background-color:#ffff00">”</span><span
-                                style="font-family:Verdana; background-color:#ffff00"> situated at </span><span
-                                style="font-family:Verdana; background-color:#ffff00">“</span><span
-                                style="font-family:Verdana; background-color:#ffff00">${site_address}</span><span
+                                style="font-family:Verdana; ">${client}</span><span
+                                style="font-family:Verdana; ">”</span><span
+                                style="font-family:Verdana; "> situated at </span><span
+                                style="font-family:Verdana; ">“</span><span
+                                style="font-family:Verdana; ">${site_address}</span><span
                                 style="font-family:Verdana">”</span><span style="font-family:Verdana">.</span></p>
                 <p style="margin-top:0pt; margin-bottom:12pt; text-align:justify; font-size:11pt"><span
                                 style="font-family:Verdana">For all </span><span
-                                style="font-family:Verdana; background-color:#ffff00">${client}</span><span
+                                style="font-family:Verdana; ">${client}</span><span
                                 style="font-family:Verdana"> at </span><span style="font-family:Verdana">other
                         </span><span style="font-family:Verdana">location</span><span
                                 style="font-family:Verdana">s</span><span style="font-family:Verdana">, </span><span
@@ -2307,9 +2476,9 @@ export function commercialContract(
                                 <span>The Designer agrees to abide by ‘</span><span style="font-weight:bold">No Compete
                                         Agreement’,</span><span> in that they will not accept Designing works from any
                                         Competitor Franchise, opening similar Outlets of </span><span
-                                        style="background-color:#ffff00">${client}</span><span
-                                        style="background-color:#ffff00">, of </span><span
-                                        style="background-color:#ffff00">Company/${franchises}</span><span>, for making
+                                        style="">${client}</span><span
+                                        style="">, of </span><span
+                                        style="">Company/${franchises}</span><span>, for making
                                         similar Food &amp; Beverage Outlet.</span><span> The Site pics will also not be
                                         used on Social Media or elsewhere, for One Year from the date of
                                 </span><span>Handover of the Project, by The Designer</span><span>.</span></li>

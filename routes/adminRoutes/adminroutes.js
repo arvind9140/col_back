@@ -59,7 +59,7 @@ router.route("/get/onefile").get(getSingleFileData);
 router.route("/lead/getfile").get(getleadData);
 router.route("/project/getfile").get(getprojectData);
 router.route("/project/fileupload").post(projectFileUpload);
-router.route("/view/contract").get(contractShare);
+router.route("/view/contract").post(contractShare);
 router.route("/share/file").post(shareFile);
 router.route("/template/fileupload").post(templateFileUpload);
 router.route("/template/single/file").get(getSingleTemplateFile);

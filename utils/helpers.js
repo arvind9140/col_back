@@ -182,6 +182,4 @@ export const getMongoosePaginationOptions = ({
 /**
  * @param {number} max Ceil threshold (exclusive)
  */
-export const getRandomNumber = (max) => {
-  return Math.floor(Math.random() * max);
-};
+

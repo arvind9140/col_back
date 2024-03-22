@@ -29,13 +29,18 @@ const s3 = new AWS.S3({
   region: "ap-south-1",
 });
 
-const uploadImage = async (filePath, fileName, quotation) => {
+const uploadImage = async (req, filePath, fileName) => {
+
+  if (typeof fileName !== 'string') {
+    fileName = String(fileName);
+  }
   let response = s3
     .upload({
-      Bucket: `interior-design1/${quotation}`,
+      Bucket: `interior-design1`,
       Key: fileName,
-      query: filePath,
-
+      Body: fs.createReadStream(filePath),
+      ContentType: 'application/pdf',
+        // ACL: "public-read",
     })
     .promise();
   return response
@@ -121,24 +126,23 @@ function numberToWordsString(number) {
 
 export const contractShare = async (req, res) => {
 
-  const client_email = JSON.parse(req.query.client_email);
-  const client_phone = JSON.parse( req.query.client_phone);
+  const client_email = req.body.client_email;
+  const client_phone = req.body.client_phone;
 
-  const site_address = req.query.site_address;
-  const date = req.query.date;
-  const city = req.query.city;
-  const type = req.query.type;
-  const quotation = req.query.quotation;
-  const client_name = JSON.parse( req.query.client_name);
-
-
-
+  const site_address = req.body.site_address;
+  const date = req.body.date;
+  const city = req.body.city;
+  const type = req.body.type;
+  const quotation = req.body.quotation;
+  const client_name = req.body.client_name;
+  //  const project_id = req.body.project_id;
+  // const contract_id = req.body.contract_id;
 
 
   if (type === "commercial") {
-    const client = req.query.client;
-    const franchises = req.query.franchises;
-    const cost = req.query.cost;
+    const client = req.body.client;
+    const franchises = req.body.franchises;
+    const cost = req.body.cost;
     const total_cost = parseFloat(cost);
     const cost_in_word = numberToWordsString(total_cost);
     const htmlTemplate = commercialContract(
@@ -165,26 +169,67 @@ export const contractShare = async (req, res) => {
       },
     };
     const contract_name = generateSixDigitNumber();
-    const localFilePath = `contract/${contract_name}.pdf`; // Local file path
-   
+    // Local file path
 
-    pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
+
+    pdf.create(htmlTemplate, pdfOptions).toStream(async(err, stream) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.setHeader("Content-Type", "application/pdf");
-        stream.pipe(res);
+        // stream.pipe(res);
+        // res.send(localFilePath)
+        const localFilePath = `contract/${contract_name}${Date.now()}.pdf`;
+        const fileWriteStream = fs.createWriteStream(localFilePath);
+
+        // Pipe the PDF stream to the file write stream
+        stream.pipe(fileWriteStream);
+
+        // Handle events for when the stream finishes writing to the file
+        fileWriteStream.on('finish', async () => {
+          // Close the file write stream
+          fileWriteStream.close();
+
+          let response;
+          try {
+         
+            response = await uploadImage(req, localFilePath, contract_name);
+            if (response.status) {
+              responseData(res, "contract create successfully", 200, true, "", response.data.Location);
+              console.log(response.data.Location);
+              fs.unlink(localFilePath, (unlinkErr) => {
+                if (unlinkErr) {
+                  console.error('Error deleting local PDF file:', unlinkErr);
+                } else {
+                  console.log('Local PDF file deleted successfully');
+                }
+              });
+            
+            } else {
+              console.log(response)
+              responseData(res, "contract create failed", 400, false, "", "");
+            }
+          } catch (error) {
+            console.error("Error uploading image:", error);
+            responseData(res, "contract create failed", 500, false, "", "");
+          }
+        });
+
+        // Handle errors during the file writing process
+        fileWriteStream.on('error', (error) => {
+          console.error("Error writing PDF to file:", error);
+          responseData(res, "contract create failed", 500, false, "", "");
+        });
       }
     });
 
   }
 
   else if (type === "residential") {
-    const project = req.query.project_name;
-    const design_charges_per_sft = req.query.design_charges_per_sft;
-    const cover_area_in_sft = req.query.cover_area_in_sft;
-    const terrace_and_balcony_charges_per_sft = req.query.terrace_and_balcony_charges_per_sft;
-    const terrace_and_balcony_area_in_sft = req.query.terrace_and_balcony_area_in_sft;
+    const project = req.body.project_name;
+    const design_charges_per_sft = req.body.design_charges_per_sft;
+    const cover_area_in_sft = req.body.cover_area_in_sft;
+    const terrace_and_balcony_charges_per_sft = req.body.terrace_and_balcony_charges_per_sft;
+    const terrace_and_balcony_area_in_sft = req.body.terrace_and_balcony_area_in_sft;
 
     const design_total_charges = parseFloat(design_charges_per_sft) * parseFloat(cover_area_in_sft);
     const design_total_charges_in_words = numberToWordsString(design_total_charges)
@@ -239,18 +284,57 @@ export const contractShare = async (req, res) => {
         left: "1cm",
       },
     };
-    const contract_name = new Date();
-
-
-
-    pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
+    const contract_name = generateSixDigitNumber();
+    pdf.create(htmlTemplate, pdfOptions).toStream(async (err, stream) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        res.setHeader("Content-Type", "application/pdf");
-        stream.pipe(res);
+        // stream.pipe(res);
+        // res.send(localFilePath)
+        const localFilePath = `contract/${contract_name}.${Date.now()}.pdf`;
+        const fileWriteStream = fs.createWriteStream(localFilePath);
+
+        // Pipe the PDF stream to the file write stream
+        stream.pipe(fileWriteStream);
+
+        // Handle events for when the stream finishes writing to the file
+        fileWriteStream.on('finish', async () => {
+          // Close the file write stream
+          fileWriteStream.close();
+
+          let response;
+          try {
+
+            response = await uploadImage(req, localFilePath, contract_name);
+            if (response.status) {
+              responseData(res, "contract create successfully", 200, true, "", response.data.Location);
+              console.log(response.data.Location);
+              fs.unlink(localFilePath, (unlinkErr) => {
+                if (unlinkErr) {
+                  console.error('Error deleting local PDF file:', unlinkErr);
+                } else {
+                  console.log('Local PDF file deleted successfully');
+                }
+              });
+
+            } else {
+              console.log(response)
+              responseData(res, "contract create failed", 400, false, "", "");
+            }
+          } catch (error) {
+            console.error("Error uploading image:", error);
+            responseData(res, "contract create failed", 500, false, "", "");
+          }
+        });
+
+        // Handle errors during the file writing process
+        fileWriteStream.on('error', (error) => {
+          console.error("Error writing PDF to file:", error);
+          responseData(res, "contract create failed", 500, false, "", "");
+        });
       }
     });
+    
 
 
   } else {
