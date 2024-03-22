@@ -54,51 +54,46 @@ export const login = async (req, res) => {
         responseData(res, "", 404, false, "user name or password not match");
       }
       if (user.length > 0) {
-        // bcrypt.compare(password, user[0].password, (_err, result) => {
-        //   if (!result) {
-        //     responseData(res, "", 401, false, "user name or password not match");
-        //   }
-        //   if (result) {
-        //     console.log(result)
-        //     ///////Get here all logintoken becausse maxx 5 token are store in one account//////
-        //     loginModel
-        //       .find({ userId: user[0]._id })
-        //       .then((GetlogToken) => {
-        //         if (GetlogToken.length < 5) {
-        //           insertLogInData(res, user);
-        //         } else {
-        //           const firstObjGet = GetlogToken[0]._id;
-        //           const deleteObj = loginModel
-        //             .deleteOne({ _id: firstObjGet })
-        //             .then(() => {
-        //               insertLogInData(res, user);
-        //             })
-        //             .catch(() => {
-        //               responseData(
-        //                 res,
-        //                 "",
-        //                 500,
-        //                 false,
-        //                 "Something is wrong token object not delete"
-        //               );
-        //             });
-        //         }
-        //       })
-        //       .catch((_e) => {
-        //         responseData(
-        //           res,
-        //           "",
-        //           500,
-        //           false,
-        //           "Something is wrong tokens not get."
-        //         );
-        //       });
-        //   }
-        // });
-        if (password === user[0].password)
-        {
-          insertLogInData(res, user);
-        }
+        bcrypt.compare(password, user[0].password, (_err, result) => {
+          if (!result) {
+            responseData(res, "", 401, false, "user name or password not match");
+          }
+          if (result) {
+            ///////Get here all logintoken becausse maxx 5 token are store in one account//////
+            loginModel
+              .find({ userId: user[0]._id })
+              .then((GetlogToken) => {
+                if (GetlogToken.length < 5) {
+                  insertLogInData(res, user);
+                } else {
+                  const firstObjGet = GetlogToken[0]._id;
+                  const deleteObj = loginModel
+                    .deleteOne({ _id: firstObjGet })
+                    .then(() => {
+                      insertLogInData(res, user);
+                    })
+                    .catch(() => {
+                      responseData(
+                        res,
+                        "",
+                        500,
+                        false,
+                        "Something is wrong token object not delete"
+                      );
+                    });
+                }
+              })
+              .catch((_e) => {
+                responseData(
+                  res,
+                  "",
+                  500,
+                  false,
+                  "Something is wrong tokens not get."
+                );
+              });
+          }
+        });
       }
     } catch (err) {
       res.send(err);
