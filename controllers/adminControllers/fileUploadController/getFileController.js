@@ -15,7 +15,7 @@ import { responseData } from "../../../utils/respounse.js";
               if(element.project_id !=null)
               {
                 projectData.push({
-                  project_Name:element.project_name,
+                  project_name:element.project_name,
                   project_id:element.project_id,
                   files:element.files
 

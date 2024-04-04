@@ -17,12 +17,10 @@ export const notificationForUser = async (req, res, user_name) => {
     if (find_user) {
       for (const item of find_user.data[0].projectData) {
         let find_notification = await notificationModel.find({ itemId: item.project_id });
-       
-        if(find_notification.length >0)
-        {
-         
-          for(let  i =0;i<find_notification.length;i++)
-          {
+
+        if (find_notification.length > 0) {
+
+          for (let i = 0; i < find_notification.length; i++) {
             const add_notification_in_user = await registerModel.findOneAndUpdate(
               { username: user_name },
               {
@@ -37,10 +35,10 @@ export const notificationForUser = async (req, res, user_name) => {
             );
 
           }
-         
+
         }
 
-       
+
       }
       delete_notification_for_user(req, res, user_name)
     }
@@ -254,54 +252,50 @@ export const getNotification = async (req, res) => {
 
   try {
     const userId = req.query.userId;
-    const find_user = await registerModel.findOne({_id:userId})
-    if(find_user)
-    {
+    const find_user = await registerModel.findOne({ _id: userId })
+    if (find_user) {
 
-    
-    if(find_user.role ==="PROCUREMENT")
-    {
-      let notificaltionData =[]
-      const find_notification_user = await registerModel.findOne({ _id: userId })
-      for (let i = 0; i < find_notification_user.data[0].notificationData.length; i++) {
-        notificaltionData.push(find_notification_user.data[0].notificationData[i])
-      }
-      const find_notification = await notificationModel.find({})
-      
-      for(let i=0;i<find_notification.length;i++)
-      {
-        notificaltionData.push(find_notification[i])
-      }
 
-    
+      if (find_user.role === "PROCUREMENT") {
+        let notificaltionData = []
+        const find_notification_user = await registerModel.findOne({ _id: userId })
+        for (let i = 0; i < find_notification_user.data[0].notificationData.length; i++) {
+          notificaltionData.push(find_notification_user.data[0].notificationData[i])
+        }
+        const find_notification = await notificationModel.find({})
 
-     
+        for (let i = 0; i < find_notification.length; i++) {
+          notificaltionData.push(find_notification[i])
+        }
 
-    
+
+
+
+
+
 
         const response = {
           NotificationData: notificaltionData
         }
         responseData(res, "notification Data", 200, true, "", response)
-      
-    }
-    if(find_user.role ==="ADMIN")
-    {
-      const find_notification = await notificationModel.find({})
-      if (find_notification.length > 0) {
-        const response = {
-          NotificationData: find_notification
+
+      }
+      if (find_user.role === "ADMIN") {
+        const find_notification = await notificationModel.find({})
+        if (find_notification.length > 0) {
+          const response = {
+            NotificationData: find_notification
+          }
+          responseData(res, "notification Data", 200, true, "", response)
         }
-        responseData(res, "notification Data", 200, true, "", response)
-      }
-      else {
-        responseData(res, "", 404, false, "No notification found")
+        else {
+          responseData(res, "", 404, false, "No notification found")
+        }
       }
     }
-  }
-  else{
-    responseData(res,"",404,false,"User not found")
-  }
+    else {
+      responseData(res, "", 404, false, "User not found")
+    }
 
   }
   catch (error) {
@@ -323,139 +317,118 @@ export const updateNotification = async (req, res) => {
     const notification_id = req.body.notification_id;
     const type = req.body.type;
 
-if(!userId)
-{
-  return responseData(res, "", 400, false, "User Id is required");
-}
-else{
-  const find_user = await registerModel.findById(userId);
-  if(!find_user)
-  {
-    return responseData(res, "", 404, false, "User not found");
-  }
-  else{
-    if(find_user.role === "ADMIN" || find_user.role === "PROCUREMENT")
-    {
-      if (type === "One") {
-        const User_notification = await registerModel.findOneAndUpdate(
-          { "_id": userId },
-          { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-          {
-            arrayFilters: [
-              { "elem.notificationData": { $exists: true } },
-              { "inner._id": notification_id }
-            ],
-            new: true // return the updated document
-          }
-        );
-        
-        if(!User_notification)
-        {
-          const notification = await Notification.findByIdAndUpdate(
-            notification_id,
-            { status: true },
-            { new: true }
-          );
-          
-          if(!notification)
-          {
-           
-            return responseData(res, "", 404, false, "Notification not found");
-          }
+    if (!userId) {
+      return responseData(res, "", 400, false, "User Id is required");
+    }
+    else {
+      const find_user = await registerModel.findById(userId);
+      if (!find_user) {
+        return responseData(res, "", 404, false, "User not found");
+      }
+      else {
+        if (find_user.role === "ADMIN" || find_user.role === "PROCUREMENT") {
+          if (type === "One") {
+            const notification = await Notification.findByIdAndUpdate(
+              notification_id,
+              { status: true },
+              { new: true }
+            );
 
+            const notification1 = await registerModel.findOneAndUpdate(
+              { "_id": userId, "data.notificationData._id": notification_id },
+              { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
+              {
+                arrayFilters: [
+                  { "elem.notificationData": { $exists: true } },
+                  { "inner._id": notification_id }
+                ],
+                new: true // return the updated document
+              }
+            );
+
+            if (!notification1 && !notification) {
+              return responseData(res, "", 404, false, "Notification not found");
+            }
+
+            // Respond with the updated notification
+            responseData(res, "Notification updated successfully", 200, true, "");
+          } else if (type === "All") {
+            // Update status for all notifications
+            const { nModified } = await Notification.updateMany(
+              {},
+              { status: true }
+            );
+            const notification = await registerModel.findOneAndUpdate(
+              { "_id": userId },
+              { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
+              {
+                arrayFilters: [
+                  { "elem.notificationData": { $exists: true } },
+                  { "inner.status": false }
+                ],
+                new: true // return the updated document
+              }
+            );
+            if (nModified === 0 && !notification) {
+              return responseData(res, "", 404, false, "No notifications found");
+            }
+
+            // Respond with success message
+            responseData(
+              res,
+              "All notifications updated successfully",
+              200,
+              true,
+              ""
+            );
+          } else {
+            responseData(res, "", 400, false, "Invalid type");
+          }
         }
-       
-        // Respond with the updated notification
-        responseData(res, "Notification updated successfully", 200, true, "");
-      } else if (type === "All") {
-        // Update status for all notifications
-        const user_notification = await registerModel.findOneAndUpdate(
-          { "_id": userId },
-          { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-          {
-            arrayFilters: [
-              { "elem.notificationData": { $exists: true } },
-              { "inner.status": false }
-            ],
-            new: true // return the updated document
-          }
-        );
-        const notification = await registerModel.findOneAndUpdate(
-          { "_id": userId },
-          { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-          {
-            arrayFilters: [
-              { "elem.notificationData": { $exists: true } },
-              { "inner.status": false }
-            ],
-            new: true // return the updated document
-          }
-        );
-        const { nModified } = await Notification.updateMany(
-          {},
-          { status: true }
-        );
+        else {
 
-        if (nModified === 0) {
-          return responseData(res, "", 404, false, "No notifications found");
+          if (type === "One") {
+            const notification = await registerModel.findOneAndUpdate(
+              { "_id": userId, "data.notificationData._id": notification_id },
+              { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
+              {
+                arrayFilters: [
+                  { "elem.notificationData": { $exists: true } },
+                  { "inner._id": notification_id }
+                ],
+                new: true // return the updated document
+              }
+            );
+
+            if (!notification) {
+              return responseData(res, "", 404, false, "Notification not found");
+            }
+
+            responseData(res, "Notification updated successfully", 200, true, "");
+          } else if (type === "All") {
+            const notification = await registerModel.findOneAndUpdate(
+              { "_id": userId },
+              { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
+              {
+                arrayFilters: [
+                  { "elem.notificationData": { $exists: true } },
+                  { "inner.status": false }
+                ],
+                new: true // return the updated document
+              }
+            );
+
+            if (!notification) {
+              return responseData(res, "", 404, false, "Notification not found");
+            }
+
+            responseData(res, "All notifications updated successfully", 200, true, "");
+          } else {
+            responseData(res, "", 400, false, "Invalid type");
+          }
         }
-
-        // Respond with success message
-        responseData(
-          res,
-          "All notifications updated successfully",
-          200,
-          true,
-          ""
-        );
-      } else {
-        responseData(res, "", 400, false, "Invalid type");
       }
     }
-    else{
-
-      if (type === "One") {
-        const notification = await registerModel.findOneAndUpdate(
-          { "_id": userId, "data.notificationData._id": notification_id },
-          { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-          {
-            arrayFilters: [
-              { "elem.notificationData": { $exists: true } },
-              { "inner._id": notification_id }
-            ],
-            new: true // return the updated document
-          }
-        );
-
-        if (!notification) {
-          return responseData(res, "", 404, false, "Notification not found");
-        }
-
-        responseData(res, "Notification updated successfully", 200, true, "");
-      } else if (type === "All") {
-        const notification = await registerModel.findOneAndUpdate(
-          { "_id": userId },
-          { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-          {
-            arrayFilters: [
-              { "elem.notificationData": { $exists: true } },
-              { "inner.status": false }
-            ],
-            new: true // return the updated document
-          }
-        );
-
-        if (!notification) {
-          return responseData(res, "", 404, false, "Notification not found");
-        }
-
-        responseData(res, "All notifications updated successfully", 200, true, "");
-      } else {
-        responseData(res, "", 400, false, "Invalid type");
-      }
-  }
-}
-}
   } catch (error) {
     console.error("Error updating notifications:", error);
     responseData(res, "", 500, false, "Error updating notifications");

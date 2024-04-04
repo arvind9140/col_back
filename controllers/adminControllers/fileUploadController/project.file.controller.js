@@ -41,7 +41,7 @@ const saveFileUploadData = async (
     if (isFirst) {
       const firstFile = await fileuploadModel.create({
         project_id: existingFileUploadData.project_id,
-        project_name: existingFileUploadData.project_Name,
+        project_name: existingFileUploadData.project_name,
         files: [
           {
             folder_name: existingFileUploadData.folder_name,
@@ -126,7 +126,7 @@ const projectFileUpload = async (req, res) => {
         responseData(res, "", 404, false, "project not found!", []);
       }
       if (find_project.length > 0) {
-        const project_Name = find_project[0].project_name;
+        const project_name = find_project[0].project_name;
         const files = Array.isArray(req.files.files)
           ? req.files.files
           : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
@@ -181,7 +181,7 @@ const projectFileUpload = async (req, res) => {
           if (existingFile) {
             await saveFileUploadData(res, {
               project_id,
-              project_Name,
+              project_name,
               folder_name,
               files: fileUrls,
             });
@@ -190,7 +190,7 @@ const projectFileUpload = async (req, res) => {
               res,
               {
                 project_id,
-                project_Name,
+                project_name,
                 folder_name,
                 files: fileUrls,
               },

@@ -50,7 +50,7 @@ router.use(verifyJWT)
 
 router.route("/create/user").post(isAdmin, createUser);
 router.route("/add/member").post(isAdmin, addMember);
-router.route("/get/alluser").get(isAdmin, getUser);
+router.route("/get/alluser").get(getUser);
 
 
 router.route("/fileupload").post(fileupload);
