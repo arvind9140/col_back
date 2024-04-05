@@ -1,5 +1,18 @@
-/node_modules
+# Ignore node_modules directory
+node_modules/
 
+# Ignore build artifacts
+build/
+dist/
 
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore environment-specific files
 .env
+.env.local
 
+# Ignore log files and directories
+logs/
+*.log
