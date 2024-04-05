@@ -25,7 +25,7 @@ const s3 = new AWS.S3({
 const uploadFile = async (file, fileName, project_id, mom_id) => {
   return s3
     .upload({
-      Bucket: `interior-design1/${project_id}/${mom_id}`,
+      Bucket: `collegemanage/${project_id}/${mom_id}`,
       Key: fileName,
       Body: file.data,
       ContentType: file.mimetype,
@@ -135,8 +135,8 @@ export const getAllProjectMom = async (req, res) => {
 
       }
     }
-    const response  ={
-      MomData:MomData
+    const response = {
+      MomData: MomData
     }
 
     responseData(res, "all project mom", 200, true, "", response);
@@ -520,7 +520,7 @@ export const generatePdf = async (req, res) => {
             stream.pipe(res);
           }
         });
-    
+
 
 
 

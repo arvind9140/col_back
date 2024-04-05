@@ -17,7 +17,7 @@ const uploadFile = async (
 ) => {
   return s3
     .upload({
-      Bucket: `interior-design1/${project_ID}/${quotation_id}/${item_id}`,
+      Bucket: `collegemanage/${project_ID}/${quotation_id}/${item_id}`,
       Key: fileName,
       Body: file.data,
       ContentType: file.mimetype,
@@ -107,7 +107,7 @@ export const updateQuotation = async (req, res) => {
       return responseData(res, "", 404, false, "Project not found");
     }
     if (find_project.length > 0) {
-      
+
 
       if (find_project[0].quotation.length > 0) {
         const files = req.files?.files;

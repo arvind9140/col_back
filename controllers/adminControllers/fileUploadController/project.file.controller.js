@@ -23,7 +23,7 @@ function generateSixDigitNumber() {
 const uploadFile = async (file, fileName, lead_id, folder_name) => {
   return s3
     .upload({
-      Bucket: `interior-design1/${lead_id}/${folder_name}`,
+      Bucket: `collegemanage/${lead_id}/${folder_name}`,
       Key: fileName,
       Body: file.data,
       ContentType: file.mimetype,
@@ -54,7 +54,7 @@ const saveFileUploadData = async (
       // Use update query to push data
       const updateResult = await fileuploadModel.updateOne(
         {
-         project_id: existingFileUploadData.project_id,
+          project_id: existingFileUploadData.project_id,
           "files.folder_name": existingFileUploadData.folder_name,
         },
         {
@@ -146,7 +146,7 @@ const projectFileUpload = async (req, res) => {
         const filesToUpload = files.slice(0, 5);
 
         for (const file of filesToUpload) {
-          const fileName =  file.name;
+          const fileName = file.name;
           uploadfileName.push(file.name);
           fileUploadPromises.push(
             uploadFile(file, fileName, project_id, folder_name)
@@ -164,7 +164,7 @@ const projectFileUpload = async (req, res) => {
           (result) => result.data
         );
 
-        
+
         if (successfullyUploadedFiles.length > 0) {
           let fileUrls = successfullyUploadedFiles.map((result) => ({
             fileUrl: result.data.Location,

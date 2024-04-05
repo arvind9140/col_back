@@ -19,7 +19,7 @@ const s3 = new AWS.S3({
 const uploadFile = async (file, fileName, project_ID, quotation_id, item_id) => {
   return s3
     .upload({
-      Bucket: `interior-design1/${project_ID}/${quotation_id}/${item_id}`,
+      Bucket: `collegemanage/${project_ID}/${quotation_id}/${item_id}`,
       Key: fileName,
       Body: file.data,
       ContentType: file.mimetype,
@@ -113,42 +113,42 @@ export const createQuotation = async (req, res) => {
     }
 
     const quotation_id = `CCPL/${generateSixDigitNumber()}`;
-     const item_id = `ITM/${generateSixDigitNumber()}`;
-        const files = req.files?.files;
-        const fileUploadPromises = [];
-        let successfullyUploadedFiles = [];
+    const item_id = `ITM/${generateSixDigitNumber()}`;
+    const files = req.files?.files;
+    const fileUploadPromises = [];
+    let successfullyUploadedFiles = [];
 
-        if (files) {
-          const filesToUpload = Array.isArray(files)
-            ? files.slice(0, 5)
-            : [files];
+    if (files) {
+      const filesToUpload = Array.isArray(files)
+        ? files.slice(0, 5)
+        : [files];
 
-          for (const file of filesToUpload) {
-            const fileName = Date.now() + file.name;
-            fileUploadPromises.push(
-              uploadFile(file, fileName, project_id, quotation_id, item_id)
-            );
-          }
+      for (const file of filesToUpload) {
+        const fileName = Date.now() + file.name;
+        fileUploadPromises.push(
+          uploadFile(file, fileName, project_id, quotation_id, item_id)
+        );
+      }
 
-          const responses = await Promise.all(fileUploadPromises);
+      const responses = await Promise.all(fileUploadPromises);
 
-          const fileUploadResults = responses.map((response) => ({
-            status: response.Location ? true : false,
-            data: response ? response : response.err,
-          }));
+      const fileUploadResults = responses.map((response) => ({
+        status: response.Location ? true : false,
+        data: response ? response : response.err,
+      }));
 
-          successfullyUploadedFiles = fileUploadResults.filter(
-            (result) => result.status
-          );
-        }
-        let file=[]
-        if (successfullyUploadedFiles.length > 0) {
-            const newfileuploads = successfullyUploadedFiles.map(
-              (result, index) => file.push(result.data.Location)
-            );
-        }
+      successfullyUploadedFiles = fileUploadResults.filter(
+        (result) => result.status
+      );
+    }
+    let file = []
+    if (successfullyUploadedFiles.length > 0) {
+      const newfileuploads = successfullyUploadedFiles.map(
+        (result, index) => file.push(result.data.Location)
+      );
+    }
 
-        
+
 
 
     const existingQuotation = find_project.quotation.find(

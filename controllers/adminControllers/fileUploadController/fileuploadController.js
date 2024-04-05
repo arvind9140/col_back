@@ -23,7 +23,7 @@ function generateSixDigitNumber() {
 const uploadFile = async (file, fileName, lead_id, folder_name) => {
   return s3
     .upload({
-      Bucket: `interior-design1/${lead_id}/${folder_name}`,
+      Bucket: `collegemanage/${lead_id}/${folder_name}`,
       Key: fileName,
       Body: file.data,
       ContentType: file.mimetype,
@@ -137,8 +137,8 @@ const fileupload = async (req, res) => {
           ? req.files.files
           : [req.files.files]; // Assuming the client sends an array of files with the key 'files'
         const fileUploadPromises = [];
-        
-        
+
+
         if (!files || files.length === 0) {
           return res.send({
             message: "",
@@ -154,13 +154,13 @@ const fileupload = async (req, res) => {
 
         for (const file of filesToUpload) {
           const fileName = file.name;
-        
+
           fileUploadPromises.push(uploadFile(file, fileName, lead_id, folder_name));
         }
 
         const responses = await Promise.all(fileUploadPromises);
-// console.log(responses)
-       
+        // console.log(responses)
+
         const fileUploadResults = responses.map((response) => ({
           status: response.Location ? true : false,
           data: response ? response : response.err,
@@ -170,44 +170,44 @@ const fileupload = async (req, res) => {
           (result) => result.data
         );
         if (successfullyUploadedFiles.length > 0) {
-          
-           let fileUrls =successfullyUploadedFiles.map((result) =>({
-              fileUrl: result.data.Location,
-             fileName: result.data.Location.split('/').pop(),
-              fileId: `FL-${generateSixDigitNumber()}`,
-              date:new Date()
-          
+
+          let fileUrls = successfullyUploadedFiles.map((result) => ({
+            fileUrl: result.data.Location,
+            fileName: result.data.Location.split('/').pop(),
+            fileId: `FL-${generateSixDigitNumber()}`,
+            date: new Date()
+
           }));
-          
 
-            const existingFile = await fileuploadModel.findOne({
-              lead_id: lead_id,
+
+          const existingFile = await fileuploadModel.findOne({
+            lead_id: lead_id,
+          });
+
+          if (existingFile) {
+
+
+
+
+            await saveFileUploadData(res, {
+              lead_id,
+              lead_Name,
+              folder_name,
+              files: fileUrls,
             });
-
-            if (existingFile) {
-
-
-
-
-              await saveFileUploadData(res, {
+          } else {
+            await saveFileUploadData(
+              res,
+              {
                 lead_id,
                 lead_Name,
                 folder_name,
                 files: fileUrls,
-              });
-            } else {
-              await saveFileUploadData(
-                res,
-                {
-                  lead_id,
-                  lead_Name,
-                  folder_name,
-                  files: fileUrls,
-                },
-                true
-              );
-            }
-          
+              },
+              true
+            );
+          }
+
 
         } else {
           res.send({

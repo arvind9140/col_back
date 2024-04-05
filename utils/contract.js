@@ -1,29 +1,29 @@
 
 export function residentialContract(
-  project,
-  city,
-  client_name,
-  client_phone,
-  client_email,
-  site_address,
-  date,
-  quotation,
-  design_charges_per_sft,
-  cover_area_in_sft,
-  design_total_charges,
-  design_total_charges_in_words,
-  design_discount,
-  design_total_charges_after_discount,
-  design_total_charges_after_discount_in_words,
-  terrace_and_balcony_charges_per_sft,
-  terrace_and_balcony_total_charges_discount,
-  terrace_and_balcony_area_in_sft,
-  terrace_and_balcony_total_charges,
-  terrace_and_balcony_total_charges_in_words,
-  total_design_charges,
-  total_design_charges_in_words
+        project,
+        city,
+        client_name,
+        client_phone,
+        client_email,
+        site_address,
+        date,
+        quotation,
+        design_charges_per_sft,
+        cover_area_in_sft,
+        design_total_charges,
+        design_total_charges_in_words,
+        design_discount,
+        design_total_charges_after_discount,
+        design_total_charges_after_discount_in_words,
+        terrace_and_balcony_charges_per_sft,
+        terrace_and_balcony_total_charges_discount,
+        terrace_and_balcony_area_in_sft,
+        terrace_and_balcony_total_charges,
+        terrace_and_balcony_total_charges_in_words,
+        total_design_charges,
+        total_design_charges_in_words
 ) {
-  const htmlTemplate = `
+        const htmlTemplate = `
     <html>
 
 <head>
@@ -215,7 +215,7 @@ font-family:"Times New Roman",serif'>&nbsp;</span></p>
                 <p class=MsoBodyText style='margin-left:164.8pt'><span lang=EN-IN
                                 style='font-size:10.0pt;font-family:"Times New Roman",serif'><img width=172 height=122
                                         id=image1.jpeg
-                                        src="https://interior-design1.s3.ap-south-1.amazonaws.com/image001.jpg"></span>
+                                        src="https://collegemanage.s3.ap-south-1.amazonaws.com/image001.jpg"></span>
                 </p>
 
                 <p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span>
@@ -1622,24 +1622,24 @@ line-height:115%'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp
 </html>
 
     `;
-  return htmlTemplate;
+        return htmlTemplate;
 }
 
 
 export function commercialContract(
-  client,
-  city,
-  client_name,
-  client_phone,
-  client_email,
-  site_address,
-  date,
-  quotation,
-  cost,
-  cost_in_word,
-  franchises
+        client,
+        city,
+        client_name,
+        client_phone,
+        client_email,
+        site_address,
+        date,
+        quotation,
+        cost,
+        cost_in_word,
+        franchises
 ) {
-  const htmlTemplate = `
+        const htmlTemplate = `
   <html>
 
 <head>
@@ -1826,7 +1826,7 @@ export function commercialContract(
                                         style="font-family:'Times New Roman'; font-size:10pt">&nbsp;</span></p>
                 </div>
                 <p style="margin-top:0pt; margin-bottom:12pt; text-align:center; font-size:11pt"><img
-                                src="https://interior-design1.s3.ap-south-1.amazonaws.com/image001.jpg" width="247"
+                                src="https://collegemanage.s3.ap-south-1.amazonaws.com/image001.jpg" width="247"
                                 height="247"
                                 alt="May be an image of text that says &quot;COLONELZ BUILDING RELATIONSHIPS&quot;"
                                 style="-aw-left-pos:0pt; -aw-rel-hpos:column; -aw-rel-vpos:paragraph; -aw-top-pos:0pt; -aw-wrap-type:inline">
@@ -1884,8 +1884,8 @@ export function commercialContract(
                         <span style="font-family:Verdana; font-size:11pt">Client Contact </span>
                         
                          ${client_name
-                           .map(
-                             (name, index) => `
+                        .map(
+                                (name, index) => `
                                <span
                                 style="width:24.88pt; text-indent:0pt; display:inline-block">&nbsp;</span><span
                                 style="font-family:Verdana; font-size:11pt">-</span><span
@@ -1903,8 +1903,8 @@ export function commercialContract(
                                 style="font-family:Verdana; font-size:11pt; ">&nbsp; </span>
                        
                             `
-                           )
-                           .join("")}
+                        )
+                        .join("")}
                            
                         
                        
@@ -1956,9 +1956,8 @@ export function commercialContract(
                                 style="font-family:Verdana; "> at </span><span
                                 style="font-family:Verdana; "> ${site_address}</span><span
                                 style="font-family:Verdana">,</span><span style="font-family:Verdana"> represented by
-                                its Director, </span><span style="font-family:Verdana">${
-                                  client_name[0]
-                                }</span><span
+                                its Director, </span><span style="font-family:Verdana">${client_name[0]
+                }</span><span
                                 style="font-family:Verdana"> </span><span
                                 style="font-family:Verdana"> (</span><span style="font-family:Verdana">hereinafter known
                                 as </span><span style="font-family:Verdana">“</span><span
@@ -2819,9 +2818,8 @@ export function commercialContract(
                                 style="font-family:Verdana">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </span></p>
                 <p style="margin-top:0pt; margin-bottom:0pt; font-size:11pt"><span
-                                style="font-family:Verdana">${
-                                  client_name[0]
-                                }</span><span
+                                style="font-family:Verdana">${client_name[0]
+                }</span><span
                                 style="width:26.39pt; display:inline-block">&nbsp;</span><span
                                 style="width:36pt; display:inline-block">&nbsp;</span><span
                                 style="width:36pt; display:inline-block">&nbsp;</span><span
@@ -2913,6 +2911,6 @@ export function commercialContract(
 </html>
    `;
 
-  return htmlTemplate;
+        return htmlTemplate;
 }
 

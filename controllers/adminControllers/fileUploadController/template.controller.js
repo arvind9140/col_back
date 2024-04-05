@@ -20,7 +20,7 @@ function generateSixDigitNumber() {
 
 const uploadFile = async (file, fileName, folder_name) => {
     return s3.upload({
-        Bucket: `interior-design1/template/${folder_name}`,
+        Bucket: `collegemanage/template/${folder_name}`,
         Key: fileName,
         Body: file.data,
         ContentType: file.mimetype,
@@ -45,12 +45,12 @@ const saveFileUploadData = async (res, existingFileUploadData, isFirst = false) 
             responseData(res, "First file created successfully", 200, true);
         } else {
             let updateQuery = {};
-                updateQuery = {
-                    $push: {
-                        "files.$.files": { $each: existingFileUploadData.files },
-                    },
-                };
-            
+            updateQuery = {
+                $push: {
+                    "files.$.files": { $each: existingFileUploadData.files },
+                },
+            };
+
 
             const updateResult = await fileuploadModel.updateOne(
                 {
@@ -84,7 +84,7 @@ const saveFileUploadData = async (res, existingFileUploadData, isFirst = false) 
                 });
 
                 responseData(res, "File data updated successfully", 200, true);
-               
+
 
             }
         }
@@ -143,8 +143,8 @@ export const templateFileUpload = async (req, res) => {
                 date: new Date()
             }));
 
-            if (folder_name === "commercial" || folder_name === "residential" || folder_name === "miscellaneous")  {
-                if (sub_folder_name_first === "designing" || sub_folder_name_first === "executing" || sub_folder_name_first === "miscellaneous" ) {
+            if (folder_name === "commercial" || folder_name === "residential" || folder_name === "miscellaneous") {
+                if (sub_folder_name_first === "designing" || sub_folder_name_first === "executing" || sub_folder_name_first === "miscellaneous") {
                     const folder_Id = `FOL_ID${generateSixDigitNumber()}`;
                     const check_type = await fileuploadModel.findOne({
                         type: type,

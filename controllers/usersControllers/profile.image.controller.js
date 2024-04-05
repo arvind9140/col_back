@@ -11,7 +11,7 @@ const s3 = new AWS.S3({
 const uploadImage = async (req, fileName, userId, key) => {
   let response = s3
     .upload({
-      Bucket: `interior-design1/${userId}`,
+      Bucket: `collegemanage/${userId}`,
       Key: fileName,
       Body: req.files[key].data,
       ContentType: req.files[key].mimetype,

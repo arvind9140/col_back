@@ -36,11 +36,11 @@ const uploadImage = async (req, filePath, fileName) => {
   }
   let response = s3
     .upload({
-      Bucket: `interior-design1`,
+      Bucket: `collegemanage`,
       Key: fileName,
       Body: fs.createReadStream(filePath),
       ContentType: 'application/pdf',
-        // ACL: "public-read",
+      // ACL: "public-read",
     })
     .promise();
   return response
@@ -172,7 +172,7 @@ export const contractShare = async (req, res) => {
     // Local file path
 
 
-    pdf.create(htmlTemplate, pdfOptions).toStream(async(err, stream) => {
+    pdf.create(htmlTemplate, pdfOptions).toStream(async (err, stream) => {
       if (err) {
         res.status(500).send(err);
       } else {
@@ -191,7 +191,7 @@ export const contractShare = async (req, res) => {
 
           let response;
           try {
-         
+
             response = await uploadImage(req, localFilePath, contract_name);
             if (response.status) {
               responseData(res, "contract create successfully", 200, true, "", response.data.Location);
@@ -203,7 +203,7 @@ export const contractShare = async (req, res) => {
                   console.log('Local PDF file deleted successfully');
                 }
               });
-            
+
             } else {
               console.log(response)
               responseData(res, "contract create failed", 400, false, "", "");
@@ -306,6 +306,7 @@ export const contractShare = async (req, res) => {
           try {
 
             response = await uploadImage(req, localFilePath, contract_name);
+            console.log(response)
             if (response.status) {
               responseData(res, "contract create successfully", 200, true, "", response.data.Location);
               console.log(response.data.Location);
@@ -334,7 +335,7 @@ export const contractShare = async (req, res) => {
         });
       }
     });
-    
+
 
 
   } else {
