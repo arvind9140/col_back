@@ -1,5 +1,15 @@
 import mongoose from "mongoose";
-import moment from "moment-timezone";
+
+const contractSchema = new mongoose.Schema({
+  admin_status: String,
+  itemId: String,
+  file_name: String,
+  files: [],
+  remark: String,
+
+});
+
+
 const lead = new mongoose.Schema({
   name: {
     type: String,
@@ -36,6 +46,7 @@ const lead = new mongoose.Schema({
     type: String,
     // You can define specific sources based on your needs
   },
+  contract:[contractSchema],
   date: {
     type: String,
     require: true,

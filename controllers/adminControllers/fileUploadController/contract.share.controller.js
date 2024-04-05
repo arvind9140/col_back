@@ -1,0 +1,237 @@
+import mongoose from "mongoose";
+import nodemailer from "nodemailer";
+import { responseData } from "../../../utils/respounse.js";
+import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
+import registerModel from "../../../models/usersModels/register.model.js";
+// import projectModel from "../../../models/adminModels/project.model.js";
+import leadModel from "../../../models/adminModels/leadModel.js";
+import { onlyEmailValidation } from "../../../utils/validation.js";
+
+
+const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: "a72302492@gmail.com",
+        pass: process.env.APP_PASSWORD,
+    },
+});
+
+const storeOrUpdateContract = async (res, existingContractData, isFirst = false) => {
+    try {
+        if (isFirst) {
+            const updatedLead = await leadModel.findOneAndUpdate(
+                { lead_id: existingContractData.lead_id },
+                {
+                    $push: { "contract": existingContractData.contractData }
+                },
+                { new: true } // Return the updated document
+            );
+            return responseData(res, `Contract shared successfully`, 200, true, "");
+
+        }
+        else {
+            const check_lead = await leadModel.findOne({ lead_id: existingContractData.lead_id });
+            if (check_lead) {
+                const updatedLead = await leadModel.findOneAndUpdate(
+                    { lead_id: existingContractData.lead_id },
+                    {
+                        $push: {
+                            "contract": existingContractData.contractData
+                        }
+                    }
+                )
+                return responseData(res, `Contract shared successfully`, 200, true, "");
+            }
+        }
+    }
+    catch (err) {
+        return responseData(res, "", 401, false, "Error occured while storing contract");
+    }
+
+}
+
+
+export const shareContract = async (req, res) => {
+    try {
+        const folder_name = req.body.folder_name;
+        const fileId = req.body.file_id;
+        const lead_id = req.body.lead_id;
+        const user_name = req.body.user_name;
+        const type = req.body.type;
+
+
+        if (!folder_name || !fileId || !lead_id || !user_name) {
+            return responseData(res, "", 400, false, "Please enter all fields");
+        }
+        else {
+            if (type === 'Internal') {
+                const check_user = await registerModel.findOne({ username: user_name });
+                if (!check_user) {
+                    return responseData(res, "", 400, false, "User not found");
+                }
+                else {
+                    const check_lead = await leadModel.findOne({ lead_id: lead_id });
+                    if (!check_lead) {
+                        return responseData(res, "", 400, false, "Lead not found");
+                    }
+                    else {
+                      
+                        const check_file = await fileuploadModel.findOne({ "files.files.fileId": fileId });
+
+                        if (!check_file) {
+                            return responseData(res, "", 400, false, "File not found");
+                        }
+                        else {
+                            
+
+                            const file_url = check_file.files.find(x => x.folder_name === folder_name)?.files.find(file => file.fileId === fileId);
+
+                         
+                            const mailOptions = {
+                                from: "a72302492@gmail.com",
+                                to: check_user.email,
+                                subject: "Contract Share Notification",
+                                html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Contract Share Notification</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    width: 80%;
+                    margin: auto;
+                    padding: 20px;
+                }
+                .notification {
+                    background-color: #f0f0f0;
+                    padding: 20px;
+                    border-radius: 5px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+                .notification h2 {
+                    margin-top: 0;
+                    color: #333;
+                }
+                .notification p {
+                    margin-bottom: 10px;
+                    color: #555;
+                }
+                .btn {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+                .btn:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="notification">
+                <h2>Contract Share Notification</h2>
+                <p>Hello ${user_name},</p>
+                <p>A new contract has been shared with you. Please review it and take necessary actions.</p>
+                <p>Lead Name: <strong>${check_lead.name}</strong></p>
+                <p>Contract File ID: <strong>${fileId}</strong></p>
+                <p>File URL: <a href="${file_url.fileUrl}">View File</a></p>
+               
+                <p>Thank you!</p>
+            </div>
+        </body>
+        </html>
+    `
+                            };
+                          
+
+                            transporter.sendMail(mailOptions, async (error, info) => {
+                                if (error) {
+                                    return responseData(res, "", 400, false, "Failed to send email");
+                                } else {
+                                    await registerModel.updateOne(
+                                        { username: user_name },
+                                        {
+                                            $push: {
+                                                "data.$[elem].quotationData": {
+                                                    lead_id: lead_id,
+                                                    contract_file_id: fileId,
+                                                    file_url: file_url.fileUrl,
+                                                    approval_status: "pending"
+                                                },
+                                                "data.$[elem].notificationData": {
+                                                    _id: new mongoose.Types.ObjectId(),
+                                                    itemId: lead_id,
+                                                    type: "contract",
+                                                    status: false,
+                                                    message: `Contract file shared with you for review in ${check_lead.name}  . Please check`,
+                                                    createdAt: new Date()
+                                                }
+                                            }
+                                        },
+                                        { arrayFilters: [{ "elem.projectData": { $exists: true } }] }
+                                    );
+
+                                    const contractData = {
+                                        itemId: fileId,
+                                        admin_status: "pending",
+                                        file_name: file_url.fileName,
+                                        files: file_url,
+                                        remark: "",
+
+                                    };
+                                  
+                                    if (check_lead.contract.length < 1) {
+
+                                        const createObj = {
+                                            lead_id,
+                                            contractData,
+                                        }
+
+                                        await storeOrUpdateContract(res, createObj, true);
+                                    }
+                                    else {
+                                        const createObj = {
+                                            lead_id,
+                                            contractData,
+                                           
+
+                                        }
+                                        await storeOrUpdateContract(res, createObj);
+
+                                    }
+                                }
+                            });
+
+
+                        }
+
+                    }
+                }
+
+            }
+        }
+
+
+    }
+    catch (err) {
+
+    }
+}
+
+
+
+
+
+

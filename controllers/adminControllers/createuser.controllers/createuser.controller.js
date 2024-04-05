@@ -177,3 +177,14 @@ catch(err)
 }
 
 }
+
+export const deleteUser = async(req, res) =>{
+    try{
+        
+        
+    }
+    catch(err)
+    {
+        return responseData(res, "", 500, false, err.message);
+    }
+}
