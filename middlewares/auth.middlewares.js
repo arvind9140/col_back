@@ -38,7 +38,6 @@ req.user = user
     return responseData(res, "", 401, false, "Unauthorized: Invalid token");
   }
 };
-
 export const checkAvailableUserIsAdmin = async(req,res,next) =>{
   try{
     const token = req.cookies?.auth ||
