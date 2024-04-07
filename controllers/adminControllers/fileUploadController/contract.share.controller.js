@@ -166,8 +166,8 @@ export const shareContract = async (req, res) => {
                 <p>Contract File ID: <strong>${fileId}</strong></p>
                 <p>File URL: <a href="${file_url.fileUrl}">View File</a></p>
                   <p >
-                 <a href="${approvalLink(lead_id, fileId, 'approved')}">Approve</a> |
-            <a href="${approvalLink(lead_id, fileId, 'rejected')}">Reject</a>
+                 <a href="${approvalLinkAdmin(lead_id, fileId, 'approved')}">Approve</a> |
+            <a href="${approvalLinkAdmin(lead_id, fileId, 'rejected')}">Reject</a>
             
                     </p>
                
@@ -254,7 +254,7 @@ export const shareContract = async (req, res) => {
 }
 
 
-function approvalLink(lead_id, fileId, status) {
+function approvalLinkAdmin(lead_id, fileId, status) {
     return `http://col-back-2.onrender.com/v1/api/users/approval/contract/admin/${lead_id}/${fileId}/${status}`;
 }
 
