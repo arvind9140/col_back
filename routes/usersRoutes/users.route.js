@@ -6,7 +6,8 @@ import { logout } from "../../controllers/usersControllers/logout.controller.js"
 import { changePassController, otpVerification, sendotpforgetpassword } from "../../controllers/usersControllers/forget.password.controller.js";
 import { getUserData } from "../../controllers/usersControllers/getuserdata.controller.js";
 import { profileupload } from "../../controllers/usersControllers/profile.image.controller.js";
-import { updateStatus, updateStatusAdmin, updateStatusClient } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
+import { updateStatus,  updateStatusClient } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
+import { updateStatusAdmin } from "../../controllers/adminControllers/fileUploadController/contract.share.controller.js"
 const router = Router();
 
 router.route("/send/otp").post(sendOtp);
