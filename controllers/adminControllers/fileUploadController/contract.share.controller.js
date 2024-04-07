@@ -77,18 +77,36 @@ export const shareContract = async (req, res) => {
                         return responseData(res, "", 400, false, "Lead not found");
                     }
                     else {
-                      
+                        const check_file_in_lead = await leadModel.findOne({ lead_id: lead_id, "contract.itemId": fileId });
+                        if (check_file_in_lead) {
+                            return responseData(res, "", 400, false, "File already exists in lead");
+                        }
+                        const check_status1 = await leadModel.findOne({ lead_id: lead_id, "contract.itemId": fileId, "contract.admin_status": "pending" });
+                        if (check_status1) {
+                            return responseData(res, "", 400, false, "Previous Contract not  closed yet");
+                        }
+                        const check_status2 = await leadModel.findOne({ lead_id: lead_id, "contract.itemId": fileId, "contract.admin_status": "rejected" });
+                        if (check_status2) {
+                            return responseData(res, "", 400, false, "Previous Contract rejected");
+                        }
+                        const check_status3 = await leadModel.findOne({ lead_id: lead_id, "contract.itemId": fileId, "contracts.admin_status": "approved" });
+                        if (check_status3) {
+                            return responseData(res, "", 400, false, "Previous Contract approved");
+                        }
+
+
+
                         const check_file = await fileuploadModel.findOne({ "files.files.fileId": fileId });
 
                         if (!check_file) {
                             return responseData(res, "", 400, false, "File not found");
                         }
                         else {
-                            
+
 
                             const file_url = check_file.files.find(x => x.folder_name === folder_name)?.files.find(file => file.fileId === fileId);
 
-                         
+
                             const mailOptions = {
                                 from: "a72302492@gmail.com",
                                 to: check_user.email,
@@ -147,6 +165,11 @@ export const shareContract = async (req, res) => {
                 <p>Lead Name: <strong>${check_lead.name}</strong></p>
                 <p>Contract File ID: <strong>${fileId}</strong></p>
                 <p>File URL: <a href="${file_url.fileUrl}">View File</a></p>
+                  <p >
+                 <a href="${approvalLink(lead_id, fileId, 'approved')}">Approve</a> |
+            <a href="${approvalLink(lead_id, fileId, 'rejected')}">Reject</a>
+            
+                    </p>
                
                 <p>Thank you!</p>
             </div>
@@ -154,7 +177,7 @@ export const shareContract = async (req, res) => {
         </html>
     `
                             };
-                          
+
 
                             transporter.sendMail(mailOptions, async (error, info) => {
                                 if (error) {
@@ -191,7 +214,7 @@ export const shareContract = async (req, res) => {
                                         remark: "",
 
                                     };
-                                  
+
                                     if (check_lead.contract.length < 1) {
 
                                         const createObj = {
@@ -205,7 +228,7 @@ export const shareContract = async (req, res) => {
                                         const createObj = {
                                             lead_id,
                                             contractData,
-                                           
+
 
                                         }
                                         await storeOrUpdateContract(res, createObj);
@@ -229,6 +252,114 @@ export const shareContract = async (req, res) => {
 
     }
 }
+
+
+function approvalLink(lead_id, fileId, status) {
+    return `http://col-back.onrender.com/v1/api/users/approval/contract/admin/${lead_id}/${fileId}/${status}`;
+}
+
+
+export const updateStatusAdmin = async (req, res) => {
+    try {
+        const file_id = req.params.fileId;
+        const lead_id = req.params.lead_id;
+        const status = req.params.status;
+        const check_status = await leadModel.find({ lead_id: lead_id, "contract.itemId": file_id })
+        if (check_status) {
+            for (let i = 0; i < check_status.contract.length; i++) {
+                if (check_status.contract[i].itemId == file_id) {
+                    if (check_status.contract[i].admin_status !== 'pending') {
+                        return responseData(res, "", 404, false, "You already submit your response");
+                    }
+                    else {
+                        try {
+                            const filter = { "data.quotationData.contract_file_id": file_id };
+                            const update = {
+                                $set: { "data.$[outerElem].quotationData.$[innerElem].approval_status": status }
+                            };
+                            const options = {
+                                arrayFilters: [
+                                    { "outerElem.quotationData": { $exists: true } },
+                                    { "innerElem.contract_file_id": file_id }
+                                ],
+                                new: true
+                            };
+
+                            const userUpdate = await registerModel.findOneAndUpdate(filter, update, options);
+
+
+                        } catch (error) {
+                            console.error("Error updating document:", error);
+                        }
+                        if (status == 'approved') {
+                            await leadModel.findOneAndUpdate(
+                                {
+                                    lead_id: lead_id,
+                                    "contract.$.itemId": file_id
+                                },
+                                {
+                                    $set: {
+                                        "contract.$[elem].admin_status": status,
+
+                                    }
+                                },
+                                {
+                                    arrayFilters: [{ "elem.itemId": file_id }],
+                                    new: true
+                                }
+
+                            );
+                            res.send('Quotation approved successfully!');
+
+                        }
+                        if (status === 'rejected') {
+                            await leadModel.findOneAndUpdate(
+                                {
+                                    lead_id: lead_id,
+                                    "contract.$.itemId": file_id
+                                },
+                                {
+                                    $set: {
+                                        "contract.$[elem].admin_status": status,
+
+                                    }
+                                },
+                                {
+                                    arrayFilters: [{ "elem.itemId": file_id }],
+                                    new: true
+                                }
+                            );
+                            res.send('Quotation rejected successfully!');
+                        }
+                    }
+                }
+
+            }
+        }
+        else {
+            return responseData(res, "", 404, false, "No lead found with this lead_id");
+        }
+
+    }
+    catch (err) {
+        console.error(err);
+        return responseData(res, "", 500, false, "Something went wrong while approving the Contract");
+
+    }
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
 
 
 

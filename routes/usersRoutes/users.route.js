@@ -6,7 +6,7 @@ import { logout } from "../../controllers/usersControllers/logout.controller.js"
 import { changePassController, otpVerification, sendotpforgetpassword } from "../../controllers/usersControllers/forget.password.controller.js";
 import { getUserData } from "../../controllers/usersControllers/getuserdata.controller.js";
 import { profileupload } from "../../controllers/usersControllers/profile.image.controller.js";
-import { updateStatus, updateStatusClient } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
+import { updateStatus, updateStatusAdmin, updateStatusClient } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
 const router = Router();
 
 router.route("/send/otp").post(sendOtp);
@@ -27,5 +27,6 @@ router.route("/profileurl").post(profileupload)
 // router.route("/").get(checkAvailableUserIsAdmin)
 router.route("/approval/admin/:project_id/:file_id/:status").get(updateStatus)
 router.route("/approval/client/:project_id/:file_id/:status").get(updateStatusClient)
+router.route("/approval/contract/admin/:project_id/:file_id/:status").get(updateStatusAdmin)
 
 export default router;
