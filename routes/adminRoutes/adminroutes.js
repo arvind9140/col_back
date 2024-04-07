@@ -45,7 +45,7 @@ import { checkAvailableUserIsAdmin, isAdmin } from "../../middlewares/auth.middl
 
 
 import { verifyJWT } from "../../middlewares/auth.middlewares.js";
-import { shareContract } from "../../controllers/adminControllers/fileUploadController/contract.share.controller.js";
+import { contractStatus, shareContract } from "../../controllers/adminControllers/fileUploadController/contract.share.controller.js";
 // router.use(checkAvailableUserIsAdmin)
 router.use(verifyJWT)
 
@@ -65,7 +65,8 @@ router.route("/share/file").post(shareFile);
 router.route("/template/fileupload").post(templateFileUpload);
 router.route("/template/single/file").get(getSingleTemplateFile);
 router.route("/delete/file").delete(deleteFile);
-router.route("/share/contract").post(shareContract)
+router.route("/share/contract").post(shareContract);
+router.route("/contract/approval").post(contractStatus);
 
 
 
