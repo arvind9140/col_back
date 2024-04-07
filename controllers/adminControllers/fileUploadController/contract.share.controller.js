@@ -416,7 +416,7 @@ export const contractStatus = async(req,res) =>{
                             }
 
                         );
-                        res.send('Quotation approved successfully!');
+                        res.send('Contract approved successfully!');
 
                     }
                     if (status === 'rejected') {
@@ -437,7 +437,7 @@ export const contractStatus = async(req,res) =>{
                                 new: true
                             }
                         );
-                        res.send('Quotation rejected successfully!');
+                        res.send('Contract rejected successfully!');
                     }
                 }
             }
@@ -447,7 +447,7 @@ export const contractStatus = async(req,res) =>{
     }
     catch (err) {
         console.error(err);
-        return responseData(res, "", 500, false, "Something went wrong while approving the quotation");
+        return responseData(res, "", 500, false, "Something went wrong while approving the contract");
     }
 }
 
