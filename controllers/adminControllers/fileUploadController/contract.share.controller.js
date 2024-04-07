@@ -255,7 +255,7 @@ export const shareContract = async (req, res) => {
 
 
 function approvalLink(lead_id, fileId, status) {
-    return `http://col-back.onrender.com/v1/api/users/approval/contract/admin/${lead_id}/${fileId}/${status}`;
+    return `http://col-back-2.onrender.com/v1/api/users/approval/contract/admin/${lead_id}/${fileId}/${status}`;
 }
 
 
