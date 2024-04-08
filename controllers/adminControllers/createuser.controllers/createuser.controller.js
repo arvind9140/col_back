@@ -157,7 +157,7 @@ try{
     {
         const filteredUsers = users.reduce((acc, user) => {
             if (user) {
-                acc.push({ username: user.username, role: user.role });
+                acc.push({ username: user.username, role: user.role, email:user.email,  UserId:user._id });
             }
             return acc;
         }, []);

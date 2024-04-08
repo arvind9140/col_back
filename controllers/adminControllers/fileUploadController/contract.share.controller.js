@@ -525,7 +525,7 @@ export const contractStatus = async(req,res) =>{
                             }
 
                         );
-                        res.send('Contract approved successfully!');
+                        responseData(res, "COntract  approved Successfully", 200, true, "");
 
                     }
                     if (status === 'rejected') {
@@ -546,7 +546,7 @@ export const contractStatus = async(req,res) =>{
                                 new: true
                             }
                         );
-                        res.send('Contract rejected successfully!');
+                        responseData(res, "COntract  rejected Successfully", 200,true,"");
                     }
                 }
             }
