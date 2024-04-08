@@ -47,7 +47,7 @@ export const login = async (req, res) => {
     responseData(res, "", 400, false, "Password is required");
   }  else {
     try {
-      const user = await registerModel.find({ username: user_name });
+      const user = await registerModel.find({ username: user_name, status:true });
     
 
       if (user.length < 1) {

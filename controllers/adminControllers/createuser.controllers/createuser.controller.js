@@ -2,6 +2,7 @@ import registerModel from "../../../models/usersModels/register.model.js";
 import { responseData } from "../../../utils/respounse.js";
 import nodemailer from "nodemailer";
 import bcrypt from "bcrypt";
+import loginModel from "../../../models/usersModels/login.model.js";
 
 
 function generateStrongPassword() {
@@ -151,7 +152,7 @@ export const createUser = async (req, res) => {
 
 export const getUser = async(req, res) =>{
 try{
-    const users = await registerModel.find({})
+    const users = await registerModel.find({status:true})
     if(users)
     {
         const filteredUsers = users.reduce((acc, user) => {
@@ -180,6 +181,23 @@ catch(err)
 
 export const deleteUser = async(req, res) =>{
     try{
+        const user_id = req.query.userId;
+        if(!user_id)
+        {
+            return responseData(res, "", 400, false, "User Id is required");
+        }
+        else{
+            const user = await registerModel.findOne({_id: user_id, status:true})
+            if(!user)
+            {
+                return responseData(res, "", 404, false, "User Not Found");
+            }
+            else{
+                const deletedUser = await registerModel.findOneAndUpdate({_id: user_id}, {status:false}, {new: true})
+                const deleteUserFormLongin = await loginModel.deleteMany({ userID:user_id})
+                return responseData(res, "User Deleted Successfully", 200, true, "");
+            }
+        }
         
         
     }

@@ -587,7 +587,7 @@ export const updateStatusClient = async (req, res) => {
         for (let i = 0; i < check_status.quotation.length; i++) {
             if (check_status.quotation[i].itemId == itemId) {
                 if (check_status.quotation[i].client_status !== "pending") {
-                    res.send(`<h1>asfdghjmnbvcdsretyuikjhnbvc</h1>`)
+                    res.send(`you are already submit your response`)
                 }
                 else {
                     if (status === 'approved') {

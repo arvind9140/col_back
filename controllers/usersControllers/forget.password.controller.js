@@ -31,7 +31,7 @@ export const sendotpforgetpassword = async (req, res) => {
   try {
     
     //checking email is registered or not
-    const user = await registerModel.find({ email:email });
+    const user = await registerModel.find({ email:email , status:true});
     if (user.length < 1) {
       return responseData(res,"", 404,false, "Email not registered");
     }

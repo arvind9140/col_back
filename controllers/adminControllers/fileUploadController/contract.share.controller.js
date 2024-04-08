@@ -511,7 +511,7 @@ export const contractStatus = async(req,res) =>{
                         await leadModel.findOneAndUpdate(
                             {
                                 lead_id: lead_id,
-                                "contract.$.itemId": file_id
+                                "contract.$.itemId": itemId
                             },
                             {
                                 $set: {
@@ -520,7 +520,7 @@ export const contractStatus = async(req,res) =>{
                                 }
                             },
                             {
-                                arrayFilters: [{ "elem.itemId": file_id }],
+                                arrayFilters: [{ "elem.itemId": itemId }],
                                 new: true
                             }
 
@@ -532,7 +532,7 @@ export const contractStatus = async(req,res) =>{
                         await leadModel.findOneAndUpdate(
                             {
                                 lead_id: lead_id,
-                                "contract.$.itemId": file_id
+                                "contract.$.itemId": itemId
                             },
                             {
                                 $set: {
@@ -542,7 +542,7 @@ export const contractStatus = async(req,res) =>{
                                 }
                             },
                             {
-                                arrayFilters: [{ "elem.itemId": file_id }],
+                                arrayFilters: [{ "elem.itemId": itemId }],
                                 new: true
                             }
                         );

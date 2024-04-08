@@ -13,7 +13,7 @@ import registerModel from "../../models/usersModels/register.model.js";
 
 export const notificationForUser = async (req, res, user_name) => {
   try {
-    const find_user = await registerModel.findOne({ username: user_name });
+    const find_user = await registerModel.findOne({ username: user_name, status: true });
     if (find_user) {
       for (const item of find_user.data[0].projectData) {
         let find_notification = await notificationModel.find({ itemId: item.project_id });
@@ -255,31 +255,6 @@ export const getNotification = async (req, res) => {
     const find_user = await registerModel.findOne({ _id: userId })
     if (find_user) {
 
-
-      if (find_user.role === "PROCUREMENT") {
-        let notificaltionData = []
-        const find_notification_user = await registerModel.findOne({ _id: userId })
-        for (let i = 0; i < find_notification_user.data[0].notificationData.length; i++) {
-          notificaltionData.push(find_notification_user.data[0].notificationData[i])
-        }
-        const find_notification = await notificationModel.find({})
-
-        for (let i = 0; i < find_notification.length; i++) {
-          notificaltionData.push(find_notification[i])
-        }
-
-
-
-
-
-
-
-        const response = {
-          NotificationData: notificaltionData
-        }
-        responseData(res, "notification Data", 200, true, "", response)
-
-      }
       if (find_user.role === "ADMIN") {
         const find_notification = await notificationModel.find({})
         if (find_notification.length > 0) {
@@ -316,6 +291,7 @@ export const updateNotification = async (req, res) => {
     const userId = req.body.userId;
     const notification_id = req.body.notification_id;
     const type = req.body.type;
+    console.log(notification_id)
 
     if (!userId) {
       return responseData(res, "", 400, false, "User Id is required");
@@ -326,7 +302,7 @@ export const updateNotification = async (req, res) => {
         return responseData(res, "", 404, false, "User not found");
       }
       else {
-        if (find_user.role === "ADMIN" || find_user.role === "PROCUREMENT") {
+        if (find_user.role === "ADMIN") {
           if (type === "One") {
             const notification = await Notification.findByIdAndUpdate(
               notification_id,
@@ -334,19 +310,7 @@ export const updateNotification = async (req, res) => {
               { new: true }
             );
 
-            const notification1 = await registerModel.findOneAndUpdate(
-              { "_id": userId, "data.notificationData._id": notification_id },
-              { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-              {
-                arrayFilters: [
-                  { "elem.notificationData": { $exists: true } },
-                  { "inner._id": notification_id }
-                ],
-                new: true // return the updated document
-              }
-            );
-
-            if (!notification1 && !notification) {
+            if (!notification) {
               return responseData(res, "", 404, false, "Notification not found");
             }
 
@@ -358,18 +322,8 @@ export const updateNotification = async (req, res) => {
               {},
               { status: true }
             );
-            const notification = await registerModel.findOneAndUpdate(
-              { "_id": userId },
-              { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-              {
-                arrayFilters: [
-                  { "elem.notificationData": { $exists: true } },
-                  { "inner.status": false }
-                ],
-                new: true // return the updated document
-              }
-            );
-            if (nModified === 0 && !notification) {
+
+            if (nModified === 0) {
               return responseData(res, "", 404, false, "No notifications found");
             }
 
