@@ -64,11 +64,15 @@ export const shareContract = async (req, res) => {
         const client_name = req.body.client_name;
 
 
-        if (!folder_name || !fileId || !lead_id || !user_name) {
+        if (!folder_name || !fileId || !lead_id ) {
             return responseData(res, "", 400, false, "Please enter all fields");
         }
         else {
             if (type === 'Internal') {
+                if (!user_name)
+                {
+                    return responseData(res, "", 400, false, "Please enter all fields");
+                }
                 const check_user = await registerModel.findOne({ username: user_name });
                 if (!check_user) {
                     return responseData(res, "", 400, false, "User not found");
@@ -248,6 +252,7 @@ export const shareContract = async (req, res) => {
             }
            else if(type  === 'Client')
             {
+               
                 if(!onlyEmailValidation(client_email) && !client_email)
                 {
                     return responseData(res, "", 400, false, "Please enter client email");
@@ -263,6 +268,7 @@ export const shareContract = async (req, res) => {
                     {
                         return responseData(res, "", 400, false, "Invalid lead id");
                     }
+                   
                     const check_file = await fileuploadModel.findOne({ "files.files.fileId": fileId });
 
                     if (!check_file) {
@@ -273,7 +279,7 @@ export const shareContract = async (req, res) => {
 
                     const mailOptions = {
                         from: "a72302492@gmail.com",
-                        to: check_user.email,
+                        to: client_email,
                         subject: "Contract Share Notification",
                         html: `
         <!DOCTYPE html>
@@ -336,7 +342,7 @@ export const shareContract = async (req, res) => {
     `
                     };
 
-
+                   
                     transporter.sendMail(mailOptions, async (error, info) => {
                         if (error) {
                             return responseData(res, "", 400, false, "Failed to send email");

@@ -291,7 +291,7 @@ export const updateNotification = async (req, res) => {
     const userId = req.body.userId;
     const notification_id = req.body.notification_id;
     const type = req.body.type;
-    console.log(notification_id)
+   
 
     if (!userId) {
       return responseData(res, "", 400, false, "User Id is required");
@@ -343,7 +343,7 @@ export const updateNotification = async (req, res) => {
 
           if (type === "One") {
             const notification = await registerModel.findOneAndUpdate(
-              { "_id": userId, "data.notificationData._id": notification_id },
+              { "_id": userId, "data.notificationData._id" : notification_id},
               { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
               {
                 arrayFilters: [
