@@ -38,6 +38,7 @@ req.user = user
     return responseData(res, "", 401, false, "Unauthorized: Invalid token");
   }
 };
+
 export const checkAvailableUserIsAdmin = async(req,res,next) =>{
   try{
     const token = req.cookies?.auth ||
@@ -85,18 +86,8 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
         let MomData = [];
 
 
-        const Projects = await projectModel.find({}).sort({ createdAt: -1 });
-        for (let i = 0; i < Projects.length; i++) {
-          if (Projects[i].project_status == "executing") {
-            execution.push(projects[i]);
-          }
-          if (Projects[i].project_status == "designing") {
-            design.push(Projects[i]);
-          }
-          if (Projects[i].project_status == "completed") {
-            completed.push(Projects[i]);
-          }
-        }
+       
+        
 
 
 
@@ -122,6 +113,17 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
               }
             }
             projects.push(find_project);
+            for (let i = 0; i < projects.length; i++) {
+              if (projects[i].project_status == "executing") {
+                execution.push(projects[i]);
+              }
+              if (projects[i].project_status == "designing") {
+                design.push(projects[i]);
+              }
+              if (projects[i].project_status == "completed") {
+                completed.push(projects[i]);
+              }
+            }
 
 
           }
@@ -135,11 +137,11 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
 
        
         const response = {
-          total_Project: Projects.length,
+          total_Project: projects.length,
           Execution_Phase: execution.length,
           Design_Phase: design.length,
           completed: completed.length,
-          active_Project: Projects.length - completed.length,
+          active_Project: projects.length - completed.length,
           projects,
           projectData,
           NotificationData,

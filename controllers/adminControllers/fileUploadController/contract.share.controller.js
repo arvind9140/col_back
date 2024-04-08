@@ -60,6 +60,8 @@ export const shareContract = async (req, res) => {
         const lead_id = req.body.lead_id;
         const user_name = req.body.user_name;
         const type = req.body.type;
+        const client_email = req.body.email;
+        const client_name = req.body.client_name;
 
 
         if (!folder_name || !fileId || !lead_id || !user_name) {
@@ -243,6 +245,113 @@ export const shareContract = async (req, res) => {
                     }
                 }
 
+            }
+           else if(type  === 'Client')
+            {
+                if(!onlyEmailValidation(client_email) && !client_email)
+                {
+                    return responseData(res, "", 400, false, "Please enter client email");
+                }
+                else if(!client_name || client_name.length<3)
+                {
+                    return responseData(res, "", 400, false, "Please enter client name");
+                }
+
+                else{
+                    const check_lead = await leadModel.find({lead_id:lead_id})
+                    if(!check_lead)
+                    {
+                        return responseData(res, "", 400, false, "Invalid lead id");
+                    }
+                    const check_file = await fileuploadModel.findOne({ "files.files.fileId": fileId });
+
+                    if (!check_file) {
+                        return responseData(res, "", 400, false, "File not found");
+                    }
+                    const file_url = check_file.files.find(x => x.folder_name === folder_name)?.files.find(file => file.fileId === fileId);
+
+
+                    const mailOptions = {
+                        from: "a72302492@gmail.com",
+                        to: check_user.email,
+                        subject: "Contract Share Notification",
+                        html: `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Contract Share Notification</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    width: 80%;
+                    margin: auto;
+                    padding: 20px;
+                }
+                .notification {
+                    background-color: #f0f0f0;
+                    padding: 20px;
+                    border-radius: 5px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+                .notification h2 {
+                    margin-top: 0;
+                    color: #333;
+                }
+                .notification p {
+                    margin-bottom: 10px;
+                    color: #555;
+                }
+                .btn {
+                    background-color: #4CAF50;
+                    color: white;
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    cursor: pointer;
+                }
+                .btn:hover {
+                    background-color: #45a049;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="notification">
+                <h2>Contract Share Notification</h2>
+                <p>Hello ${client_name},</p>
+                <p>A  contract has been shared with you. Please review it and take necessary actions.</p>
+                <p>File URL: <a href="${file_url.fileUrl}">View File</a></p>
+                
+               
+                <p>Thank you!</p>
+            </div>
+        </body>
+        </html>
+    `
+                    };
+
+
+                    transporter.sendMail(mailOptions, async (error, info) => {
+                        if (error) {
+                            return responseData(res, "", 400, false, "Failed to send email");
+                        } else {
+                            return responseData(res, "Email sent successfully", 200, true, "");
+
+                        }
+                    })
+
+                    
+                }
+
+            }
+            else{
+                return responseData(res, "", 400, false, "Invalid Type");
             }
         }
 
@@ -451,6 +560,36 @@ export const contractStatus = async(req,res) =>{
     }
 }
 
+
+export const getContractData = async(req,res) =>{
+    try{
+        const lead_id = req.query.lead_id;
+
+        if(!lead_id)
+        {
+            return responseData(res, "", 400, false, "Lead id is required");
+        }
+        else{
+            const contractData  =  await leadModel.find({lead_id:lead_id})
+            if (contractData)
+            {
+                
+                return responseData(res, "Contract data fetched successfully", 200, true, "", contractData[0].contract);
+            }
+            else{
+                return responseData(res, "", 400, false, "No contract found");
+            }
+
+
+        }
+        
+
+    }
+    catch(err)
+    {
+        responseData(res, "", 500, false, "Something went wrong while getting the contract");
+    }
+}
 
 
 
