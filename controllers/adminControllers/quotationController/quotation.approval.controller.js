@@ -7,6 +7,17 @@ import projectModel from "../../../models/adminModels/project.model.js";
 import { onlyEmailValidation } from "../../../utils/validation.js";
 
 
+function generatedigitnumber() {
+    const length = 6;
+    const charset = "0123456789";
+    let password = "";
+    for (let i = 0; i < length; ++i) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+}
+
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -424,6 +435,7 @@ export const shareQuotation = async (req, res) => {
                                     "data.$[elem].notificationData": {
                                         _id: new mongoose.Types.ObjectId(),
                                         itemId: project_id,
+                                        notification_id: generatedigitnumber(),
                                         type: "quotation",
                                         status: false,
                                         message: `Quotation file shared with you for approval in ${findProject.project_name}  . Please check`,

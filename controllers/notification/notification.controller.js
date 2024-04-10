@@ -117,6 +117,7 @@ const notification = async (req, res) => {
             const approachingProjectNotification = new Notification({
               type: "project",
               itemId: project.project_id,
+              notification_id:generatedigitnumber(),
               message: `Approaching project: ${project.project_name} (${daysRemaining} days remaining from project end date)`,
               status: false,
             });
@@ -128,6 +129,7 @@ const notification = async (req, res) => {
             const approachingProjectNotification = new Notification({
               type: "project",
               itemId: project.project_id,
+              notification_id: generatedigitnumber(),
               message: `Approaching project: ${project.project_name} ( project end date today. Please check )`,
               status: false,
             });
@@ -146,6 +148,7 @@ const notification = async (req, res) => {
           const overdueProjectNotification = new Notification({
             type: "project",
             itemId: project.project_id,
+            notification_id: generatedigitnumber(),
             message: `Overdue project: ${project.project_name} (Exceeded by ${daysExceeded} days)`,
             status: false,
           });
@@ -169,6 +172,7 @@ const notification = async (req, res) => {
           const outdatedLeadNotification = new Notification({
             type: "lead",
             itemId: lead.lead_id,
+            notification_id: generatedigitnumber(),
             message: `Please check this lead named ${lead.name} for the next update. Only 1 day left.`,
             status: false,
           });
@@ -178,6 +182,7 @@ const notification = async (req, res) => {
           const outdatedLeadNotification = new Notification({
             type: "lead",
             itemId: lead.lead_id,
+            notification_id: generatedigitnumber(),
             message: `Please check this lead named ${lead.name} for the next update. Today is the meeting date.`,
             status: false,
           });
@@ -242,7 +247,7 @@ cron.schedule(" 0 0 * * *", async () => {
     console.error("Error executing notification cron job:", error);
   }
 });
-cron.schedule("0 0 */14 * *", async () => {
+cron.schedule(" 0 0 */14 * *", async () => {
   // This cron pattern runs the job at 00:00 every  14 days
   try {
     await deleteNotification();
@@ -264,7 +269,7 @@ export const getNotification = async (req, res) => {
     const find_user = await registerModel.findOne({ _id: userId })
     if (find_user) {
 
-      if (find_user.role === "ADMIN" || find_user.role === "SENIOR ARCHITECTURE") {
+      if (find_user.role === "ADMIN" || find_user.role === "Senior Architect") {
         const find_notification = await notificationModel.find({})
         if (find_notification.length > 0) {
           const response = {
@@ -323,12 +328,12 @@ export const updateNotification = async (req, res) => {
             if (!notification) {
 
               const notification1 = await registerModel.findOneAndUpdate(
-                { _id: userId, "data.notificationData._id": notification_id },
+                { _id: userId, "data.notificationData.notification_id": notification_id },
                 { $set: { "data.$[elem].notificationData.$[inner].status": true } },
                 {
                   arrayFilters: [
                     { "elem.notificationData": { $exists: true } },
-                    { "inner._id": notification_id }
+                    { "inner.notification_id": notification_id }
                   ],
                   new: true
                 }
@@ -378,43 +383,27 @@ export const updateNotification = async (req, res) => {
         else {
 
           if (type === "One") {
-            // const notification = await registerModel.findOneAndUpdate(
-            //   {
-            //     "_id": userId,
-            //     "data": {
-            //       $elemMatch: {
-            //         // "notificationData._id": notification_id,
-            //         "notificationData.status": false
-            //       }
-            //     }
-            //   },
-            //   {
-            //     "$set": {
-            //       "data.$.notificationData.$[inner].status": true
-            //     }
-            //   },
-            //   {
-            //     arrayFilters: [
-            //       { "inner.status": false }
-            //     ],
-            //     new: true
-            //   }
-            // );
-             const notification = await registerModel.findOne({_id:userId})
-             for(let i=0;i<notification.data[0].notificationData.length;i++){
-              await registerModel.findOneAndUpdate
-             }
-            console.log(notification)
-          
+            
+            try {
+              const result = await registerModel.findOneAndUpdate(
+                { _id: userId, "data.notificationData.notification_id": notification_id },
+                { $set: { "data.$[elem].notificationData.$[inner].status": true } },
+                {
+                  arrayFilters: [
+                    { "elem.notificationData": { $exists: true } },
+                    { "inner.notification_id": notification_id }
+                  ]
+                }
+              );
+              if(result)
+              {
+                responseData(res, "", 200, true, "Notification updated successfully");  
+              }
 
-if (!notification) {
-  return responseData(res, "", 404, false, "Notification not found");
-}
-
-
-            responseData(res, "Notification updated successfully", 200, true, "");
-
-
+              
+            } catch (error) {
+              console.error(`An error occurred: ${error}`);
+            }
 
 
 

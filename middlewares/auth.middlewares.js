@@ -73,8 +73,8 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
           console.error("Error executing notification cron job:", error);
         }
       });
-    
       
+
         let userData = [];
         let projects = [];
         let projectData = [];

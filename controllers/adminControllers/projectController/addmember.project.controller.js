@@ -1,8 +1,18 @@
 import registerModel from "../../../models/usersModels/register.model.js";
 import projectModel from "../../../models/adminModels/project.model.js";
 import { responseData } from "../../../utils/respounse.js";
+import mongoose from "mongoose";
 
-
+function generatedigitnumber() {
+    const length = 6;
+    const charset = "0123456789";
+    let password = "";
+    for (let i = 0; i < length; ++i) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+}
 export const addMember = async (req, res) => {
     const id = req.body.id;
     const project_id = req.body.project_id;
@@ -47,6 +57,23 @@ export const addMember = async (req, res) => {
                                     {
                                         arrayFilters: [{ "outer.projectData": { $exists: true } }]
                                     }
+                                );
+                                await registerModel.updateOne(
+                                    { username: user_name },
+                                    {
+                                        $push: {
+                                            "data.$[elem].notificationData": {
+                                                _id: new mongoose.Types.ObjectId(),
+                                                itemId: project_id,
+                                                notification_id: generatedigitnumber(),
+                                                type: "project",
+                                                status: false,
+                                                message: `You are added in project ${find_project.project_name}`,
+                                                createdAt: new Date()
+                                            }
+                                        }
+                                    },
+                                    { arrayFilters: [{ "elem.projectData": { $exists: true } }] }
                                 );
                                 responseData(res, "Member added successfully", 200, true, "");
                             }
