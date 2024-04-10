@@ -113,22 +113,23 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
               }
             }
             projects.push(find_project);
-            for (let i = 0; i < projects.length; i++) {
-              if (projects[i].project_status == "executing") {
-                execution.push(projects[i]);
-              }
-              if (projects[i].project_status == "designing") {
-                design.push(projects[i]);
-              }
-              if (projects[i].project_status == "completed") {
-                completed.push(projects[i]);
-              }
-            }
-
 
           }
 
         }
+      for (let i = 0; i < projects.length; i++) {
+        if (projects[i].project_status == "executing") {
+          execution.push(projects[i]);
+        }
+        if (projects[i].project_status === "designing") {
+          design.push(projects[i]);
+          // console.log(design)
+        }
+        if (projects[i].project_status == "completed") {
+          completed.push(projects[i]);
+        }
+      }
+     
       
         let notification_push = await user.data[0].notificationData.forEach(element => {
           NotificationData.push(element)
