@@ -7,7 +7,16 @@ import notificationModel from "../../models/adminModels/notification.model.js";
 import cron from "node-cron";
 import registerModel from "../../models/usersModels/register.model.js";
 
-
+function generatedigitnumber() {
+  const length = 6;
+  const charset = "0123456789";
+  let password = "";
+  for (let i = 0; i < length; ++i) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
 
 
 
@@ -255,7 +264,7 @@ export const getNotification = async (req, res) => {
     const find_user = await registerModel.findOne({ _id: userId })
     if (find_user) {
 
-      if (find_user.role === "ADMIN") {
+      if (find_user.role === "ADMIN" || find_user.role === "SENIOR ARCHITECTURE") {
         const find_notification = await notificationModel.find({})
         if (find_notification.length > 0) {
           const response = {
@@ -291,7 +300,7 @@ export const updateNotification = async (req, res) => {
     const userId = req.body.userId;
     const notification_id = req.body.notification_id;
     const type = req.body.type;
-   
+
 
     if (!userId) {
       return responseData(res, "", 400, false, "User Id is required");
@@ -302,20 +311,45 @@ export const updateNotification = async (req, res) => {
         return responseData(res, "", 404, false, "User not found");
       }
       else {
-        if (find_user.role === "ADMIN") {
+        if (find_user.role === "ADMIN" || find_user.role === "SENIOR ARCHITECT") {
           if (type === "One") {
             const notification = await Notification.findByIdAndUpdate(
               notification_id,
               { status: true },
               { new: true }
             );
+            console.log(notification)
 
             if (!notification) {
-              return responseData(res, "", 404, false, "Notification not found");
+
+              const notification1 = await registerModel.findOneAndUpdate(
+                { _id: userId, "data.notificationData._id": notification_id },
+                { $set: { "data.$[elem].notificationData.$[inner].status": true } },
+                {
+                  arrayFilters: [
+                    { "elem.notificationData": { $exists: true } },
+                    { "inner._id": notification_id }
+                  ],
+                  new: true
+                }
+              );
+              console.log(notification1)
+              if (!notification1) {
+                return responseData(res, "", 404, false, "Notification not found");
+              }
+              else {
+                // Respond with the updated notification
+                responseData(res, "Notification updated successfully", 200, true, "");
+              }
+
+
+            }
+            else {
+              // Respond with the updated notification
+              responseData(res, "Notification updated successfully", 200, true, "");
             }
 
-            // Respond with the updated notification
-            responseData(res, "Notification updated successfully", 200, true, "");
+
           } else if (type === "All") {
             // Update status for all notifications
             const { nModified } = await Notification.updateMany(
@@ -339,26 +373,51 @@ export const updateNotification = async (req, res) => {
             responseData(res, "", 400, false, "Invalid type");
           }
         }
+
+
         else {
 
           if (type === "One") {
-            const notification = await registerModel.findOneAndUpdate(
-              { "_id": userId, "data.notificationData._id" : notification_id},
-              { "$set": { "data.$[elem].notificationData.$[inner].status": true } },
-              {
-                arrayFilters: [
-                  { "elem.notificationData": { $exists: true } },
-                  { "inner._id": notification_id }
-                ],
-                new: true // return the updated document
-              }
-            );
+            // const notification = await registerModel.findOneAndUpdate(
+            //   {
+            //     "_id": userId,
+            //     "data": {
+            //       $elemMatch: {
+            //         // "notificationData._id": notification_id,
+            //         "notificationData.status": false
+            //       }
+            //     }
+            //   },
+            //   {
+            //     "$set": {
+            //       "data.$.notificationData.$[inner].status": true
+            //     }
+            //   },
+            //   {
+            //     arrayFilters: [
+            //       { "inner.status": false }
+            //     ],
+            //     new: true
+            //   }
+            // );
+             const notification = await registerModel.findOne({_id:userId})
+             for(let i=0;i<notification.data[0].notificationData.length;i++){
+              await registerModel.findOneAndUpdate
+             }
+            console.log(notification)
+          
 
-            if (!notification) {
-              return responseData(res, "", 404, false, "Notification not found");
-            }
+if (!notification) {
+  return responseData(res, "", 404, false, "Notification not found");
+}
+
 
             responseData(res, "Notification updated successfully", 200, true, "");
+
+
+
+
+
           } else if (type === "All") {
             const notification = await registerModel.findOneAndUpdate(
               { "_id": userId },

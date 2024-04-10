@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const notification = new mongoose.Schema({
   type: String, 
-  itemId: String, 
+  itemId: String,
   message: String, 
   status: Boolean,
   createdAt: {

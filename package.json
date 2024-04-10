@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"npm install",
     "start": "export OPENSSL_CONF=/dev/null || nodemon index.js"
   },
   "author": "",

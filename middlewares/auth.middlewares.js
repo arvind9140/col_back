@@ -34,7 +34,7 @@ export const verifyJWT = async (req, res, next) => {
 req.user = user
     next(); // Proceed to the next 
   } catch (err) {
-    console.error("JWT Verification Error:", err);
+   
     return responseData(res, "", 401, false, "Unauthorized: Invalid token");
   }
 };
@@ -58,7 +58,7 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
 
 
     const user = await registerModel.findById(decodedToken?.id);
-    if(user.role ==='ADMIN' || user.role ==='PROCUREMENT')
+    if (user.role === 'ADMIN' || user.role ==='Senior Architect')
     {
       next();
     }
@@ -187,7 +187,7 @@ export const isAdmin = async(req,res,next) =>{
       return responseData(res, "", 401, false, "Unauthorized: User not found");
     }
 
-    if (user.role === "ADMIN")
+    if (user.role === "ADMIN" || user.role ==="Senior Architect")
   {
     next(); // Proceed to the next 
   }
@@ -196,10 +196,12 @@ export const isAdmin = async(req,res,next) =>{
   }
    
   } catch (err) {
-    console.error("JWT Verification Error:", err);
+   
     return responseData(res, "", 401, false, "Unauthorized: Invalid token");
   }
 }
+
+
 
 
 

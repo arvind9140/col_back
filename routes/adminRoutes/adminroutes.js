@@ -95,7 +95,7 @@ router.route("/getsingle/quotation").get(getSingleTypeQuotation);
 router.route("/update/quotation").put(updateQuotation);
 router.route("/share/quotation").post(shareQuotation);
 router.route("/get/quotationdata").get(getQuotationData);
-router.route("/quotation/approval").post(updateStatusAdmin)
+router.route("/quotation/approval").post(updateStatusAdmin);
 
 
 
