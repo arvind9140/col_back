@@ -7,6 +7,16 @@ import registerModel from "../../../models/usersModels/register.model.js";
 import leadModel from "../../../models/adminModels/leadModel.js";
 import { onlyEmailValidation } from "../../../utils/validation.js";
 
+function generatedigitnumber() {
+    const length = 6;
+    const charset = "0123456789";
+    let password = "";
+    for (let i = 0; i < length; ++i) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    return password;
+}
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -202,6 +212,7 @@ export const shareContract = async (req, res) => {
                                                 "data.$[elem].notificationData": {
                                                     _id: new mongoose.Types.ObjectId(),
                                                     itemId: lead_id,
+                                                    notification_id: generatedigitnumber(),
                                                     type: "contract",
                                                     status: false,
                                                     message: `Contract file shared with you for review in ${check_lead.name}  . Please check`,
