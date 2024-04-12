@@ -62,6 +62,27 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
     {
       next();
     }
+    else if (user.role ==='Jr. Executive HR & Marketing')
+    {
+      try{
+
+        const fileData = await fileuploadModel.find({ type:"template"})
+        if(fileData)
+        {
+          const projectData = fileData.find((item) => item.files.find((file) =>file.folder_name === "miscellaneous" && file.sub_folder_name_first === "miscellaneous"))
+          const response ={
+            projectData
+          }
+          responseData(res, "user data found", 200, true, "", response)
+        }
+
+      }
+      catch(err)
+      {
+        return responseData(res, "", 401, false, "Unauthorized: Invalid token");
+      }
+
+    }
     else{
       cron.schedule(" 0 0 * * *", async () => {
         // This cron pattern runs the job at 00:00 every day
@@ -156,7 +177,7 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
   }
   catch(err)
   {
-    console.log(err)
+
     return responseData(res, "", 401, false, "Unauthorized: Invalid token");
   }
 
