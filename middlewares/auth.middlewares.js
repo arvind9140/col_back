@@ -65,11 +65,13 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
     else if (user.role ==='Jr. Executive HR & Marketing')
     {
       try{
+        let templateData = []
 
         const fileData = await fileuploadModel.find({ type:"template"})
         if(fileData)
         {
-          const templateData = fileData.find((item) => item.files.find((file) =>file.folder_name === "miscellaneous" && file.sub_folder_name_first === "miscellaneous"))
+          const template= fileData.find((item) => item.files.find((file) =>file.folder_name === "miscellaneous" && file.sub_folder_name_first === "miscellaneous"))
+          templateData.push(template)
           const response ={
             templateData
           }
