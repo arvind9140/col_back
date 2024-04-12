@@ -69,9 +69,9 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
         const fileData = await fileuploadModel.find({ type:"template"})
         if(fileData)
         {
-          const projectData = fileData.find((item) => item.files.find((file) =>file.folder_name === "miscellaneous" && file.sub_folder_name_first === "miscellaneous"))
+          const templateData = fileData.find((item) => item.files.find((file) =>file.folder_name === "miscellaneous" && file.sub_folder_name_first === "miscellaneous"))
           const response ={
-            projectData
+            templateData
           }
           responseData(res, "user data found", 200, true, "", response)
         }
