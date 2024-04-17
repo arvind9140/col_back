@@ -1,1 +1,1 @@
-web: nodemon index.js
+web: export OPENSSL_CONF=/dev/nulln && nodemon index.js
