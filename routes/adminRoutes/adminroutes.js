@@ -44,10 +44,10 @@ import { addMember } from "../../controllers/adminControllers/projectController/
 import { checkAvailableUserIsAdmin, isAdmin } from "../../middlewares/auth.middlewares.js";
 
 
-import { verifyJWT } from "../../middlewares/auth.middlewares.js";
+// import { verifyJWT } from "../../middlewares/auth.middlewares.js";
 import { contractStatus, getContractData, shareContract } from "../../controllers/adminControllers/fileUploadController/contract.share.controller.js";
 // router.use(checkAvailableUserIsAdmin)
-router.use(verifyJWT)
+// router.use(verifyJWT)
 
 router.route("/create/user").post(isAdmin, createUser);
 router.route("/add/member").post(isAdmin, addMember);
