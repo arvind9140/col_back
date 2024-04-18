@@ -485,7 +485,8 @@ export const generatePdf = async (req, res) => {
           <ul>
             <ol>
              ${momData.files
-            .map((image) => `<li><img src="${image.fileUrl}" alt="Image"></li>`)
+            .map((image) => `<li>
+            <a href="${image.fileUrl}">files links</a></li>`)
             .join("")}
         </ol>
           </ul>
@@ -635,7 +636,7 @@ export const sendPdf = async (req, res) => {
           <ul>
            <ol>
              ${momData.files
-            .map((image) => `<li><img src="${image}" alt="Image"></li>`)
+          .map((image) => `<li> <a href="${image.fileUrl}">files links</a></li>`)
             .join("")}
         </ol>
           </ul>
