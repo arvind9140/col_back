@@ -63,7 +63,8 @@ const limiter = rateLimit({
   handler: (_, __, ___, options) => {
     throw new ApiError(
       options.statusCode || 500,
-      `There are too many requests. You are only allowed ${options.max
+      `There are too many requests. You are only allowed ${
+        options.max
       } requests per ${options.windowMs / 60000} minutes`
     );
   },

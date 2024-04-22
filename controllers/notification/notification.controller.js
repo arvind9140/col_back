@@ -270,10 +270,10 @@ export const getNotification = async (req, res) => {
     if (find_user) {
 
       if (find_user.role === "ADMIN" || find_user.role === "Senior Architect") {
-        const find_notification = await (await notificationModel.find({})).reverse()
+        const find_notification = await notificationModel.find({})
         if (find_notification.length > 0) {
           const response = {
-            NotificationData: find_notification
+            NotificationData: find_notification.reverse()
           }
           responseData(res, "notification Data", 200, true, "", response)
         }
@@ -319,11 +319,11 @@ export const updateNotification = async (req, res) => {
         if (find_user.role === "ADMIN" || find_user.role === "SENIOR ARCHITECT") {
           if (type === "One") {
             const notification = await Notification.findOneAndUpdate(
-            {notification_id: notification_id},
+            {notification_id:notification_id},
               { status: true },
               { new: true }
             );
-         
+           
 
             if (!notification) {
 
@@ -338,7 +338,7 @@ export const updateNotification = async (req, res) => {
                   new: true
                 }
               );
-          
+             
               if (!notification1) {
                 return responseData(res, "", 404, false, "Notification not found");
               }

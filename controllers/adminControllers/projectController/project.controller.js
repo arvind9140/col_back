@@ -8,7 +8,7 @@ import {
   onlyEmailValidation,
   onlyPhoneNumberValidation,
 } from "../../../utils/validation.js";
-import validator from "validator";
+import notificationModel from "../../../models/adminModels/notification.model.js";
 dotenv.config();
 
 const s3 = new AWS.S3({
@@ -18,189 +18,14 @@ const s3 = new AWS.S3({
 });
 
 
-//   const id = req.body.id;
-//   const project_name = req.body.project_name;
-//   const project_type = req.body.project_type;
-//   const client_name = req.body.client_name;
-//   const description = req.body.description;
-//   const leadmanager = req.body.leadmanager;
-//   const designer = req.body.designer;
-//   const visualizer = req.body.visualizer;
-//   const project_status = req.body.project_status;
-//   const project_start_date = req.body.project_start_date;
-//   const timeline_date = req.body.timeline_date;
-//   const project_budget = req.body.project_budget;
-//   const project_location = req.body.project_location;
-//   const client_contact = req.body.client_contact;
-//   const client_email = req.body.client_email;
-//   const project_ID = generateSixDigitNumber();
-//   const folder_name = req.body.folder_name;
 
-//   // here we validate all fields
-//   if (!onlyAlphabetsValidation(project_name) && project_name.length > 2) {
-//     responseData(res, "", 400, false, "project name required");
-//   } else if (!onlyAlphabetsValidation(project_type) && project_type > 2) {
-//     responseData(res, "", 400, false, "project type required");
-//   } else if (!onlyAlphabetsValidation(client_name) && client_name.length >= 3) {
-//     responseData(res, "", 400, false, "client name required");
-//   } else if (!onlyAlphabetsValidation(leadmanager) && leadmanager.length >= 3) {
-//     responseData(res, "", 400, false, "lead manager required");
-//   }  else if (!onlyAlphabetsValidation(designer) && designer.length >= 3) {
-//     responseData(res, "", 400, false, "superviser name  required");
-//   } else if (!onlyAlphabetsValidation(visualizer) && visualizer.length >= 3) {
-//     responseData(res, "", 400, false, "visualizer name  required");
-//   } else if (
-//     !project_budget &&
-//     !project_start_date &&
-//     !timeline_date &&
-//     !project_status
-//   ) {
-//     responseData(res, "", 400, false, "Please fill  required field ");
-//   } else if (!onlyPhoneNumberValidation(client_contact)) {
-//     responseData(
-//       res,
-//       "",
-//       400,
-//       false,
-//       "Please enter valid client contact number"
-//     );
-//   } else if (!onlyEmailValidation(client_email)) {
-//     responseData(res, "", 400, false, "Please enter valid client email");
-//   }
- 
+function generateSixDigitNumber() {
+  const min = 100000;
+  const max = 999999;
+  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
 
-//   /// ***** add validation here ****///
-//   else {
-//     try {
-//       const check_role = await registerModel.find({ _id: id });
-//       if (check_role.length > 0) {
-//         if (check_role[0].role == "ADMIN") {
-//           const files = req.files?.files;
-//           const fileUploadPromises = [];
-//           let successfullyUploadedFiles = [];
-
-//           if (files) {
-//             const filesToUpload = Array.isArray(files)
-//               ? files.slice(0, 5)
-//               : [files];
-
-//             for (const file of filesToUpload) {
-//               const fileName = file.name;
-//               fileUploadPromises.push(uploadFile(file, fileName, project_ID));
-//             }
-
-//             const responses = await Promise.all(fileUploadPromises);
-
-//             const fileUploadResults = responses.map((response) => ({
-//               status: response.Location ? true : false,
-//               data: response ? response : response.err,
-//             }));
-
-//             successfullyUploadedFiles = fileUploadResults.filter(
-//               (result) => result.status
-//             );
-//           }
-//           let file = [];
-//           if (successfullyUploadedFiles.length > 0) {
-//             let fileUrls = successfullyUploadedFiles.map((result) => ({
-//               fileUrl: result.data.Location,
-//               fileName: result.data.Location.split('/').pop(),
-//               fileId: `FL-${generateSixDigitNumber()}`,
-//               date: new Date()
-
-//             }));
-
-//            if(!folder_name){
-//             responseData(res,"", 400,false, "Folder name is required", null)
-//            }
-
-//             const project_data = await projectModel.create({
-//               project_name: project_name,
-//               client_name: client_name,
-//               project_id: `COL\P-${project_ID}`,
-//               project_type: project_type,
-//               description: description,
-//               leadmanager: leadmanager,
-//               designer:designer,
-//               visualizer: visualizer,
-//               project_status: project_status,
-//               project_start_date: project_start_date,
-//               timeline_date: timeline_date,
-//               project_end_date: timeline_date,
-//               project_budget: project_budget,
-//               project_location: project_location,
-//               files: fileUrls,
-//               client: {
-//                 client_name: client_name,
-//                 client_contact: client_contact,
-//                 client_email: client_email,
-//               },
-//             });const fileupload = new fileuploadModel({
-//               project_id: `COL\P-${project_ID}`,
-//               project_name:project_name,
-//               files:{
-//                 folder_name:folder_name,
-//                 files:fileUrls
-//               } 
-//             }
-//             )
-//            await  fileupload.save();
-
-
-//             responseData(
-//               res,
-//               "Project Create Successfully!",
-//               200,
-//               true,
-//               "",
-//               project_data
-//             );
-//           } else {
-//             const project_data = await projectModel.create({
-//               project_name: project_name,
-//               client_name: client_name,
-//               project_id: `COL\P-${project_ID}`,
-//               project_type: project_type,
-//               description: description,
-//               leadmanager: leadmanager,
-//               designer:designer,
-//               visualizer: visualizer,
-//               project_status: project_status,
-//               project_start_date: project_start_date,
-//               timeline_date: timeline_date,
-//               project_end_date: timeline_date,
-//               project_budget: `${project_budget} ₹`,
-//               project_location: project_location,
-//               files: file,
-//               client: {
-//                 client_name: client_name,
-//                 client_contact: client_contact,
-//                 client_email: client_email,
-//               },
-//             });
-//             responseData(
-//               res,
-//               "Project Create Successfully!",
-//               200,
-//               true,
-//               "",
-//               project_data
-//             );
-//           }
-//         } else {
-//           responseData(res, "", 404, false, " You are not admin!", []);
-//         }
-
-//         if (check_role.length < 1) {
-//           responseData(res, "", 404, false, " User not found.", []);
-//         }
-//       }
-//     } catch (err) {
-//       res.send(err);
-//       console.log(err);
-//     }
-//   }
-// };
+  return randomNumber;
+}
 
 // Function to check if the project is older than 6 months
 function isProjectOlderThan6Months(createdDate) {
@@ -318,6 +143,7 @@ export const updateProjectDetails = async (req, res) => {
   const project_budget = req.body.project_budget;
   const description = req.body.description;
   const designer = req.body.designer;
+  const user_name = req.body.user_name;
 
   if (!project_ID) {
     responseData(res, "", 400, false, " Project ID is required.", []);
@@ -332,10 +158,21 @@ export const updateProjectDetails = async (req, res) => {
   {
     responseData(res, "", 400, false, "designer name is required.", []);
   }
+  else if (!user_name &&  onlyAlphabetsValidation(user_name))
+  {
+    responseData(res, "", 400, false, "user name is required.", []);
+  }
 
   //  *********** add other validation **********//
   else {
     try {
+      const find_user = await registerModel.find
+      ({username:user_name})
+      if(!find_user)
+      {
+        responseData(res, "", 400, false, "user not found.", []);
+     
+      }
       const project_find = await projectModel.find({ project_id: project_ID });
       if (project_find.length > 0) {
         const project_update = await projectModel.findOneAndUpdate(
@@ -348,9 +185,34 @@ export const updateProjectDetails = async (req, res) => {
               description: description,
               designer:designer
             },
+          
+            $push: {
+              project_updated_by:{
+                user_name: user_name,
+                project_budget: project_budget,
+                project_status: project_status,
+                timeline_date: timeline_date,
+                description: description,
+                designer: designer,
+                updated_date: new Date()
+
+              }
+            
+            },
+
           },
+         
           { new: true, useFindAndModify: false }
         );
+        const newNotification = new notificationModel({
+          type: "lead",
+          notification_id: generateSixDigitNumber(),
+          itemId: project_ID,
+          message: `project  updated: Project name ${project_find[0].project_name}  update  on  ${new Date()}.`,
+          status: false,
+        });
+        await newNotification.save();
+
 
         responseData(
           res,
@@ -358,7 +220,6 @@ export const updateProjectDetails = async (req, res) => {
           200,
           true,
           "",
-          project_update
         );
       }
       if (project_find.length < 1) {
@@ -370,3 +231,5 @@ export const updateProjectDetails = async (req, res) => {
     }
   }
 };
+
+

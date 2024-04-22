@@ -71,7 +71,8 @@ export const createUser = async (req, res) => {
                             data:{
                                 projectData:[],
                                 quotationData:[],
-                                notificationData:[]
+                                notificationData:[],
+                                leadData:[]
                             }
                         })
                         newUser.save();

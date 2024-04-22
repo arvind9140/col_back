@@ -6,6 +6,7 @@ import projectModel from "../models/adminModels/project.model.js";
 import fileuploadModel from "../models/adminModels/fileuploadModel.js";
 import { notificationForUser ,getNotification} from "../controllers/notification/notification.controller.js";
 import cron from "node-cron";
+import leadModel from "../models/adminModels/leadModel.js";
 
 export const verifyJWT = async (req, res, next) => {
   try {
@@ -102,6 +103,8 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
         let projects = [];
         let projectData = [];
         let NotificationData = [];
+        let leadData = [];
+        let leads =[];
         let execution = [];
         let design = [];
         let completed = [];
@@ -159,6 +162,21 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
 
         });
 
+        for(const item of user.data[0].leadData)
+        {
+          const find_lead = await leadModel.findOne({ lead_id: item.lead_id })
+          if (find_lead){
+            const find_files = await fileuploadModel.findOne({ lead_id: item.lead_id })
+            if(find_files)
+            {
+              leadData.push(find_files)
+            }
+            leads.push(find_lead)
+
+
+          }
+        }
+
        
         const response = {
           total_Project: projects.length,
@@ -169,7 +187,10 @@ export const checkAvailableUserIsAdmin = async(req,res,next) =>{
           projects,
           projectData,
           NotificationData,
-          MomData
+          MomData,
+          leadData,
+          leads,
+
         };
         // console.log(userData)
         

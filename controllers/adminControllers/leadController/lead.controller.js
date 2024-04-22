@@ -8,6 +8,7 @@ import {
   onlyEmailValidation,
   onlyPhoneNumberValidation,
 } from "../../../utils/validation.js";
+import registerModel from "../../../models/usersModels/register.model.js";
 
 
 
@@ -26,6 +27,7 @@ function generateSixDigitNumber() {
 
 
 export const createLead = async (req, res) => {
+  
   const name = req.body.name;
   const email = req.body.email;
   const phone = req.body.phone;
@@ -33,7 +35,7 @@ export const createLead = async (req, res) => {
   const status = req.body.status;
   const source = req.body.source;
   const content = req.body.content;
-  const createdBy = req.body.createdBy;
+  const userId = req.body.userId;
   const date = req.body.date;
   const lead_manager = req.body.lead_manager;
 
@@ -47,7 +49,11 @@ export const createLead = async (req, res) => {
       false,
       "name should be greater than 3 characters."
     );
-  } else if (!onlyEmailValidation(email) && email.length > 5) {
+   
+  } else if (!userId) {
+    responseData(res, "", 401, false, "userId is required.")
+  }
+   else if (!onlyEmailValidation(email) && email.length > 5) {
     responseData(res, "", 401, false, "email is invalid.");
   } else if (!onlyPhoneNumberValidation(phone)) {
     responseData(res, "", 401, false, "phone number  is  invalid.");
@@ -78,8 +84,11 @@ export const createLead = async (req, res) => {
       }
       if (check_email.length < 1) {
         const lead_id = generateSixDigitNumber();
+        const check_user = await registerModel.findById(userId)
+       
          
         let fileUrls
+      
        
         const lead = new leadModel({
           name: name,
@@ -96,7 +105,7 @@ export const createLead = async (req, res) => {
           notes: [
             {
               content: content,
-              createdBy: createdBy,
+              createdBy: check_user.username,
               date: date,
               status: status,
             },
@@ -143,8 +152,11 @@ export const createLead = async (req, res) => {
 export const getAllLead = async (req, res) => {
   try {
     const leads = await leadModel.find({}).sort({ createdAt: -1 });
+    const response = {
+      leads:leads
+    }
 
-    responseData(res, "All Lead Data", 200, true, "", leads);
+    responseData(res, "All Lead Data", 200, true, "", response);
   } catch (error) {
     responseData(res, 500, error.message);
   }
@@ -167,6 +179,7 @@ export const getSingleLead = async (req, res) => {
 };
 
 export const updateLead = async (req, res) => {
+  const userId = req.body.userId;
   const lead_id = req.body.lead_id;
   const status = req.body.status;
   const content = req.body.content;
@@ -180,6 +193,11 @@ export const updateLead = async (req, res) => {
     responseData(res, "", 400, false, "status is required", []);
   } else if (!createdBy) {
     responseData(res, "", 400, false, "createdBy is required", []);
+  }
+  else if(!userId)
+  {
+    responseData(res, "", 400, false, "UserId is required", []);
+
   } else {
     try {
       const utcDate = new Date(update);
@@ -187,29 +205,22 @@ export const updateLead = async (req, res) => {
       const istDate = new Date(utcDate.getTime()); // IST is UTC+5.5
 
 // Format the IST date as a string
-const formattedISTDate = istDate.toLocaleString('en-IN', {
-  timeZone: 'Asia/Kolkata',
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-  hour: '2-digit',
-  minute: '2-digit',
 
-})
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
+        const check_user = await registerModel.findById(userId);
         const update_Lead = await leadModel.findOneAndUpdate(
           { lead_id: lead_id },
           {
             $set: {
               status: status,
-              updated_date: formattedISTDate,
+              updated_date:date,
             },
             $push: {
               notes: {
                 content: content,
-                createdBy: createdBy,
-                date: formattedISTDate,
+                createdBy: check_user.username,
+                date: date,
                 status: status,
               },
             },
@@ -225,13 +236,14 @@ const formattedISTDate = istDate.toLocaleString('en-IN', {
         
            const newNotification = new Notification({
              type: "lead",
+             notification_id:generateSixDigitNumber(),
              itemId: lead_id,
              message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${formattedISTDate}.`,
              status: false,
            });
            await newNotification.save();
 
-        responseData(res, "Lead Data Updated", 200, true, "", update_Lead);
+        responseData(res, "Lead Data Updated", 200, true, "", []);
           
       }
       if (find_lead.length < 1) {

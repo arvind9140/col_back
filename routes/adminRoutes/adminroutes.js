@@ -26,12 +26,11 @@ import {
   getSingleProject,
   updateProjectDetails,
 } from "../../controllers/adminControllers/projectController/project.controller.js";
-import getQuotation, {
+import {
   getQuotationData,
-  getSingleTypeQuotation,
+ 
 } from "../../controllers/adminControllers/quotationController/getQuotation.controller.js";
-import { createQuotation } from "../../controllers/adminControllers/quotationController/quotation.controller.js";
-import { updateQuotation } from "../../controllers/adminControllers/quotationController/update.quotation.controller.js";
+
 import { contractShare } from "../../controllers/adminControllers/fileUploadController/contract.controller.js";
 import { getNotification, updateNotification } from "../../controllers/notification/notification.controller.js";
 import projectFileUpload from "../../controllers/adminControllers/fileUploadController/project.file.controller.js";
@@ -44,10 +43,11 @@ import { addMember } from "../../controllers/adminControllers/projectController/
 import { checkAvailableUserIsAdmin, isAdmin } from "../../middlewares/auth.middlewares.js";
 
 
-// import { verifyJWT } from "../../middlewares/auth.middlewares.js";
+import { verifyJWT } from "../../middlewares/auth.middlewares.js";
 import { contractStatus, getContractData, shareContract } from "../../controllers/adminControllers/fileUploadController/contract.share.controller.js";
+import { AddMemberInLead } from "../../controllers/adminControllers/leadController/addmemberinlead.controller.js";
 // router.use(checkAvailableUserIsAdmin)
-// router.use(verifyJWT)
+router.use(verifyJWT)
 
 router.route("/create/user").post(isAdmin, createUser);
 router.route("/add/member").post(isAdmin, addMember);
@@ -81,6 +81,7 @@ router.route("/getall/lead").get(isAdmin, getAllLead);
 router.route("/getsingle/lead").get(isAdmin, getSingleLead);
 router.route("/update/lead").put(isAdmin, updateLead);
 router.route("/create/lead/project").post(isAdmin, leadToProject);
+router.route("/add/member/lead").post(isAdmin, AddMemberInLead);
 
 router.route("/create/mom").post(createmom);
 router.route("/getall/mom").get(getAllMom);
@@ -89,10 +90,7 @@ router.route("/generate/pdf").get(generatePdf);
 router.route("/getall/project/mom").get(checkAvailableUserIsAdmin, getAllProjectMom);
 router.route("/send/momdata").get(sendPdf);
 
-router.route("/create/quotation").post(createQuotation);
-router.route("/get/quotation").get(getQuotation);
-router.route("/getsingle/quotation").get(getSingleTypeQuotation);
-router.route("/update/quotation").put(updateQuotation);
+
 router.route("/share/quotation").post(shareQuotation);
 router.route("/get/quotationdata").get(getQuotationData);
 router.route("/quotation/approval").post(updateStatusAdmin);

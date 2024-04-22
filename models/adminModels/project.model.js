@@ -71,6 +71,7 @@ const projectSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  project_updated_by:[],
 
   createdAt: {
     type: Date,
