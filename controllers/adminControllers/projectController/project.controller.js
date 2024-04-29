@@ -143,7 +143,7 @@ export const updateProjectDetails = async (req, res) => {
   const project_budget = req.body.project_budget;
   const description = req.body.description;
   const designer = req.body.designer;
-  const user_name = req.body.user_name;
+  const user_id = req.body.user_id;
 
   if (!project_ID) {
     responseData(res, "", 400, false, " Project ID is required.", []);
@@ -158,16 +158,16 @@ export const updateProjectDetails = async (req, res) => {
   {
     responseData(res, "", 400, false, "designer name is required.", []);
   }
-  else if (!user_name &&  onlyAlphabetsValidation(user_name))
+  else if (!user_id)
   {
-    responseData(res, "", 400, false, "user name is required.", []);
+    responseData(res, "", 400, false, "user id is required.", []);
   }
 
   //  *********** add other validation **********//
   else {
     try {
       const find_user = await registerModel.find
-      ({username:user_name})
+      ({_id: user_id})
       if(!find_user)
       {
         responseData(res, "", 400, false, "user not found.", []);
@@ -188,7 +188,7 @@ export const updateProjectDetails = async (req, res) => {
           
             $push: {
               project_updated_by:{
-                user_name: user_name,
+                user_name: find_user[0].username,
                 project_budget: project_budget,
                 project_status: project_status,
                 timeline_date: timeline_date,
@@ -205,7 +205,7 @@ export const updateProjectDetails = async (req, res) => {
           { new: true, useFindAndModify: false }
         );
         const newNotification = new notificationModel({
-          type: "lead",
+          type: "project",
           notification_id: generateSixDigitNumber(),
           itemId: project_ID,
           message: `project  updated: Project name ${project_find[0].project_name}  update  on  ${new Date()}.`,
