@@ -122,9 +122,12 @@ export const templateFileUpload = async (req, res) => {
         // Limit the number of files to upload to at most 5
         const filesToUpload = files.slice(0, 5);
         const fileUploadPromises = [];
+        let fileSize = []
 
         for (const file of filesToUpload) {
             const fileName = file.name;
+            const fileSizeInBytes = file.size;
+            fileSize.push(fileSizeInBytes / 1024)
             fileUploadPromises.push(uploadFile(file, fileName, folder_name));
         }
 
@@ -135,13 +138,20 @@ export const templateFileUpload = async (req, res) => {
         }));
         const successfullyUploadedFiles = fileUploadResults.filter((result) => result.data);
 
+        let fileUrls
         if (successfullyUploadedFiles.length > 0) {
-            let fileUrls = successfullyUploadedFiles.map((result) => ({
-                fileUrl: result.data.Location,
-                fileName: result.data.Location.split('/').pop(),
-                fileId: `FL-${generateSixDigitNumber()}`,
-                date: new Date()
-            }));
+            for (let i = 0; i < fileSize.length; i++) {
+                fileUrls = successfullyUploadedFiles.map((result) => ({
+                    fileUrl: result.data.Location,
+                    fileName: result.data.Location.split('/').pop(),
+                    fileId: `FL-${generateSixDigitNumber()}`,
+                    fileSize: `${fileSize[i]} KB`,
+                    date: new Date()
+
+                }));
+
+            }
+           
 
             if (folder_name === "commercial" || folder_name === "residential" || folder_name === "miscellaneous") {
                 if (sub_folder_name_first === "designing" || sub_folder_name_first === "executing" || sub_folder_name_first === "miscellaneous") {

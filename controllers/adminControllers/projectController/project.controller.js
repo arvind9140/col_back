@@ -51,47 +51,47 @@ export const getAllProject = async (req, res) => {
     } else {
       const check_role = await registerModel.find({ _id: id });
       if (check_role.length > 0) {
-       
-          let execution = [];
-          let design = [];
-          let completed = [];
-          let archive = [];
-          const projects = await projectModel.find({}).sort({ createdAt: -1 });
-          for (let i = 0; i < projects.length; i++) {
-            if (projects[i].project_status == "executing") {
-              execution.push(projects[i]);
-            }
-            if (projects[i].project_status == "designing") {
-              design.push(projects[i]);
-            }
-            if (projects[i].project_status == "completed") {
-              completed.push(projects[i]);
-              const createdDate = projects[i].project_end_date;
-              const isOlderThan6Months = isProjectOlderThan6Months(createdDate);
-              if (isOlderThan6Months) {
-                archive.push(isOlderThan6Months);
-              }
+
+        let execution = [];
+        let design = [];
+        let completed = [];
+        let archive = [];
+        const projects = await projectModel.find({}).sort({ createdAt: -1 });
+        for (let i = 0; i < projects.length; i++) {
+          if (projects[i].project_status == "executing") {
+            execution.push(projects[i]);
+          }
+          if (projects[i].project_status == "designing") {
+            design.push(projects[i]);
+          }
+          if (projects[i].project_status == "completed") {
+            completed.push(projects[i]);
+            const createdDate = projects[i].project_end_date;
+            const isOlderThan6Months = isProjectOlderThan6Months(createdDate);
+            if (isOlderThan6Months) {
+              archive.push(isOlderThan6Months);
             }
           }
+        }
 
-          const response = {
-            total_Project: projects.length,
-            Execution_Phase: execution.length,
-            Design_Phase: design.length,
-            completed: completed.length,
-            archive: archive.length,
-            active_Project: projects.length - completed.length,
-            projects,
-          };
-          responseData(
-            res,
-            "projects fetched successfully",
-            200,
-            true,
-            "",
-            response
-          );
-      
+        const response = {
+          total_Project: projects.length,
+          Execution_Phase: execution.length,
+          Design_Phase: design.length,
+          completed: completed.length,
+          archive: archive.length,
+          active_Project: projects.length - completed.length,
+          projects,
+        };
+        responseData(
+          res,
+          "projects fetched successfully",
+          200,
+          true,
+          "",
+          response
+        );
+
       }
       if (check_role.length < 1) {
         responseData(res, "", 404, false, " User not found.", []);
@@ -117,17 +117,17 @@ export const getSingleProject = async (req, res) => {
         responseData(res, "", 404, false, " User not found.", []);
       }
       if (check_role.length > 0) {
-       
-          const find_project = await projectModel.find({
-            project_id: project_ID,
-          });
-          if (find_project.length > 0) {
-            responseData(res, "project found", 200, true, "", find_project);
-          }
-          if (find_project < 1) {
-            responseData(res, "", 404, false, "project not found", []);
-          }
-       
+
+        const find_project = await projectModel.find({
+          project_id: project_ID,
+        });
+        if (find_project.length > 0) {
+          responseData(res, "project found", 200, true, "", find_project);
+        }
+        if (find_project < 1) {
+          responseData(res, "", 404, false, "project not found", []);
+        }
+
       }
     } catch (err) {
       responseData(res, "", 500, false, "error in fetching projects", err);
@@ -154,12 +154,10 @@ export const updateProjectDetails = async (req, res) => {
   } else if (!project_status) {
     responseData(res, "", 400, false, "project status required.", []);
   }
-  else if (!designer &&  onlyAlphabetsValidation(designer))
-  {
+  else if (!designer && onlyAlphabetsValidation(designer)) {
     responseData(res, "", 400, false, "designer name is required.", []);
   }
-  else if (!user_id)
-  {
+  else if (!user_id) {
     responseData(res, "", 400, false, "user id is required.", []);
   }
 
@@ -167,11 +165,10 @@ export const updateProjectDetails = async (req, res) => {
   else {
     try {
       const find_user = await registerModel.find
-      ({_id: user_id})
-      if(!find_user)
-      {
+        ({ _id: user_id })
+      if (!find_user) {
         responseData(res, "", 400, false, "user not found.", []);
-     
+
       }
       const project_find = await projectModel.find({ project_id: project_ID });
       if (project_find.length > 0) {
@@ -183,11 +180,11 @@ export const updateProjectDetails = async (req, res) => {
               project_status: project_status,
               timeline_date: timeline_date,
               description: description,
-              designer:designer
+              designer: designer
             },
-          
+
             $push: {
-              project_updated_by:{
+              project_updated_by: {
                 user_name: find_user[0].username,
                 project_budget: project_budget,
                 project_status: project_status,
@@ -197,11 +194,11 @@ export const updateProjectDetails = async (req, res) => {
                 updated_date: new Date()
 
               }
-            
+
             },
 
           },
-         
+
           { new: true, useFindAndModify: false }
         );
         const newNotification = new notificationModel({

@@ -407,8 +407,9 @@ export const generatePdf = async (req, res) => {
       if (check_mom.length > 0) {
         const momData = check_mom[0];
          // Extracting the MOM data
+       
         
-        const htmlTemplate = momPdfTemplate(momData)
+        const htmlTemplate = momPdfTemplate(momData, check_project[0].project_name)
        
 
 
@@ -469,7 +470,7 @@ export const sendPdf = async (req, res) => {
 
 
 
-        const htmlTemplate = momPdfTemplate(momData)
+        const htmlTemplate = momPdfTemplate(momData, check_project[0].project_name)
 
         const pdfOptions = {
           format: "A4",

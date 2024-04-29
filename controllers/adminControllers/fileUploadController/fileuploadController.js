@@ -150,13 +150,18 @@ const fileupload = async (req, res) => {
         }
 
         // Limit the number of files to upload to at most 5
+        let fileSize = []
         const filesToUpload = files.slice(0, 5);
 
         for (const file of filesToUpload) {
           const fileName = file.name;
+          const fileSizeInBytes = file.size;
+          fileSize.push(fileSizeInBytes/1024)
+          
 
           fileUploadPromises.push(uploadFile(file, fileName, lead_id, folder_name));
         }
+        
 
         const responses = await Promise.all(fileUploadPromises);
         // console.log(responses)
@@ -169,15 +174,20 @@ const fileupload = async (req, res) => {
         const successfullyUploadedFiles = fileUploadResults.filter(
           (result) => result.data
         );
+        let fileUrls
         if (successfullyUploadedFiles.length > 0) {
+          for(let i=0;i<fileSize.length;i++)
+          {
+             fileUrls = successfullyUploadedFiles.map((result) => ({
+              fileUrl: result.data.Location,
+              fileName: result.data.Location.split('/').pop(),
+              fileId: `FL-${generateSixDigitNumber()}`,
+              fileSize: `${fileSize[i]} KB`,
+                date: new Date()
 
-          let fileUrls = successfullyUploadedFiles.map((result) => ({
-            fileUrl: result.data.Location,
-            fileName: result.data.Location.split('/').pop(),
-            fileId: `FL-${generateSixDigitNumber()}`,
-            date: new Date()
+            })); 
 
-          }));
+          }
 
 
           const existingFile = await fileuploadModel.findOne({

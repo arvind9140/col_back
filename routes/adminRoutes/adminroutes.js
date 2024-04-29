@@ -36,7 +36,7 @@ import { getNotification, updateNotification } from "../../controllers/notificat
 import projectFileUpload from "../../controllers/adminControllers/fileUploadController/project.file.controller.js";
 import { shareFile } from "../../controllers/adminControllers/fileUploadController/share.files.controller.js";
 import { getSingleTemplateFile, templateFileUpload } from "../../controllers/adminControllers/fileUploadController/template.controller.js";
-import { deleteFile } from "../../controllers/adminControllers/fileUploadController/delete.file.controller.js";
+import { deleteFile, deleteFolder } from "../../controllers/adminControllers/fileUploadController/delete.file.controller.js";
 import { shareQuotation, updateStatus, updateStatusAdmin } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
 import { createUser, deleteUser, getUser } from "../../controllers/adminControllers/createuser.controllers/createuser.controller.js";
 import { addMember } from "../../controllers/adminControllers/projectController/addmember.project.controller.js";
@@ -69,6 +69,7 @@ router.route("/delete/file").delete(deleteFile);
 router.route("/share/contract").post(shareContract);
 router.route("/contract/approval").post(contractStatus);
 router.route("/get/contractdata").get(getContractData);
+router.route("/delete/folder").delete(deleteFolder);
 
 
 
