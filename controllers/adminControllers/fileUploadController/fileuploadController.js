@@ -46,6 +46,7 @@ const saveFileUploadData = async (
         files: [
           {
             folder_name: existingFileUploadData.folder_name,
+            updated_date: existingFileUploadData.updated_Date,
             files: existingFileUploadData.files,
           },
         ],
@@ -62,6 +63,9 @@ const saveFileUploadData = async (
           $push: {
             "files.$.files": { $each: existingFileUploadData.files },
           },
+          $set:{
+            "files.$.updated_date": existingFileUploadData.updated_Date,
+          }
         },
         {
           arrayFilters: [
@@ -74,12 +78,14 @@ const saveFileUploadData = async (
         responseData(res, "File data updated successfully", 200, true);
       } else {
         // If the folder does not exist, create a new folder object
+       
         const updateNewFolderResult = await fileuploadModel.updateOne(
           { lead_id: existingFileUploadData.lead_id },
           {
             $push: {
               files: {
                 folder_name: existingFileUploadData.folder_name,
+                updated_date: existingFileUploadData.updated_Date,
                 files: existingFileUploadData.files,
               },
             },
@@ -203,6 +209,7 @@ const fileupload = async (req, res) => {
               lead_id,
               lead_Name,
               folder_name,
+              updated_Date:fileUrls[0].date,
               files: fileUrls,
             });
           } else {
@@ -212,6 +219,7 @@ const fileupload = async (req, res) => {
                 lead_id,
                 lead_Name,
                 folder_name,
+                updated_Date: new Date(),
                 files: fileUrls,
               },
               true

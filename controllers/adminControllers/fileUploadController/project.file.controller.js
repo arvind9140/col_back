@@ -45,6 +45,7 @@ const saveFileUploadData = async (
         files: [
           {
             folder_name: existingFileUploadData.folder_name,
+            updated_date: existingFileUploadData.updated_Date,
             files: existingFileUploadData.files,
           },
         ],
@@ -61,6 +62,9 @@ const saveFileUploadData = async (
           $push: {
             "files.$.files": { $each: existingFileUploadData.files },
           },
+          $set: {
+            "files.$.updated_date": existingFileUploadData.updated_Date,
+          }
         },
         {
           arrayFilters: [
@@ -79,6 +83,7 @@ const saveFileUploadData = async (
             $push: {
               files: {
                 folder_name: existingFileUploadData.folder_name,
+                updated_date: existingFileUploadData.updated_Date,
                 files: existingFileUploadData.files,
               },
             },
@@ -190,6 +195,7 @@ const projectFileUpload = async (req, res) => {
               project_id,
               project_name,
               folder_name,
+              updated_Date: fileUrls[0].date,
               files: fileUrls,
             });
           } else {
@@ -199,6 +205,7 @@ const projectFileUpload = async (req, res) => {
                 project_id,
                 project_name,
                 folder_name,
+                updated_Date: fileUrls[0].date,
                 files: fileUrls,
               },
               true

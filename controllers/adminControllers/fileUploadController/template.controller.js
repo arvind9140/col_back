@@ -38,6 +38,7 @@ const saveFileUploadData = async (res, existingFileUploadData, isFirst = false) 
                         sub_folder_name_first: existingFileUploadData.sub_folder_name_first,
                         sub_folder_name_second: existingFileUploadData.sub_folder_name_second,
                         folder_id: existingFileUploadData.folder_Id,
+                        updated_date: existingFileUploadData.updated_Date,
                         files: existingFileUploadData.files,
                     },
                 ],
@@ -49,6 +50,9 @@ const saveFileUploadData = async (res, existingFileUploadData, isFirst = false) 
                 $push: {
                     "files.$.files": { $each: existingFileUploadData.files },
                 },
+                $set: {
+                    "files.$.updated_date": existingFileUploadData.updated_Date,
+                }
             };
 
 
@@ -77,6 +81,7 @@ const saveFileUploadData = async (res, existingFileUploadData, isFirst = false) 
                             folder_name: existingFileUploadData.folder_name,
                             sub_folder_name_first: existingFileUploadData.sub_folder_name_first,
                             sub_folder_name_second: existingFileUploadData.sub_folder_name_second,
+                            updated_date: existingFileUploadData.updated_Date,
                             folder_id: existingFileUploadData.folder_Id,
                             files: existingFileUploadData.files,
                         },
@@ -168,6 +173,7 @@ export const templateFileUpload = async (req, res) => {
                             folder_Id,
                             sub_folder_name_first,
                             sub_folder_name_second,
+                            updated_Date: fileUrls[0].date,
                             type,
                             files: fileUrls,
                         });
@@ -177,6 +183,7 @@ export const templateFileUpload = async (req, res) => {
                             folder_Id,
                             sub_folder_name_first,
                             sub_folder_name_second,
+                            updated_Date: fileUrls[0].date,
                             type,
                             files: fileUrls,
                         }, true);
