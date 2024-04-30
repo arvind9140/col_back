@@ -1,34 +1,48 @@
 import { response } from "express";
 import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 import { responseData } from "../../../utils/respounse.js";
+import projectModel from "../../../models/adminModels/project.model.js";
+import leadModel from "../../../models/adminModels/leadModel.js";
 
  export const getFileData = async(req,res)=>{
         try {
           const data = await fileuploadModel.find({});
           if (data.length > 0) {
-
-            // console.log(data[1].project_id)
+            data.reverse()
             let projectData =[]
             let leadData = []
             let templateData =[]
-            const filterData = data.forEach((element) => {
-              if(element.project_id !=null)
-              {
-                projectData.push({
-                  project_name:element.project_name,
-                  project_id:element.project_id,
-                  files:element.files
-
-                })
+            await Promise.all(data.map(async (element) => {
+              if (element.project_id != null) {
+                const check_project = await projectModel.findOne({ project_id: element.project_id });
+                if (check_project) {
+                  projectData.push({
+                    project_name: element.project_name,
+                    project_id: element.project_id,
+                    client_name: check_project.client[0].client_name,
+                    project_type: check_project.project_type,
+                    project_status: check_project.project_status,
+                    files: element.files
+                  });
+                }
               }
               if(element.lead_id !=null){
-                leadData.push({
+                const check_lead = await leadModel.findOne({lead_id:element.lead_id})
+                if(check_lead)
+                {
+                  leadData.push({
 
-                  lead_id:element.lead_id,
-                  lead_Name:element.lead_name,
-                  files:element.files
-                  
-                })
+                    lead_id: element.lead_id,
+                    lead_Name: element.lead_name,
+                    lead_email: check_lead.email,
+                    lead_phone: check_lead.phone,
+                    lead_status: check_lead.status,
+                    lead_date: check_lead.date,
+                    files: element.files
+
+                  })
+                }
+                
                 }
                 if(element.lead_id ==null && element.project_id ==null)
                 {
@@ -58,10 +72,11 @@ import { responseData } from "../../../utils/respounse.js";
                   })
                 }
 
-              })
+              }))
+              
               const response  = {
-                leadData:leadData,
-                projectData:projectData,
+                leadData: leadData.reverse(),
+                projectData: projectData.reverse(),
                 templateData:templateData
               }
             responseData(
