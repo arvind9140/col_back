@@ -37,7 +37,7 @@ import { responseData } from "../../../utils/respounse.js";
                   // console.log(element.files)
                   for(let i=0;i<element.files.length;i++)
                   {
-                    
+
                     
                     files.push({
                       folder_name:element.files[i].folder_name,
@@ -97,9 +97,11 @@ export const getleadData = async(req,res)=>{
           const data = await fileuploadModel.find({lead_id:lead_id});
           if(data.length>0)
           {
+            
 
             let files = []
             for (let i = 0; i < data[0].files.length; i++) {
+              console.log(data[0].files[i])
               if(data[0].files[i].files.length>0)
               {
                 files.push({

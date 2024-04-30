@@ -87,7 +87,7 @@ export const createLead = async (req, res) => {
         const check_user = await registerModel.findById(userId)
        
          
-        let fileUrls
+        let fileUrls=[]
       
        
         const lead = new leadModel({
@@ -117,15 +117,18 @@ export const createLead = async (req, res) => {
           lead_name:name,
           
           files:[{
-            folder_name:"CLIENT BRIEF",
+            folder_name:"client brief",
+            updated_date:date,
             files:fileUrls
           },
             {
-              folder_name: "DRAWING",
+              folder_name: "drawing",
+              updated_date: date,
               files: fileUrls
             },
             {
-              folder_name: "REVIEW",
+              folder_name: "review",
+              updated_date: date,
               files: fileUrls
             },
         ]
@@ -325,7 +328,7 @@ const projectID = `COL\P-${project_ID}`;
           200,
           true,
           "",
-          project_data
+          
         );
         }
       }
