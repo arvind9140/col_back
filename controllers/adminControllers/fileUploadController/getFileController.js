@@ -38,6 +38,7 @@ import { responseData } from "../../../utils/respounse.js";
                   for(let i=0;i<element.files.length;i++)
                   {
                     
+                    
                     files.push({
                       folder_name:element.files[i].folder_name,
                       sub_folder_name_first:element.files[i].sub_folder_name_first,
@@ -99,12 +100,24 @@ export const getleadData = async(req,res)=>{
 
             let files = []
             for (let i = 0; i < data[0].files.length; i++) {
-              files.push({
-                folder_name: data[0].files[i].folder_name,
-                updated_date: data[0].files[i].updated_date,
-                total_files: data[0].files[i].files.length,
-                files: data[0].files[i].files
-              })
+              if(data[0].files[i].files.length>0)
+              {
+                files.push({
+                  folder_name: data[0].files[i].folder_name,
+                  updated_date: data[0].files[i].updated_date,
+                  total_files: data[0].files[i].files.length,
+                  files: data[0].files[i].files
+                })
+              }
+              else{
+                files.push({
+                  folder_name: data[0].files[i].folder_name,
+                  updated_date: data[0].files[i].updated_date,
+                  total_files: 0,
+                  files: []
+                })
+              }
+             
 
             }
             responseData(
@@ -145,11 +158,24 @@ try{
     let files =[]
     for(let i=0;i<data[0].files.length;i++)
     {
-      files.push({folder_name: data[0].files[i].folder_name,
-      updated_date:data[0].files[i].updated_date,
-      total_files:data[0].files[i].files.length,
-        files:data[0].files[i].files
-      })
+      if(data[0].files[i].files.length>0)
+      {
+        files.push({
+          folder_name: data[0].files[i].folder_name,
+          updated_date: data[0].files[i].updated_date,
+          total_files: data[0].files[i].files.length,
+          files: data[0].files[i].files
+        })
+      }
+      else{
+        files.push({
+          folder_name: data[0].files[i].folder_name,
+          updated_date: data[0].files[i].updated_date,
+          total_files: 0,
+          files: []
+        })
+      }
+     
 
     }
     responseData(
