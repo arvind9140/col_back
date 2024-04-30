@@ -27,7 +27,7 @@ function generateSixDigitNumber() {
 
 
 export const createLead = async (req, res) => {
-  
+
   const name = req.body.name;
   const email = req.body.email;
   const phone = req.body.phone;
@@ -49,11 +49,11 @@ export const createLead = async (req, res) => {
       false,
       "name should be greater than 3 characters."
     );
-   
+
   } else if (!userId) {
     responseData(res, "", 401, false, "userId is required.")
   }
-   else if (!onlyEmailValidation(email) && email.length > 5) {
+  else if (!onlyEmailValidation(email) && email.length > 5) {
     responseData(res, "", 401, false, "email is invalid.");
   } else if (!onlyPhoneNumberValidation(phone)) {
     responseData(res, "", 401, false, "phone number  is  invalid.");
@@ -64,8 +64,7 @@ export const createLead = async (req, res) => {
   } else if (!source) {
     responseData(res, "", 401, false, "source is required.");
   }
-  else if (!onlyAlphabetsValidation(lead_manager) && lead_manager.length >= 3)
-  {
+  else if (!onlyAlphabetsValidation(lead_manager) && lead_manager.length >= 3) {
     responseData(
       res,
       "",
@@ -73,10 +72,10 @@ export const createLead = async (req, res) => {
       false,
       "lead manager should be greater than 3 characters."
     )
-      
+
   }
-  
-   else {
+
+  else {
     try {
       const check_email = await leadModel.find({ email: email });
       if (check_email.length > 0) {
@@ -85,21 +84,21 @@ export const createLead = async (req, res) => {
       if (check_email.length < 1) {
         const lead_id = generateSixDigitNumber();
         const check_user = await registerModel.findById(userId)
-       
-         
-        let fileUrls=[]
-      
-       
+
+
+        let fileUrls = []
+
+
         const lead = new leadModel({
           name: name,
           lead_id: lead_id,
-          lead_manager:lead_manager,
+          lead_manager: lead_manager,
           email: email,
           phone: phone,
           location: location,
           status: status,
           source: source,
-          updated_date:date,
+          updated_date: date,
           files: fileUrls,
           date: date,
           notes: [
@@ -112,30 +111,30 @@ export const createLead = async (req, res) => {
           ],
         });
         const lead_data = await lead.save();
-        const fileUploadData =  new fileuploadModel({
-          lead_id:lead_id,
-          lead_name:name,
-          
-          files:[{
-            folder_name:"client brief",
-            updated_date:date,
-            files:fileUrls
+        const fileUploadData = new fileuploadModel({
+          lead_id: lead_id,
+          lead_name: name,
+
+          files: [{
+            folder_name: "client brief",
+            updated_date: date,
+            files: fileUrls
           },
-            {
-              folder_name: "drawing",
-              updated_date: date,
-              files: fileUrls
-            },
-            {
-              folder_name: "review",
-              updated_date: date,
-              files: fileUrls
-            },
-        ]
+          {
+            folder_name: "drawing",
+            updated_date: date,
+            files: fileUrls
+          },
+          {
+            folder_name: "review",
+            updated_date: date,
+            files: fileUrls
+          },
+          ]
 
         })
-           
-       await fileUploadData.save()
+
+        await fileUploadData.save()
         responseData(
           res,
           "lead created successfully.",
@@ -143,8 +142,8 @@ export const createLead = async (req, res) => {
           true,
           "",
         );
-         }
-      
+      }
+
     } catch (err) {
       console.log(err);
       res.send(err);
@@ -156,7 +155,7 @@ export const getAllLead = async (req, res) => {
   try {
     const leads = await leadModel.find({}).sort({ createdAt: -1 });
     const response = {
-      leads:leads
+      leads: leads
     }
 
     responseData(res, "All Lead Data", 200, true, "", response);
@@ -197,17 +196,12 @@ export const updateLead = async (req, res) => {
   } else if (!createdBy) {
     responseData(res, "", 400, false, "createdBy is required", []);
   }
-  else if(!userId)
-  {
+  else if (!userId) {
     responseData(res, "", 400, false, "UserId is required", []);
 
   } else {
     try {
-      const utcDate = new Date(update);
 
-      const istDate = new Date(utcDate.getTime()); // IST is UTC+5.5
-
-// Format the IST date as a string
 
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
@@ -217,13 +211,13 @@ export const updateLead = async (req, res) => {
           {
             $set: {
               status: status,
-              updated_date:date,
+              updated_date: update,
             },
             $push: {
               notes: {
                 content: content,
                 createdBy: check_user.username,
-                date: date,
+                date: update,
                 status: status,
               },
             },
@@ -236,18 +230,18 @@ export const updateLead = async (req, res) => {
         );
 
 
-        
-           const newNotification = new Notification({
-             type: "lead",
-             notification_id:generateSixDigitNumber(),
-             itemId: lead_id,
-             message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${formattedISTDate}.`,
-             status: false,
-           });
-           await newNotification.save();
+
+        const newNotification = new Notification({
+          type: "lead",
+          notification_id: generateSixDigitNumber(),
+          itemId: lead_id,
+          message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${update}.`,
+          status: false,
+        });
+        await newNotification.save();
 
         responseData(res, "Lead Data Updated", 200, true, "", []);
-          
+
       }
       if (find_lead.length < 1) {
         responseData(res, "", 404, false, "lead not found");
@@ -272,7 +266,7 @@ export const leadToProject = async (req, res) => {
   const timeline_date = req.body.timeline_date;
   const project_start_date = req.body.project_start_date;
   const project_budget = req.body.project_budget;
-  const designer= req.body.designer; 
+  const designer = req.body.designer;
 
   if (!lead_id) {
     responseData(res, "", 400, false, "lead_id is required", []);
@@ -280,56 +274,53 @@ export const leadToProject = async (req, res) => {
     try {
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
-        const find_project = await projectModel.find({lead_id:lead_id})
-        if(find_project.length > 0)
-        {
+        const find_project = await projectModel.find({ lead_id: lead_id })
+        if (find_project.length > 0) {
           responseData(res, "", 400, false, "project already exist for this lead", []);
         }
-        if(find_project.length <1)
-        {
-
-        
-        const project_ID = generateSixDigitNumber();
-const projectID = `COL\P-${project_ID}`;
-        const project_data = await projectModel.create({
-          project_name: project_name,
-          project_type: project_type,
-          project_id: projectID,
-          client: {
-            client_name: client_name,
-            client_email: client_email,
-            client_contact: client_contact,
-          },
-
-          project_location: location,
-          description: description,
-          lead_id: lead_id,
-          project_budget: project_budget,
-          project_end_date: timeline_date,
-          timeline_date: timeline_date,
-          project_start_date: project_start_date,
-          project_status: project_status,
-          project_incharge:designer,
-          visualizer: "",
-          supervisor: "",
-          leadmanager: "",
-        });
-        project_data.save();
-        const lead_find_in_fileupload = await fileuploadModel.find({lead_id:lead_id});
-        if(lead_find_in_fileupload.length>0)
-        {
-          const lead_update_in_fileupload = await fileuploadModel.updateOne({ lead_id: lead_id }, { $set: { project_id: projectID, project_name: project_name, lead_id:null}});
+        if (find_project.length < 1) {
 
 
-        }
-        responseData(
-          res,
-          "project created successfully",
-          200,
-          true,
-          "",
-          
-        );
+          const project_ID = generateSixDigitNumber();
+          const projectID = `COL\P-${project_ID}`;
+          const project_data = await projectModel.create({
+            project_name: project_name,
+            project_type: project_type,
+            project_id: projectID,
+            client: {
+              client_name: client_name,
+              client_email: client_email,
+              client_contact: client_contact,
+            },
+
+            project_location: location,
+            description: description,
+            lead_id: lead_id,
+            project_budget: project_budget,
+            project_end_date: timeline_date,
+            timeline_date: timeline_date,
+            project_start_date: project_start_date,
+            project_status: project_status,
+            project_incharge: designer,
+            visualizer: "",
+            supervisor: "",
+            leadmanager: "",
+          });
+          project_data.save();
+          const lead_find_in_fileupload = await fileuploadModel.find({ lead_id: lead_id });
+          if (lead_find_in_fileupload.length > 0) {
+            const lead_update_in_fileupload = await fileuploadModel.updateOne({ lead_id: lead_id }, { $set: { project_id: projectID, project_name: project_name, lead_id: null } });
+
+
+          }
+          responseData(
+            res,
+            "project created successfully",
+            200,
+            true,
+            "",
+
+          );
         }
       }
       if (find_lead.length < 1) {
