@@ -75,8 +75,8 @@ import leadModel from "../../../models/adminModels/leadModel.js";
               }))
               
               const response  = {
-                leadData: leadData.reverse(),
-                projectData: projectData.reverse(),
+                leadData: leadData,
+                projectData: projectData,
                 templateData:templateData
               }
             responseData(
