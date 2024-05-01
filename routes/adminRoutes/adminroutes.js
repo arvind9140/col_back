@@ -89,7 +89,7 @@ router.route("/getall/mom").get(verifyJWT, getAllMom);
 router.route("/getsingle/mom").get(verifyJWT, getSingleMom);
 router.route("/generate/pdf").get(generatePdf);
 router.route("/getall/project/mom").get(verifyJWT, checkAvailableUserIsAdmin, getAllProjectMom);
-router.route("/send/momdata").get(verifyJWT, sendPdf);
+router.route("/send/momdata").post(verifyJWT, sendPdf);
 
 
 router.route("/share/quotation").post(verifyJWT, shareQuotation);
