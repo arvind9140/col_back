@@ -454,8 +454,8 @@ export const generatePdf = async (req, res) => {
 
 export const sendPdf = async (req, res) => {
   try {
-    const project_id = req.query.project_id;
-    const mom_id = req.query.mom_id;
+    const project_id = req.body.project_id;
+    const mom_id = req.body.mom_id;
 
     const check_project = await projectModel.find({ project_id: project_id });
 

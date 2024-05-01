@@ -116,7 +116,7 @@ export const getleadData = async(req,res)=>{
 
             let files = []
             for (let i = 0; i < data[0].files.length; i++) {
-              console.log(data[0].files[i])
+              
               if(data[0].files[i].files.length>0)
               {
                 files.push({
