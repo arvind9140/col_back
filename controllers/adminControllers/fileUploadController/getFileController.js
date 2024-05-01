@@ -8,7 +8,6 @@ import leadModel from "../../../models/adminModels/leadModel.js";
         try {
           const data = await fileuploadModel.find({});
           if (data.length > 0) {
-            data.reverse()
             let projectData =[]
             let leadData = []
             let templateData =[]
