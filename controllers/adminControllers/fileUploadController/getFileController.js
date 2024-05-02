@@ -54,6 +54,7 @@ import leadModel from "../../../models/adminModels/leadModel.js";
                     
                     files.push({
                       folder_name:element.files[i].folder_name,
+                      folder_id:element.files[i].folder_id,
                       sub_folder_name_first:element.files[i].sub_folder_name_first,
                       sub_folder_name_second: element.files[i].sub_folder_name_second,
                       updated_date:element.files[i].updated_date,
