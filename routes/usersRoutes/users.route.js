@@ -8,6 +8,7 @@ import { getUserData } from "../../controllers/usersControllers/getuserdata.cont
 import { profileupload } from "../../controllers/usersControllers/profile.image.controller.js";
 import { updateStatus,  updateStatusClient } from "../../controllers/adminControllers/quotationController/quotation.approval.controller.js";
 import { updateStatusAdmin } from "../../controllers/adminControllers/fileUploadController/contract.share.controller.js"
+import { resetPassword } from "../../controllers/usersControllers/reset.password.controller.js";
 const router = Router();
 
 router.route("/send/otp").post(sendOtp);
@@ -20,6 +21,7 @@ router.route("/logout").post(logout)
 router.route("/sendotp/forget/password").post( sendotpforgetpassword);
 router.route("/verifyotp/forget/password").post(otpVerification);
 router.route("/reset/password").post(changePassController);
+router.route("/change/password").post(resetPassword);
 
 
 router.route("/getdata").get(getUserData)

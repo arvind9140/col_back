@@ -1,13 +1,13 @@
 import registerModel from "../../models/usersModels/register.model.js";
 import { responseData } from "../../utils/respounse.js";
-
+import bcrypt from "bcrypt";
 
 
 export const resetPassword = async(req,res) =>{
     try{
         const oldPassword = req.body.old_password;
         const newPassword = req.body.new_password;
-        const userId = req.user.id;
+        const userId = req.body.userId;
         const confirmNewPassword = req.body.confirm_new_password;
 
         if(!userId)
@@ -41,19 +41,23 @@ else{
         const isMatch = await bcrypt.compare(oldPassword,user.password);
         if(!isMatch)
         {
-            return responseData(res,"",400,"old password does not match")
+            return responseData(res,"",400,false, "old password does not match")
         }
         else{
-            const hashedPassword = await bcrypt.hash(newPassword,10);
-            console.log(hashedPassword);
+            const isSamePassword = await bcrypt.compare(newPassword,user.password);
+           if(isSamePassword)
+           {
+               return responseData(res,"",400,false,"new password and old password cannot be same")   
 
-
+           }
+           else{
+               const hashedPassword = await bcrypt.hash(newPassword,10);
+               const updatedUser = await registerModel.findByIdAndUpdate(userId,{password:hashedPassword},{new:true});
+               return responseData(res,"password updated successfully",200,true,"")
+           }
         }
-
 }
 }
-
-
     }
     catch(err)
     {

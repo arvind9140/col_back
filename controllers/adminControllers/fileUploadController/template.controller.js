@@ -156,7 +156,7 @@ export const templateFileUpload = async (req, res) => {
                 }));
 
             }
-           
+
 
             if (folder_name === "commercial" || folder_name === "residential" || folder_name === "company data") {
                 if (sub_folder_name_first === "designing" || sub_folder_name_first === "executing" || sub_folder_name_first === "company policies") {
