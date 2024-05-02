@@ -118,7 +118,7 @@ const notification = async (req, res) => {
               type: "project",
               itemId: project.project_id,
               notification_id:generatedigitnumber(),
-              message: `Approaching project: ${project.project_name} (${daysRemaining} days remaining from project end date)`,
+              message: `Approaching project deadline: ${project.project_name} (${daysRemaining} days remaining until project completion)`,
               status: false,
             });
             notificationData.approachingProjects.push(

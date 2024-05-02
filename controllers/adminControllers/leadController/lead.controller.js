@@ -180,6 +180,14 @@ export const getSingleLead = async (req, res) => {
   }
 };
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
 export const updateLead = async (req, res) => {
   const userId = req.body.userId;
   const lead_id = req.body.lead_id;
@@ -203,6 +211,7 @@ export const updateLead = async (req, res) => {
     try {
 
 
+const formatedDate = formatDate(update);
       const find_lead = await leadModel.find({ lead_id: lead_id });
       if (find_lead.length > 0) {
         const check_user = await registerModel.findById(userId);
@@ -235,7 +244,7 @@ export const updateLead = async (req, res) => {
           type: "lead",
           notification_id: generateSixDigitNumber(),
           itemId: lead_id,
-          message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${update}.`,
+          message: `Lead status updated: Lead name ${find_lead[0].name} status changed to ${status} on  ${formatedDate}.`,
           status: false,
         });
         await newNotification.save();

@@ -8,6 +8,7 @@ import { notificationForUser ,getNotification} from "../controllers/notification
 import cron from "node-cron";
 import leadModel from "../models/adminModels/leadModel.js";
 
+
 export const verifyJWT = async (req, res, next) => {
   try {
     const token = req.cookies?.auth ||
@@ -25,7 +26,6 @@ export const verifyJWT = async (req, res, next) => {
 
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
  
-   
     const user = await registerModel.findById(decodedToken?.id);
 
 

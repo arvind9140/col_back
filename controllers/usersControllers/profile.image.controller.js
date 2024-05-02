@@ -68,8 +68,10 @@ export const profileupload = async (req, res) => {
     responseData(res, "", 400, false, "userId is required");
   } else {
     try {
-      //   console.log(req.files);
-      let fileName = Date.now() + req.files.file.name;
+      const file = req.files.file;
+      const fileName = Date.now() + "_" + file.name;
+
+      console.log(fileName);
       let response = await uploadImage(req, fileName, userId, "file");
       if (response.status) {
         //  res.send({response})
