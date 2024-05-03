@@ -134,10 +134,17 @@ const storeOrUpdateQuotations = async (res, existingQuotationData, isFirst = fal
 
 export const shareQuotation = async (req, res) => {
     try {
-        const { user_name, file_id, folder_name, project_id, client_email, client_name, type } = req.body;
+        const user_name = req.body.user_name;
+        const file_id = req.body.file_id;
+        const folder_name = req.body.folder_name;
+        const project_id = req.body.project_id;
+        const client_email = req.body.client_email;
+        const client_name = req.body.client_name;
+        const type = req.body.type;
         if (!type || !file_id || !project_id) {
             return responseData(res, "", 400, false, "Missing required fields");
         }
+      
 
         if (type === "Client") {
             if (!onlyEmailValidation(client_email) || !client_name) {
@@ -319,8 +326,10 @@ export const shareQuotation = async (req, res) => {
 
 
             });
+            console.log(check_status)
             if (!check_status) {
                 const user = await registerModel.findOne({ username: user_name });
+              
                 if (!user) {
                     return responseData(res, "", 401, false, "User not found");
                 }

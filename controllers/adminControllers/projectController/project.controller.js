@@ -17,7 +17,13 @@ const s3 = new AWS.S3({
   region: "ap-south-1",
 });
 
-
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
 
 function generateSixDigitNumber() {
   const min = 100000;
@@ -205,7 +211,7 @@ export const updateProjectDetails = async (req, res) => {
           type: "project",
           notification_id: generateSixDigitNumber(),
           itemId: project_ID,
-          message: `project  updated: Project name ${project_find[0].project_name}  update  on  ${new Date()}.`,
+          message: `project  updated: Project name ${project_find[0].project_name}  update  on  ${formatDate(new Date())}.`,
           status: false,
         });
         await newNotification.save();
