@@ -39,7 +39,7 @@ const projectSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  project_incharge: {
+  designer: {
     type: String,
     require: true,
   },

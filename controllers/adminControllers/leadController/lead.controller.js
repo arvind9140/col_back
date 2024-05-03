@@ -310,7 +310,7 @@ export const leadToProject = async (req, res) => {
             timeline_date: timeline_date,
             project_start_date: project_start_date,
             project_status: project_status,
-            project_incharge: designer,
+            designer: designer,
             visualizer: "",
             supervisor: "",
             leadmanager: "",
