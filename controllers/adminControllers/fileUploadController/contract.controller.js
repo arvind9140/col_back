@@ -128,11 +128,12 @@ export const contractShare = async (req, res) => {
 
   const client_email = req.body.client_email;
   const client_phone = req.body.client_phone;
+  const residential_type = req.body.contract_type;
 
   const site_address = req.body.site_address;
   const date = req.body.date;
   const city = req.body.city;
-  const type = req.body.type;
+  const type = req.body.project_type;
   const quotation = req.body.quotation;
   const client_name = req.body.client_name;
   //  const project_id = req.body.project_id;
@@ -225,32 +226,44 @@ export const contractShare = async (req, res) => {
   }
 
   else if (type === "residential") {
+    
     const project = req.body.project_name;
+    const design_stage = req.body.design_stage;
+    const number = req.body.number;
+    const design_charges = req.body.design_charges;
+    const discount = req.body.discount;
     const design_charges_per_sft = req.body.design_charges_per_sft;
-    const cover_area_in_sft = req.body.cover_area_in_sft;
-    const terrace_and_balcony_charges_per_sft = req.body.terrace_and_balcony_charges_per_sft;
-    const terrace_and_balcony_area_in_sft = req.body.terrace_and_balcony_area_in_sft;
+    const design_cover_area_in_sft = req.body.design_cover_area_in_sft;
 
-    const design_total_charges = parseFloat(design_charges_per_sft) * parseFloat(cover_area_in_sft);
+    const balcony_charges_per_sft = req.body.balcony_charges_per_sft;
+    const balcony_area_in_sft = req.body.balcony_area_in_sft;
+    const terrace_covered_charges_per_sft = req.body.terrace_covered_charges_per_sft;
+    const terrace_covered_area_in_sft = req.body.terrace_covered_area_in_sft;
+    const terrace_open_charges_per_sft = req.body.terrace_open_charges_per_sft;
+    const terrace_open_area_in_sft = req.body.terrace_open_area_in_sft;
+
+    const design_total_charges = parseFloat(design_charges_per_sft) * parseFloat(design_cover_area_in_sft);
     const design_total_charges_in_words = numberToWordsString(design_total_charges)
 
-    const design_discount = (parseFloat(design_total_charges) * parseFloat(20)) / 100;
+    const balcony_total_charge = parseFloat(balcony_charges_per_sft) * parseFloat(balcony_area_in_sft);
+    const balcony_total_charge_in_words = numberToWordsString(balcony_total_charge)
 
-    const design_total_charges_after_discount = parseFloat(design_total_charges) - parseFloat(design_total_charges) * parseFloat(20) / 100;
-    const design_total_charges_after_discount_in_words = numberToWordsString(design_total_charges_after_discount)
+    const terrace_covered_total_charge = parseFloat(terrace_covered_charges_per_sft) * parseFloat(terrace_covered_area_in_sft);
+    const terrace_covered_total_charge_in_words = numberToWordsString(terrace_covered_total_charge)
 
-    const terrace_and_balcony_total_charges_discount = (parseFloat(terrace_and_balcony_charges_per_sft) * parseFloat(60)) / 100;
+    const terrace_open_total_charge = parseFloat(terrace_open_charges_per_sft) * parseFloat(terrace_open_area_in_sft);
+    const terrace_open_total_charge_in_words = numberToWordsString(terrace_open_total_charge)
 
-    const terrace_and_balcony_total_charges = parseFloat(terrace_and_balcony_total_charges_discount) * parseFloat(terrace_and_balcony_area_in_sft);
-    const terrace_and_balcony_total_charges_in_words = numberToWordsString(terrace_and_balcony_total_charges)
+const total_design_charges = design_total_charges + balcony_total_charge + terrace_covered_total_charge + terrace_open_total_charge;
 
+const total_design_charges_in_words = numberToWordsString(total_design_charges)
 
-    const total_design_charges = parseFloat(design_total_charges) + parseFloat(terrace_and_balcony_total_charges);
-    const total_design_charges_in_words = numberToWordsString(total_design_charges)
+  
 
 
 
     const htmlTemplate = residentialContract(
+      residential_type,
       project,
       city,
       client_name,
@@ -259,20 +272,29 @@ export const contractShare = async (req, res) => {
       site_address,
       date,
       quotation,
+      design_stage,
+      number,
+      design_charges,
+      discount,
       design_charges_per_sft,
-      cover_area_in_sft,
+      design_cover_area_in_sft,
       design_total_charges,
       design_total_charges_in_words,
-      design_discount,
-      design_total_charges_after_discount,
-      design_total_charges_after_discount_in_words,
-      terrace_and_balcony_charges_per_sft,
-      terrace_and_balcony_total_charges_discount,
-      terrace_and_balcony_area_in_sft,
-      terrace_and_balcony_total_charges,
-      terrace_and_balcony_total_charges_in_words,
+      balcony_charges_per_sft,
+      balcony_area_in_sft,
+      balcony_total_charge,
+      balcony_total_charge_in_words,
+      terrace_covered_charges_per_sft,
+      terrace_covered_area_in_sft,
+      terrace_covered_total_charge,
+      terrace_covered_total_charge_in_words,
+      terrace_open_charges_per_sft,
+      terrace_open_area_in_sft,
+      terrace_open_total_charge,
+      terrace_open_total_charge_in_words,
       total_design_charges,
       total_design_charges_in_words
+      
     );
 
     const pdfOptions = {
@@ -306,10 +328,10 @@ export const contractShare = async (req, res) => {
           try {
 
             response = await uploadImage(req, localFilePath, contract_name);
-            console.log(response)
+            
             if (response.status) {
               responseData(res, "contract create successfully", 200, true, "", response.data.Location);
-              console.log(response.data.Location);
+              
               fs.unlink(localFilePath, (unlinkErr) => {
                 if (unlinkErr) {
                   console.error('Error deleting local PDF file:', unlinkErr);
@@ -335,7 +357,7 @@ export const contractShare = async (req, res) => {
         });
       }
     });
-
+    
 
 
   } else {

@@ -1,5 +1,6 @@
 
 export function residentialContract(
+        type,
         project,
         city,
         client_name,
@@ -8,1620 +9,1521 @@ export function residentialContract(
         site_address,
         date,
         quotation,
+        design_stage,
+        number,
+        design_charges,
+        discount,
         design_charges_per_sft,
-        cover_area_in_sft,
+        design_cover_area_in_sft,
         design_total_charges,
         design_total_charges_in_words,
-        design_discount,
-        design_total_charges_after_discount,
-        design_total_charges_after_discount_in_words,
-        terrace_and_balcony_charges_per_sft,
-        terrace_and_balcony_total_charges_discount,
-        terrace_and_balcony_area_in_sft,
-        terrace_and_balcony_total_charges,
-        terrace_and_balcony_total_charges_in_words,
+        balcony_charges_per_sft,
+        balcony_area_in_sft,
+        balcony_total_charge,
+        balcony_total_charge_in_words,
+        terrace_covered_charges_per_sft,
+        terrace_covered_area_in_sft,
+        terrace_covered_total_charge,
+        terrace_covered_total_charge_in_words,
+        terrace_open_charges_per_sft,
+        terrace_open_area_in_sft,
+        terrace_open_total_charge,
+        terrace_open_total_charge_in_words,
         total_design_charges,
         total_design_charges_in_words
 ) {
-        const htmlTemplate = `
-    <html>
+        const htmlTemplate = `<html>
 
 <head>
-        <meta http-equiv=Content-Type content="text/html; charset=utf-8">
-        <meta name=Generator content="Microsoft Word 15 (filtered)">
-        <title>Microsoft Word - Int Design</title>
-        <style>
-                <!--
-                /* Font Definitions */
-                @font-face {
-                        font-family: Wingdings;
-                        panose-1: 5 0 0 0 0 0 0 0 0 0;
-                }
-
-                @font-face {
-                        font-family: "Cambria Math";
-                        panose-1: 2 4 5 3 5 4 6 3 2 4;
-                }
-
-                @font-face {
-                        font-family: Verdana;
-                        panose-1: 2 11 6 4 3 5 4 4 2 4;
-                }
-
-                @font-face {
-                        font-family: Tahoma;
-                        panose-1: 2 11 6 4 3 5 4 4 2 4;
-                }
-
-                /* Style Definitions */
-                p.MsoNormal,
-                li.MsoNormal,
-                div.MsoNormal {
-                        margin: 0in;
-                        text-autospace: none;
-                        font-size: 11.0pt;
-                        font-family: "Verdana", sans-serif;
-                }
-
-                h1 {
-                        mso-style-link: "Heading 1 Char";
-                        margin-top: 0in;
-                        margin-right: 0in;
-                        margin-bottom: 0in;
-                        margin-left: 4.2pt;
-                        text-autospace: none;
-                        font-size: 11.0pt;
-                        font-family: "Verdana", sans-serif;
-                }
-
-                p.MsoTitle,
-                li.MsoTitle,
-                div.MsoTitle {
-                        margin-top: 13.25pt;
-                        margin-right: 5.05pt;
-                        margin-bottom: 0in;
-                        margin-left: 4.2pt;
-                        text-align: center;
-                        text-autospace: none;
-                        font-size: 14.0pt;
-                        font-family: "Verdana", sans-serif;
-                        font-weight: bold;
-                        text-decoration: underline;
-                }
-
-                p.MsoBodyText,
-                li.MsoBodyText,
-                div.MsoBodyText {
-                        mso-style-link: "Body Text Char";
-                        margin: 0in;
-                        text-autospace: none;
-                        font-size: 11.0pt;
-                        font-family: "Verdana", sans-serif;
-                }
-
-                a:link,
-                span.MsoHyperlink {
-                        color: blue;
-                        text-decoration: underline;
-                }
-
-                a:visited,
-                span.MsoHyperlinkFollowed {
-                        color: purple;
-                        text-decoration: underline;
-                }
-
-                p.MsoAcetate,
-                li.MsoAcetate,
-                div.MsoAcetate {
-                        mso-style-link: "Balloon Text Char";
-                        margin: 0in;
-                        text-autospace: none;
-                        font-size: 8.0pt;
-                        font-family: "Tahoma", sans-serif;
-                }
-
-                p.MsoListParagraph,
-                li.MsoListParagraph,
-                div.MsoListParagraph {
-                        margin-top: 0in;
-                        margin-right: 0in;
-                        margin-bottom: 0in;
-                        margin-left: 90.05pt;
-                        text-indent: -28.5pt;
-                        text-autospace: none;
-                        font-size: 11.0pt;
-                        font-family: "Verdana", sans-serif;
-                }
-
-                p.TableParagraph,
-                li.TableParagraph,
-                div.TableParagraph {
-                        mso-style-name: "Table Paragraph";
-                        margin: 0in;
-                        text-autospace: none;
-                        font-size: 11.0pt;
-                        font-family: "Verdana", sans-serif;
-                }
-
-                span.BodyTextChar {
-                        mso-style-name: "Body Text Char";
-                        mso-style-link: "Body Text";
-                        font-family: "Verdana", sans-serif;
-                }
-
-                span.BalloonTextChar {
-                        mso-style-name: "Balloon Text Char";
-                        mso-style-link: "Balloon Text";
-                        font-family: "Tahoma", sans-serif;
-                }
-
-                span.Heading1Char {
-                        mso-style-name: "Heading 1 Char";
-                        mso-style-link: "Heading 1";
-                        font-family: "Verdana", sans-serif;
-                        font-weight: bold;
-                }
-
-                .MsoChpDefault {
-                        font-family: "Calibri", sans-serif;
-                }
-
-                .MsoPapDefault {
-                        text-autospace: none;
-                }
-
-                /* Page Definitions */
-                @page WordSection1 {
-                        size: 595.5pt 842.0pt;
-                        margin: 79.0pt 66.0pt 37.0pt 67.0pt;
-                }
-
-                div.WordSection1 {
-                        page: WordSection1;
-                }
-
-                @page WordSection2 {
-                        size: 595.5pt 842.0pt;
-                        margin: 69.0pt 66.0pt 37.0pt 67.0pt;
-                }
-
-                div.WordSection2 {
-                        page: WordSection2;
-                }
-
-                /* List Definitions */
-                ol {
-                        margin-bottom: 0in;
-                }
-
-                ul {
-                        margin-bottom: 0in;
-                }
-                -->
-        </style>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<title>Microsoft Word - Int Design Contract_Tata Primanti EF 14A</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Verdana;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:"Verdana",sans-serif;}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:4.2pt;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:"Verdana",sans-serif;}
+p.MsoTitle, li.MsoTitle, div.MsoTitle
+	{mso-style-link:"Title Char";
+	margin-top:13.25pt;
+	margin-right:5.05pt;
+	margin-bottom:0in;
+	margin-left:4.2pt;
+	text-align:center;
+	text-autospace:none;
+	font-size:14.0pt;
+	font-family:"Verdana",sans-serif;
+	font-weight:bold;
+	text-decoration:underline;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{mso-style-link:"Body Text Char";
+	margin:0in;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:"Verdana",sans-serif;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Balloon Text Char";
+	margin:0in;
+	text-autospace:none;
+	font-size:8.0pt;
+	font-family:"Tahoma",sans-serif;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:90.05pt;
+	text-indent:-28.5pt;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:"Verdana",sans-serif;}
+p.TableParagraph, li.TableParagraph, div.TableParagraph
+	{mso-style-name:"Table Paragraph";
+	margin:0in;
+	text-autospace:none;
+	font-size:11.0pt;
+	font-family:"Verdana",sans-serif;}
+span.BodyTextChar
+	{mso-style-name:"Body Text Char";
+	mso-style-link:"Body Text";
+	font-family:"Verdana",sans-serif;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma",sans-serif;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Verdana",sans-serif;
+	font-weight:bold;}
+span.TitleChar
+	{mso-style-name:"Title Char";
+	mso-style-link:Title;
+	font-family:"Verdana",sans-serif;
+	font-weight:bold;
+	text-decoration:underline;}
+.MsoChpDefault
+	{font-family:"Calibri",sans-serif;}
+.MsoPapDefault
+	{text-autospace:none;}
+ /* Page Definitions */
+ @page WordSection1
+	{size:595.5pt 842.0pt;
+	margin:79.0pt 66.0pt 37.0pt 67.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+@page WordSection2
+	{size:595.5pt 842.0pt;
+	margin:69.0pt 66.0pt 37.0pt 67.0pt;}
+div.WordSection2
+	{page:WordSection2;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
 
 </head>
 
 <body lang=EN-US link=blue vlink=purple style='word-wrap:break-word'>
 
-        <div class=WordSection1>
+<div class=WordSection1>
 
-                <p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'> </span></p>
+<p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'> </span></p>
 
-                <p class=MsoBodyText style='margin-top:.15pt'><span style='font-size:6.0pt;
+<p class=MsoBodyText style='margin-top:.15pt'><span style='font-size:6.0pt;
 font-family:"Times New Roman",serif'>&nbsp;</span></p>
 
-                <p class=MsoBodyText style='margin-left:164.8pt'><span lang=EN-IN
-                                style='font-size:10.0pt;font-family:"Times New Roman",serif'><img width=172 height=122
-                                        id=image1.jpeg
-                                        src="https://collegemanage.s3.ap-south-1.amazonaws.com/image001.jpg"></span>
-                </p>
+<p class=MsoBodyText style='margin-left:164.8pt'><span lang=EN-IN
+style='font-size:10.0pt;font-family:"Times New Roman",serif'><img width=172
+height=122 id=image1.jpeg
+src="https://www.colonelz.com/wupsujyz/2022/12/colonelz-logo.png"></span></p>
 
-                <p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span>
-                </p>
+<p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></p>
 
-                <p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span>
-                </p>
+<p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></p>
 
-                <p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span>
-                </p>
+<p class=MsoTitle><u><span style=''>${type} </span>CONTRACT</u></p>
 
-                <p class=MsoTitle><u>INTERIOR<span style='letter-spacing:.05pt'> </span>DESIGN<span
-                                        style='letter-spacing:-.15pt'> </span>CONSULTANCY<span style='letter-spacing:
--.1pt'> </span>CONTRACT</u></p>
-
-                <p class=MsoNormal align=center style='margin-top:11.85pt;margin-right:5.05pt;
+<p class=MsoNormal align=center style='margin-top:11.85pt;margin-right:5.05pt;
 margin-bottom:0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><b><u><span
-                                                style='font-size:12.0pt;'>${project}, ${city}</span></u></b></p>
+style='font-size:12.0pt;'>${project} &amp;${city}</span></u></b></p>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:10.5pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:10.5pt'>&nbsp;</span></b></p>
 
-                <h1 style='margin-left:5.0pt'>Client                   –<span style='letter-spacing:
--.15pt'> </span><span style=''>${client_name[0]}</span></h1>
+<h1 style='margin-left:5.0pt;line-height:150%'>Client                   -<span
+style='letter-spacing:-.15pt'> </span><span style=''>${client_name[0]}</span></h1>
 
-                <p class=MsoBodyText style='margin-top:.5pt'><b><span style='font-size:9.5pt'>&nbsp;</span></b></p>
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:5.0pt;line-height:150%'><b>Designer              -<span
+style='letter-spacing:-.15pt'> </span>Ms.<span style='letter-spacing:-.15pt'> </span>Naomi
+Sahay</b></p>
 
-                <p class=MsoNormal style='margin-left:5.0pt'><b>Designer              -<span
-                                        style='letter-spacing:-.15pt'> </span>Ms.<span style='letter-spacing:-.15pt'>
-                                </span>Naomi
-                                Sahay</b></p>
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:1.8pt;margin-bottom:
+0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Date                      -
+<span style=''>${date}</span><span
+style='letter-spacing:.05pt'> <br>
+</span>Quotation<span style='letter-spacing:-.05pt'> </span>No         -<span
+style='letter-spacing:-.25pt'> </span>CCPL<span style='letter-spacing:-.3pt'> </span>/FY25/<span
+style='letter-spacing:-.3pt'> </span><span style=''>${quotation}</span></p>
 
-                <p class=MsoBodyText style='margin-top:.4pt'><b><span style='font-size:9.5pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+margin-left:5.0pt;line-height:150%'>Site Address          - <span
+style=''>${site_address}</span></p>
 
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:247.55pt;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:200%'>Date                      -
-                        <span style=''>${date}</span>
-                </p>
-                <pclass=MsoBodyText style='margin-top:.05pt;margin-right:247.55pt;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:200%>
-                <span style='letter-spacing:
-.05pt'> </span><span style='letter-spacing:-.05pt;margin-right:40.55pt;'>Quotation No. </span> -<span
-                                style='letter-spacing:-.25pt'> </span>CCPL<span style='letter-spacing:-.3pt'>
-                        </span>/<span style=''>${quotation}</span></p>
+<p class=MsoBodyText style='margin-left:5.0pt;line-height:150%'>Client<span
+style='letter-spacing:-.15pt'> </span>Contact        -  ${client_name
+                        .map(
+                                (name, index) => `
+                               <span
+                                style="width:24.88pt; text-indent:0pt; display:inline-block">&nbsp;</span><span
+                                style="font-family:Verdana; font-size:11pt">-</span><span
+                                style="font-family:Verdana; font-size:11pt"> </span>
+                                <span
+                                style="font-family:Verdana; font-size:11pt; ">${client_name[index]}</span><span
+                                style="font-family:Verdana; font-size:11pt; "> </span><span
+                                style="font-family:Verdana; font-size:11pt; ">: +91 </span><span
+                                style="font-family:Verdana; font-size:11pt; ">${client_phone[index]}; </span><a
+                                href="mailto:${client_email[index]}" style="text-decoration:none"><span
+                                        style="font-family:'Times New Roman'; font-size:10pt; color:#000000; ">&nbsp;</span><span
+                                        style="font-family:Verdana; font-size:11pt; text-decoration:underline; color:#0000ff; ">${client_email[index]}</span></a><span
+                                style="font-family:Verdana; font-size:11pt; "> </span></p>
+                <p style="margin-top:0pt; margin-left:108pt; margin-bottom:0pt; line-height:15pt"><span
+                                style="font-family:Verdana; font-size:11pt; ">&nbsp; </span>
+                       
+                            `
+                        )
+                        .join("")}
+                           
 
-                <p class=MsoBodyText style='margin-left:5.0pt;line-height:150%'>Site Address          -
-                        <span style=''>${site_address}</span>
-                </p>
+<p class=MsoBodyText style='margin-top:5.05pt;margin-right:0in;margin-bottom:
+0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Colonelz’ Contact   -
+Ms. Naomi Sahay, Principal Designer;</p>
 
-                <p class=MsoBodyText style='margin-top:.05pt'>&nbsp;</p>
+<p class=MsoBodyText align=center style='margin-top:0in;margin-right:0in;
+margin-bottom:12.0pt;margin-left:4.2pt;text-align:center;line-height:150%'>+91 8447500754, <a
+href="mailto:naomi@colonelz.com"><span style='color:blue'>naomi@colonelz.com</span></a></p>
 
-                <p class=MsoBodyText style='margin-left:5.0pt'>Client<span style='letter-spacing:
--.15pt'> </span>Contact        - <span style=''>${client_name[0]}</span>;</p>
+<h1 align=center style='margin-top:5.05pt;margin-right:5.05pt;margin-bottom:
+0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><u>Scope<span
+style='letter-spacing:-.1pt'> </span>of Work</u></h1>
 
-                <p class=MsoBodyText style='margin-top:.25pt'>&nbsp;</p>
+<p class=MsoBodyText style='margin-top:.4pt'><b><span style='font-size:9.5pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText style='margin-left:120.6pt'><span >+91${client_phone[0]},  <span class=MsoHyperlink>${client_email[0]}</span></span> </p>
-
-                <p class=MsoBodyText style='margin-top:.2pt'><span style='font-size:8.0pt'>&nbsp;</span></p>
-
-                <p class=MsoBodyText style='margin-top:5.05pt;margin-right:0in;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt'>Colonelz’ Contact   - Ms. Naomi
-                        Sahay, Principal Designer;</p>
-
-                <p class=MsoBodyText style='margin-top:.4pt'><span style='font-size:9.5pt'>&nbsp;</span></p>
-
-                <p class=MsoBodyText align=center style='margin-left:4.2pt;text-align:center'>+91
-                        8447500754, <a href="mailto:naomi@colonelz.com"><span
-                                        style='color:blue'>naomi@colonelz.com</span></a></p>
-
-                <p class=MsoBodyText style='margin-top:.15pt'><span style='font-size:13.5pt'>&nbsp;</span></p>
-
-                <h1 align=center style='margin-top:5.05pt;margin-right:5.05pt;margin-bottom:
-0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><u>Scope<span style='letter-spacing:-.1pt'> </span>of
-                                Work</u></h1>
-
-                <p class=MsoBodyText style='margin-top:.4pt'><b><span style='font-size:9.5pt'>&nbsp;</span></b></p>
-
-                <p class=MsoBodyText style='margin-left:5.0pt;text-align:justify'><a name="_Hlk135137180">The Scope of
-                                work entails Interior Designing and Implementation
-                                by Colonelz Constructions Pvt Ltd, with Corporate Office at D11, Vipul World, Sector
-                                48, Sohna Road, Gurgaon, Haryana- 122018, represented by Ms Naomi Sahay,<span
-                                        style='letter-spacing:.05pt'> </span>(hereinafter<span style='letter-spacing:
-.05pt'> </span>known<span style='letter-spacing:.05pt'> </span>as<span style='letter-spacing:.05pt'> </span><b>The<span
-                                                style='letter-spacing:.05pt'> </span>Designer</b>).
-                                The Scope shall include<span style='letter-spacing:.05pt'> </span>preparation<span
-                                        style='letter-spacing:.05pt'> </span>of<span style='letter-spacing:.05pt'>
-                                </span>all<span style='letter-spacing:.05pt'> </span>drawings<span
-                                        style='letter-spacing:.05pt'>
-                                </span>for<span style='letter-spacing:.05pt'> </span>the<span style='letter-spacing:
+<p class=MsoBodyText style='margin-left:5.0pt;text-align:justify'><a
+name="_Hlk135137180">The Scope of work entails Architectural Planning,
+Construction, Interior Designing and Implementation by Colonelz Constructions
+Pvt Ltd, with Corporate Office at D11, Vipul World, Sector 48, Sohna Road,
+Gurgaon, Haryana- 122018, represented by Ms Naomi Sahay,<span style='letter-spacing:
+.05pt'> </span>(hereinafter<span style='letter-spacing:.05pt'> </span>known<span
+style='letter-spacing:.05pt'> </span>as<span style='letter-spacing:.05pt'> </span><b>The<span
+style='letter-spacing:.05pt'> </span>Designer</b>). The Scope shall include<span
+style='letter-spacing:.05pt'> the </span>preparation<span style='letter-spacing:
+.05pt'> </span>of<span style='letter-spacing:.05pt'> </span>all<span
+style='letter-spacing:.05pt'> </span>drawings<span style='letter-spacing:.05pt'>
+</span>for<span style='letter-spacing:.05pt'> </span>the<span style='letter-spacing:
 .05pt'> </span>execution of the designs finalised and the implementation of finalised
-                                designs by the Colonelz Team, in<span style='letter-spacing:-.3pt'> </span>the<span
-                                        style='letter-spacing:-.3pt'> </span>apartment<span
-                                        style='letter-spacing:-.4pt'>
-                                </span>of<span style='letter-spacing:-.3pt'> </span><span >${client_name[0]},<span style='letter-spacing:-.25pt'> r/o </span>${site_address}</span><span
-                                        style='letter-spacing:-.25pt'> </span>(hereinafter known as <b>The Client</b>).
-                                Design scope shall also cover<span style='letter-spacing:.05pt'> </span>periodic<span
-                                        style='letter-spacing:-.4pt'> </span>supervision<span style='letter-spacing:
--.35pt'> during the</span><span style='letter-spacing:-.3pt'> </span>implementation<span style='letter-spacing:-.5pt'>
-                                </span>of<span style='letter-spacing:-.25pt'> </span>the<span
-                                        style='letter-spacing:-.25pt'> </span>same.</a></p>
+designs by the Colonelz Team, in<span style='letter-spacing:-.3pt'> </span>the<span
+style='letter-spacing:-.3pt'> </span>apartment<span style='letter-spacing:-.4pt'>
+</span>of<span style='letter-spacing:-.3pt'> </span><span style=''>${client_name[0]}</span>,<span style='letter-spacing:-.25pt'> r/o </span><span
+style=''>${site_address}</span>, (hereinafter known as <b>The
+Client</b>). Design scope shall also cover<span style='letter-spacing:.05pt'> </span>supervision<span
+style='letter-spacing:-.35pt'> during the</span><span style='letter-spacing:
+-.3pt'> </span>implementation<span style='letter-spacing:-.5pt'> </span>of<span
+style='letter-spacing:-.25pt'> </span>the<span style='letter-spacing:-.25pt'> </span>same.</a></p>
 
-                <p class=MsoBodyText style='margin-top:.5pt'><span style='font-size:9.5pt'> </span></p>
+<p class=MsoBodyText style='margin-top:.5pt'><span style='font-size:9.5pt'> </span></p>
 
-                <p class=MsoNormal style='margin-left:5.0pt;text-align:justify'><b><u>Part<span
-                                                style='letter-spacing:-.05pt'> </span>I.</u>       <span style='letter-spacing:
-2.1pt'> </span></b>Interior Designing of the<span style='letter-spacing:-.05pt'>
-                        </span>complete<span style='letter-spacing:-.05pt'> </span>space.</p>
+<p class=MsoBodyText style='margin-top:0in;margin-right:6.0pt;margin-bottom:
+0in;margin-left:77.0pt;margin-bottom:.0001pt;text-indent:-1.0in'><b><u>Part I.</u>       
+</b>Architectural Planning, Construction &amp; Interior Designing of the
+complete space.</p>
 
-                <p class=MsoBodyText style='margin-top:.4pt'><span style='font-size:9.5pt'>&nbsp;</span></p>
+<p class=MsoBodyText style='margin-top:.4pt'><span style='font-size:9.5pt'>&nbsp;</span></p>
 
-                <p class=MsoBodyText style='margin-top:0in;margin-right:6.0pt;margin-bottom:
-0in;margin-left:77.0pt;margin-bottom:.0001pt;text-indent:-1.0in'><b><u>Part<span style='letter-spacing:-.1pt'>
-                                        </span>II.</u>       </b>Implementation and
-                        Execution of the finalised Design as detailed by The Designer and approved by
-                        The Client.</p>
+<p class=MsoBodyText style='margin-top:0in;margin-right:6.0pt;margin-bottom:
+0in;margin-left:77.0pt;margin-bottom:.0001pt;text-indent:-1.0in'><b><u>Part<span
+style='letter-spacing:-.1pt'> </span>II.</u>       </b>Implementation and
+Execution of the finalised Design as detailed by The Designer and approved by
+The Client.</p>
 
-        </div>
+</div>
 
-        <span style='font-size:11.0pt;font-family:"Verdana",sans-serif'><br clear=all style='page-break-before:always'>
-        </span>
+<span style='font-size:11.0pt;font-family:"Verdana",sans-serif'><br clear=all
+style='page-break-before:always'>
+</span>
 
-        <div class=WordSection2>
+<div class=WordSection2>
 
-                <h1 align=center style='margin-top:3.75pt;margin-right:5.0pt;margin-bottom:
+<h1 align=center style='margin-top:3.75pt;margin-right:5.0pt;margin-bottom:
 0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><u>Part I</u></h1>
 
-                <p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+<p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><b><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText style='margin-left:5.0pt;line-height:115%'>This is<span
-                                style='letter-spacing:-.15pt'> </span>the Designing Part,<span
-                                style='letter-spacing:.1pt'> </span>which<span style='letter-spacing:-.15pt'>
-                        </span>will<span style='letter-spacing:-.15pt'> </span>be covered<span style='letter-spacing:
--.05pt'> </span>in<span style='letter-spacing:-.1pt'> </span>2 parts,<span style='letter-spacing:.05pt'> </span>as<span
-                                style='letter-spacing:.05pt'> </span>below:</p>
+<p class=MsoBodyText style='margin-left:5.0pt;line-height:115%'>This is<span
+style='letter-spacing:-.15pt'> </span>the Designing Part,<span
+style='letter-spacing:.1pt'> </span>which<span style='letter-spacing:-.15pt'> </span>will<span
+style='letter-spacing:-.15pt'> </span>be covered<span style='letter-spacing:
+-.05pt'> </span>in<span style='letter-spacing:-.1pt'> </span>2 parts,<span
+style='letter-spacing:.05pt'> </span>as<span style='letter-spacing:.05pt'> </span>below:</p>
 
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
 
-                <p class=MsoListParagraph style='margin-left:33.3pt;text-indent:-28.35pt;
-line-height:115%'><b>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></b><b>Phase<span style='letter-spacing:-.1pt'> </span>I<span
-                                        style='letter-spacing:-.15pt'> </span>–Design Stage,<span style='letter-spacing:
+<p class=MsoListParagraph style='margin-left:33.3pt;text-indent:-28.35pt;
+line-height:115%'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><b>Phase<span style='letter-spacing:-.1pt'> </span>I<span
+style='letter-spacing:-.15pt'> </span>–Design Stage,<span style='letter-spacing:
 -.2pt'> </span></b>i.e., Stage<span style='letter-spacing:-.05pt'> </span>1:</p>
 
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
 0in;margin-left:61.6pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span><u>Presentation<span style='letter-spacing:-.15pt'> </span>Drawings:</u></p>
+</span><u>Presentation<span style='letter-spacing:-.15pt'> </span>Drawings:</u></p>
 
-                <p class=MsoListParagraph style='margin-top:6.65pt;line-height:115%'><span
-                                style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Furniture<span style='letter-spacing:-.1pt'> </span>Layout<span
-                                style='letter-spacing:-.05pt'> </span>Plan</p>
+<p class=MsoListParagraph style='margin-top:6.65pt;line-height:115%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Furniture<span style='letter-spacing:-.1pt'> </span>Layout<span
+style='letter-spacing:-.05pt'> </span>Plan</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Presentation<span style='letter-spacing:-.1pt'> </span>with<span
-                                style='letter-spacing:-.15pt'> </span>Conceptual Pictures &amp;<span
-                                style='letter-spacing:-.1pt'> </span>Sketches</p>
+</span></span>Presentation<span style='letter-spacing:-.1pt'> </span>with<span
+style='letter-spacing:-.15pt'> </span>Conceptual Pictures &amp;<span
+style='letter-spacing:-.1pt'> </span>Sketches</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Conceptual 3D Views:</p>
+</span></span>Conceptual 3D Views with 1 view each of the following spaces:</p>
 
-                <p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
-                                style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>4 x Bedrooms                 -<span style='letter-spacing:-.2pt'>
-                        </span>1<span style='letter-spacing:.1pt'> </span>view each</p>
+${design_stage.map((name, index) => {
+                                if (name === 'Bedrooms') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      - ${number[0]}
+no.</span></p>`
+                                }
+                                else if (name === 'Balconies') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      - ${number[1]}
+no.</span></p>`
+                                }
+                                else if (name === 'Toilets') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      - ${number[2]}
+no.</span></p>`
+                                }
+                                else {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      
+</span></p>`
 
-                <p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
-                                style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Music room<span style='letter-spacing:-.05pt'>                    </span>-
-                        1<span style='letter-spacing:.1pt'> </span>view</p>
+                                }
+                        })
+                }
 
-                <p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
-                                style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Study<span style='letter-spacing:-.05pt'>                            
-                        </span>-
-                        <span style='letter-spacing:-.15pt'>1</span> view
-                </p>
+<p class=MsoNormal style='margin-top:1.95pt;margin-right:0in;margin-bottom:
+0in;margin-left:90.05pt;margin-bottom:.0001pt;line-height:115%'>&nbsp;</p>
 
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Foyer                             -<span style='letter-spacing:
--.1pt'> </span>1 view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Living room                    - <span style='letter-spacing:
--.1pt'>1</span> view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Outdoor Terrace             - 1 view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Family lounge                - 1 view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Mandir<span style='letter-spacing:-.15pt'>                          
-                        </span>-<span style='letter-spacing:-.1pt'> </span>1<span style='letter-spacing:.05pt'>
-                        </span>view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Kitchen<span style='letter-spacing:-.05pt'>                         
-                        </span>-<span style='letter-spacing:-.15pt'> </span>1 view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Dining<span style='letter-spacing:.05pt'> </span>area<span
-                                style='letter-spacing:.05pt'>                    </span>-<span
-                                style='letter-spacing:-.1pt'> </span>1 view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>5 x Toilets                      -<span style='letter-spacing:
--.15pt'> </span>1<span style='letter-spacing:.1pt'> </span>view each</p>
-
-                <p class=MsoListParagraph style='margin-top:1.95pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:0in;line-height:115%'>&nbsp;</p>
-
-                <p class=MsoListParagraph style='margin-left:61.65pt;text-indent:-28.4pt;
+<p class=MsoListParagraph style='margin-left:61.65pt;text-indent:-28.4pt;
 line-height:115%'>b.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span><u>Civil Work<span style='letter-spacing:-.2pt'> </span>Drawings:</u></p>
+</span><u>Civil Work<span style='letter-spacing:-.2pt'> </span>Drawings (as per
+requirement):</u></p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Floor Plan</p>
+</span></span>Floor Plan</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Electrical<span style='letter-spacing:-.15pt'> </span>Layout</p>
+</span></span>Structural Layout</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>HVAC ducting layout</p>
+</span></span>Electrical<span style='letter-spacing:-.15pt'> </span>Layout</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>False<span style='letter-spacing:-.05pt'> </span>Ceiling<span
-                                style='letter-spacing:.05pt'> </span>Plan</p>
+</span></span>Plumbing Layout</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='margin-top:2.0pt;text-indent:-29.55pt;
+line-height:115%'><span style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>HVAC ducting Layout</p>
+
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Toilet<span style='letter-spacing:-.05pt'> </span>Layout</p>
+</span></span>False<span style='letter-spacing:-.05pt'> </span>Ceiling<span
+style='letter-spacing:.05pt'> </span>Plan</p>
 
-                <p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Toilet<span style='letter-spacing:-.05pt'> </span>Layout</p>
 
-                <h1 style='margin-left:41.0pt;text-indent:-.5in;line-height:115%'>2.<span
-                                style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Phase II<span style='letter-spacing:-.1pt'> </span>–<span style='letter-spacing:-.15pt'>
-                        </span>Interior<span style='letter-spacing:-.15pt'>
-                        </span>Fit Out Stage:</h1>
+<p class=MsoListParagraph style='text-indent:0in;line-height:115%'>&nbsp;</p>
 
-                <p class=MsoListParagraph style='margin-top:6.75pt;margin-right:0in;margin-bottom:
+<p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<h1 style='margin-left:41.0pt;text-indent:-.5in;line-height:115%'><span
+style='font-weight:normal'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Phase II<span style='letter-spacing:-.1pt'> </span>–<span
+style='letter-spacing:-.15pt'> </span>Interior<span style='letter-spacing:-.15pt'>
+</span>Fit Out Stage:</h1>
+
+<p class=MsoListParagraph style='margin-top:6.75pt;margin-right:0in;margin-bottom:
 0in;margin-left:61.6pt;margin-bottom:.0001pt;text-indent:-29.55pt;line-height:
-115%'><span style='font-size:12.0pt;line-height:115%'>a.<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><u>Stage 2:<span style='letter-spacing:.1pt'> </span>Design<span
-                                        style='letter-spacing:-.1pt'> </span>Development<span style='letter-spacing:
+115%'><span style='font-size:12.0pt;line-height:115%'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><u>Stage 2:<span style='letter-spacing:.1pt'> </span>Design<span
+style='letter-spacing:-.1pt'> </span>Development<span style='letter-spacing:
 -.2pt'> </span>Phase<span style='letter-spacing:-.05pt'> </span>1</u></p>
 
-                <p class=MsoListParagraph style='margin-top:6.35pt;line-height:115%'><span
-                                style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Detailed<span style='letter-spacing:-.2pt'> </span>3D<span
-                                style='letter-spacing:-.2pt'> </span>Views<span style='letter-spacing:-.05pt'>
-                        </span>(with<span style='letter-spacing:-.05pt'> </span>finalised<span style='letter-spacing:
+<p class=MsoListParagraph style='margin-top:6.35pt;line-height:115%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Detailed<span style='letter-spacing:-.2pt'> </span>3D<span
+style='letter-spacing:-.2pt'> </span>Views<span style='letter-spacing:-.05pt'> </span>with
+1-2 views each (as per requirement) of the following spaces (with<span
+style='letter-spacing:-.05pt'> </span>finalised<span style='letter-spacing:
 -.05pt'> </span>details):</p>
 
-                <p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
-                                style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>4 x Bedrooms                 -<span style='letter-spacing:-.2pt'>
-                        </span>2<span style='letter-spacing:.1pt'> </span>views each</p>
 
-                <p class=MsoListParagraph style='margin-top:2.1pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>4 x Dressing/wardrobe   -<span style='letter-spacing:-.2pt'> </span>2<span
-                                style='letter-spacing:.1pt'> </span>views each <br>
-                        (One internal and one external of each wardrobe)</p>
+${design_stage.map((name, index) => {
+                        if (name === 'Bedrooms') {
+                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      - ${number[0]}
+no.</span></p>`
+                        }
+                        else if (name === 'Balconies') {
+                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      - ${number[1]}
+no.</span></p>`
+                        }
+                        else if (name === 'Toilets') {
+                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      - ${number[2]}
+no.</span></p>`
+                        }
+                        else {
+                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style=''> ${name}                      
+</span></p>`
 
-                <p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
-                                style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Music room<span style='letter-spacing:-.05pt'>                   
-                        </span>-<span style='letter-spacing:-.2pt'> </span>2<span style='letter-spacing:.1pt'>
-                        </span>views
-                </p>
+                        }
+                })
+                }
+<p class=MsoNormal>&nbsp;</p>
 
-                <p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
-                                style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Study<span style='letter-spacing:-.05pt'>                           
-                        </span>-<span style='letter-spacing:-.2pt'> </span>2<span style='letter-spacing:.1pt'>
-                        </span>views
-                </p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Foyer                             -<span style='letter-spacing:
--.2pt'> </span>1<span style='letter-spacing:.1pt'> </span>view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Living room                    -<span style='letter-spacing:-.2pt'>
-                        </span>3<span style='letter-spacing:.1pt'> </span>views</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Outdoor terrace area      -<span style='letter-spacing:-.2pt'>
-                        </span>4<span style='letter-spacing:.1pt'> </span>views</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Family lounge                -<span style='letter-spacing:-.2pt'>
-                        </span>2<span style='letter-spacing:.1pt'> </span>views</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Mandir<span style='letter-spacing:-.15pt'>                          
-                        </span>-<span style='letter-spacing:-.2pt'> </span>1<span style='letter-spacing:.1pt'>
-                        </span>view</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Kitchen<span style='letter-spacing:-.05pt'>                         
-                        </span>-<span style='letter-spacing:-.2pt'> </span>2<span style='letter-spacing:.1pt'>
-                        </span>views</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Dining<span style='letter-spacing:.05pt'> </span>Room<span
-                                style='letter-spacing:.05pt'>                  </span>-<span style='letter-spacing:
--.2pt'> </span>2<span style='letter-spacing:.1pt'> </span>isometric views</p>
-
-                <p class=MsoListParagraph style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:113.0pt;margin-bottom:.0001pt;text-indent:-22.95pt'><span style='font-family:Wingdings'>Ø<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>5 x Toilet                       -<span style='letter-spacing:
--.15pt'> </span>2<span style='letter-spacing:.1pt'> </span>views each</p>
-
-                <p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
-                                style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Balcony                         -<span style='letter-spacing:
--.2pt'> </span>1<span style='letter-spacing:.1pt'> </span>view</p>
-
-                <p class=MsoBodyText style='margin-top:.05pt'><span style='font-size:11.5pt'>&nbsp;</span></p>
-
-                <p class=MsoBodyText style='margin-top:.05pt'><span style='font-size:11.5pt'>&nbsp;</span></p>
-
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 12.0pt;margin-left:61.6pt;text-indent:-25.95pt;line-height:115%'><span
-                                style='font-size:12.0pt;line-height:115%'>b.<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><u>Stage<span style='letter-spacing:-.1pt'> </span>3: Good<span
-                                        style='letter-spacing:-.05pt'> </span>for<span style='letter-spacing:-.05pt'>
-                                </span>Construction<span style='letter-spacing:-.05pt'> </span>(GFC)<span
-                                        style='letter-spacing:.05pt'> </span>Drawings</u>
-                        – Working drawings that give detailed dimensions, graphical information that
-                        can be used by a contractor/site teams to construct the works, or by suppliers
-                        to fabricate components of the works.</p>
+style='font-size:12.0pt;line-height:115%'>b.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><u>Stage<span style='letter-spacing:-.1pt'> </span>3: Good<span
+style='letter-spacing:-.05pt'> </span>for<span style='letter-spacing:-.05pt'> </span>Construction<span
+style='letter-spacing:-.05pt'> </span>(GFC)<span style='letter-spacing:.05pt'> </span>Drawings</u>
+– Working drawings that give detailed dimensions, graphical information that
+can be used by a contractor/site teams to construct the works, or by suppliers
+to fabricate components of the works.</p>
 
-                <p class=MsoListParagraph style='line-height:150%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:150%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Furniture<span style='letter-spacing:-.1pt'> </span>Layout</p>
+</span></span>Furniture<span style='letter-spacing:-.1pt'> </span>Layout</p>
 
-                <p class=MsoListParagraph style='margin-top:6.65pt;line-height:115%'><span
-                                style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Toilet Details (if needed)</p>
+<p class=MsoListParagraph style='margin-top:6.65pt;line-height:115%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Flooring Layout Plan </p>
 
-                <p class=MsoListParagraph style='margin-top:6.55pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Detailed Space Plan/ Furniture Layout</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Floor Finish Detail</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Floor LVL Layout</p>
+
+<p class=MsoListParagraph style='margin-top:6.65pt;line-height:115%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Toilet Details </p>
+
+<p class=MsoListParagraph style='margin-top:6.55pt;margin-right:0in;margin-bottom:
 0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Plumbing Layout</p>
+</span></span>Plumbing Layout</p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Water<span style='letter-spacing:.05pt'> </span>Supply<span
-                                style='letter-spacing:-.15pt'> </span>Plan</p>
+</span></span>Water<span style='letter-spacing:.05pt'> </span>Supply<span
+style='letter-spacing:-.15pt'> </span>Plan</p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
 line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Drain<span style='letter-spacing:-.1pt'> </span>Layout</p>
+</span></span>Drain<span style='letter-spacing:-.1pt'> </span>Layout</p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
 line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Wall<span style='letter-spacing:-.15pt'> </span>Elevations</p>
+</span></span>Wall<span style='letter-spacing:-.15pt'> </span>Elevations</p>
 
-                <p class=MsoListParagraph style='margin-top:6.8pt;line-height:150%'><span
-                                style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Reflected<span style='letter-spacing:-.15pt'> </span>Ceiling Plan</p>
+<p class=MsoListParagraph style='margin-top:6.8pt;line-height:150%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Reflected<span style='letter-spacing:-.15pt'> </span>Ceiling Plan</p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
 line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>False<span style='letter-spacing:-.05pt'> </span>Ceiling<span
-                                style='letter-spacing:.05pt'> </span>Plan</p>
+</span></span>False<span style='letter-spacing:-.05pt'> </span>Ceiling<span
+style='letter-spacing:.05pt'> </span>Plan</p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
 line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Ceiling<span style='letter-spacing:-.05pt'> </span>Lighting<span
-                                style='letter-spacing:-.2pt'> </span>Plan</p>
+</span></span>Ceiling<span style='letter-spacing:-.05pt'> </span>Lighting<span
+style='letter-spacing:-.2pt'> </span>Plan</p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Ceiling Finish<span style='letter-spacing:-.15pt'> </span>layout</p>
+</span></span>Ceiling Finish<span style='letter-spacing:-.15pt'> </span>layout</p>
 
-                <p class=MsoListParagraph align=right style='margin-top:6.65pt;margin-right:
-333.3pt;margin-bottom:0in;margin-left:60.05pt;margin-bottom:.0001pt;text-align:
-right;text-indent:-28.35pt;line-height:150%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Electrical<span style='letter-spacing:-.15pt'> </span>Drawings</p>
+<p class=MsoListParagraph style='margin-top:6.7pt;line-height:150%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Electrical<span style='letter-spacing:-.15pt'> </span>Drawings<span
+style='letter-spacing:.05pt'> </span></p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Looping Plan</p>
+</span></span>Looping Plan</p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Wall<span style='letter-spacing:-.15pt'> </span>Lighting<span
-                                style='letter-spacing:-.15pt'> </span>Plan</p>
+</span></span>Wall<span style='letter-spacing:-.15pt'> </span>Lighting<span
+style='letter-spacing:-.15pt'> </span>Plan</p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
 line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Wall<span style='letter-spacing:-.2pt'> </span>Electrical</p>
+</span></span>Wall<span style='letter-spacing:-.2pt'> </span>Electrical</p>
 
-                <p class=MsoListParagraph style='margin-top:6.7pt;line-height:150%'><span
-                                style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Wall<span style='letter-spacing:-.15pt'> </span>Finishes<span
-                                style='letter-spacing:.05pt'> </span>Plan</p>
+<p class=MsoListParagraph style='margin-top:6.7pt;line-height:150%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Wall<span style='letter-spacing:-.15pt'> </span>Finishes<span
+style='letter-spacing:.05pt'> </span>Plan</p>
 
-                <p class=MsoListParagraph style='margin-top:6.55pt;line-height:150%'><span
-                                style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Woodwork<span style='letter-spacing:-.05pt'> </span>Details:</p>
+<p class=MsoListParagraph style='margin-top:6.65pt;line-height:115%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Terrace Details </p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
-line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Fixed<span style='letter-spacing:-.1pt'> </span>Furniture</p>
-
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
-line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Wardrobes<span style='letter-spacing:-.05pt'> </span>&amp;
-                        Storages</p>
-
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
-line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Kitchen<span style='letter-spacing:-.05pt'> </span>Storages</p>
-
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:6.55pt;margin-right:0in;margin-bottom:
 0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Wall<span style='letter-spacing:-.05pt'> </span>Paneling</p>
+</span></span>Addition/ Alteration Layout</p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
-line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Loose Furniture</p>
-
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
 115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Wooden<span style='letter-spacing:.05pt'> </span>Ceiling<span
-                                style='letter-spacing:-.1pt'> </span>Detail</p>
+</span></span>Parapet Details</p>
 
-                <p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
 line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Moulding<span style='letter-spacing:-.15pt'> </span>&amp;<span
-                                style='letter-spacing:.05pt'> </span>Detailing<span style='letter-spacing:-.15pt'>
-                        </span>if<span style='letter-spacing:-.1pt'> </span>any.</p>
+</span></span>Electrical<span style='letter-spacing:-.1pt'> </span>Layout</p>
 
-                <p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Plumbing Layout</p>
 
-                <p class=MsoListParagraph style='margin-left:61.6pt;text-indent:-24.75pt;
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Wall<span style='letter-spacing:-.15pt'> </span>Elevations</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Woodwork Details</p>
+
+<p class=MsoListParagraph style='margin-top:6.55pt;line-height:150%'><span
+style='font-family:Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Woodwork<span style='letter-spacing:-.05pt'> </span>Details:</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Fixed<span style='letter-spacing:-.1pt'> </span>Furniture</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Wardrobes<span style='letter-spacing:-.05pt'> </span>&amp;
+Storages</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Kitchen<span style='letter-spacing:-.05pt'> </span>Storages</p>
+
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
+115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Wall<span style='letter-spacing:-.05pt'> </span>Paneling</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Loose Furniture</p>
+
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+0in;margin-left:118.4pt;margin-bottom:.0001pt;text-indent:-28.35pt;line-height:
+115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Wooden<span style='letter-spacing:.05pt'> </span>Ceiling<span
+style='letter-spacing:-.1pt'> </span>Detail</p>
+
+<p class=MsoListParagraph style='margin-left:118.4pt;text-indent:-28.35pt;
+line-height:115%'><span style='font-family:Wingdings'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Moulding<span style='letter-spacing:-.15pt'> </span>&amp;<span
+style='letter-spacing:.05pt'> </span>Detailing<span style='letter-spacing:-.15pt'>
+</span>if<span style='letter-spacing:-.1pt'> </span>any.</p>
+
+<p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-left:61.6pt;text-indent:-24.75pt;
 line-height:150%'><span style='font-size:12.0pt;line-height:150%'>c.<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Stage<span style='letter-spacing:-.1pt'> </span>4:<span
-                                style='letter-spacing:.05pt'> </span>Documents<span style='letter-spacing:-.15pt'>
-                        </span>&amp;<span style='letter-spacing:-.1pt'> </span>BOQs</p>
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Stage<span
+style='letter-spacing:-.1pt'> </span>4:<span style='letter-spacing:.05pt'> </span>Documents<span
+style='letter-spacing:-.15pt'> </span>&amp;<span style='letter-spacing:-.1pt'> </span>BOQs</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Light<span style='letter-spacing:-.1pt'> </span>fixtures<span
-                                style='letter-spacing:-.05pt'> </span>BOQ</p>
+</span></span>Light<span style='letter-spacing:-.1pt'> </span>fixtures<span
+style='letter-spacing:-.05pt'> </span>BOQ</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Furniture<span style='letter-spacing:-.2pt'> </span>BOQ</p>
+</span></span>Furniture<span style='letter-spacing:-.2pt'> </span>BOQ</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Toilet Fixtures<span style='letter-spacing:-.05pt'> </span>BOQ</p>
+</span></span>Toilet Fixtures<span style='letter-spacing:-.05pt'> </span>BOQ</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Tiling<span style='letter-spacing:-.1pt'> </span>BOQ</p>
+</span></span>Tiling<span style='letter-spacing:-.1pt'> &amp; Stone </span>BOQ</p>
 
-                <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
+<p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Furnishing<span style='letter-spacing:-.15pt'> </span>BOQ</p>
+</span></span>Furnishing<span style='letter-spacing:-.15pt'> </span>BOQ</p>
 
-                <p class=MsoNormal style='line-height:115%'>&nbsp;</p>
+<p class=MsoListParagraph style='text-indent:0in;line-height:115%'>&nbsp;</p>
 
-                <h1 align=center style='margin-top:9.45pt;margin-right:5.05pt;margin-bottom:
-0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><u>Part<span style='letter-spacing:-.05pt'>
-                                </span>II</u></h1>
+<h1 align=center style='margin-top:9.45pt;margin-right:5.05pt;margin-bottom:
+0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><u>Part<span
+style='letter-spacing:-.05pt'> </span>II</u></h1>
 
-                <p class=MsoBodyText style='margin-top:.4pt'><b><span style='font-size:9.5pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText style='margin-top:.4pt'><b><span style='font-size:9.5pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:5.75pt;margin-bottom:
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:5.75pt;margin-bottom:
 0in;margin-left:12.05pt;margin-bottom:.0001pt;text-align:justify;text-indent:
 28.9pt'>The Designer shall implement the Design as finalised with The Client.
-                        The Designer shall ensure Quality checks, as also coordination with all
-                        stakeholders and supervision of all site teams.</p>
+The Designer shall ensure Quality checks, as also coordination with all
+stakeholders and supervision of all site teams.</p>
 
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:5.75pt;margin-bottom:
-0in;margin-left:12.05pt;margin-bottom:.0001pt;text-align:justify;text-indent:
-28.9pt'><span style='font-size:13.0pt'>&nbsp;</span></p>
+<h1 style='margin-top:0in;margin-right:5.0pt;margin-bottom:0in;margin-left:
+0in;margin-bottom:.0001pt;line-height:115%'><span style='font-size:17.5pt;
+line-height:115%;font-weight:normal'>&nbsp;</span></h1>
 
-                <p class=MsoBodyText style='margin-top:.35pt'><span style='font-size:17.5pt'>&nbsp;</span></p>
+<h1 align=center style='margin-right:5.0pt;text-align:center;line-height:115%'><u>Fee
+Proposal</u></h1>
 
-                             <h1 align=center style='margin-right:5.0pt;text-align:center;line-height:115%'><u>Fee
-                                Proposal</u></h1>
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
-
-                <p class=MsoBodyText style='margin-left:5.0pt;line-height:115%'>Designing<span
-                                style='letter-spacing:-.15pt'> </span>will<span style='letter-spacing:-.1pt'> </span>be
-                        done as<span style='letter-spacing:.05pt'> </span>per<span style='letter-spacing:
+<p class=MsoBodyText style='margin-bottom:12.0pt;text-align:justify;line-height:
+115%'>Our Design charges are @ ₹<span style=''>${design_charges}</span>/ Sft
+but with special regards we offer ${discount}% discount for you, thus the complete
+process of designing, supervision, site and joint material selection visits<span
+style='letter-spacing:-.15pt'> </span>will<span style='letter-spacing:-.1pt'> </span>be
+done as<span style='letter-spacing:.05pt'> </span>per<span style='letter-spacing:
 .05pt'> </span>the following<span style='letter-spacing:-.1pt'> </span>rates:</p>
 
-                <h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:0in;margin-left:
+<h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:12.0pt;
+margin-left:41.0pt;text-align:justify;text-indent:-.25in;line-height:115%'><span
+style='font-weight:normal'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Design charges @ ₹<span style=''>${design_charges_per_sft}</span>/ Sft
+x Covered area @<span style=''>${design_cover_area_in_sft}</span> Sft = ₹<span
+style=''>${design_total_charges}</span>/-<span style='letter-spacing:.05pt;
+font-weight:normal'> </span><span style='font-weight:normal'> (Rupees ${design_total_charges_in_words} Only) excl. of<span style='letter-spacing:.05pt'> </span>taxes
+and the Terrace &amp; Balcony.</span></h1>
+
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
+12.0pt;margin-left:41.0pt;text-align:justify;text-indent:-.25in;line-height:
+115%'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span><b>Balconies
+@ ₹<span style=''>${balcony_charges_per_sft}</span>/ Sft x Balcony area @</b><span
+style=''> <b>${balcony_area_in_sft}</b></span><b> Sft = ₹<span style=''>${balcony_total_charge}</span>/-</b><span style='letter-spacing:.05pt'> </span>(Rupees ${balcony_total_charge_in_words} Only) excl. of<span style='letter-spacing:.05pt'> </span>taxes.</p>
+
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
+12.0pt;margin-left:41.0pt;text-align:justify;text-indent:-.25in;line-height:
+115%'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span><b>Terrace
+covered area @ ₹<span style=''>${terrace_covered_charges_per_sft}</span>/ Sft x Terrace area
+@<span style=''> ${terrace_covered_area_in_sft}</span> Sft = ₹<span style=''>${terrace_covered_total_charge}</span>/-</b><span style='letter-spacing:.05pt'> </span>(Rupees  ${terrace_covered_total_charge_in_words} Only) excl. of<span style='letter-spacing:.05pt'> </span>taxes.</p>
+
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
+12.0pt;margin-left:41.0pt;text-align:justify;text-indent:-.25in;line-height:
+115%'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span><b>Terrace
+open area @ ₹<span style=''>${terrace_open_charges_per_sft}</span>/ Sft x Terrace area @<span
+style=''>${terrace_open_area_in_sft}</span> Sft = ₹<span style=''>${terrace_open_total_charge}</span>/-</b><span
+style='letter-spacing:.05pt'> </span> (Rupees ${terrace_open_total_charge_in_words} Only) excl. of<span style='letter-spacing:.05pt'> </span>taxes.</p>
+
+<h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:12.0pt;
+margin-left:41.0pt;text-align:justify;text-indent:-.25in;line-height:115%'><span
+style='font-weight:normal'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>Final Design charges as per the site areas mentioned above are ₹<span
+style=''> ${design_total_charges}</span>/- (Covered area) + ₹<span
+style=''> ${balcony_total_charge}</span>/- (Balcony area) + ₹<span
+style=''> ${terrace_covered_total_charge}</span>/- (Terrace covered area) ₹<span
+style=''> ${terrace_open_total_charge}</span>/- (Terrace open area)  = ₹${total_design_charges}/- <span
+style='font-weight:normal'>(Rupees ${total_design_charges_in_words} Only)
+excl. of<span style='letter-spacing:.05pt'> </span>taxes.</span></h1>
+
+<h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:12.0pt;
+margin-left:41.0pt;text-align:justify;text-indent:-.25in;line-height:115%'><span
+style='font-weight:normal'>6.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span>The Tentative Project Execution cost will be shared with you as a
+tentative estimate<span style='font-weight:normal'>, after our design &amp;
+scope of work discussion and finalization.</span></h1>
+
+<h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:0in;margin-left:
 41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-.25in;line-height:
-115%'><span style='font-weight:normal'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Design charges @ ₹<span style=''>${design_charges_per_sft}</span>/ Sft
-                        x Covered area @<span style=''>${cover_area_in_sft}</span> Sft = ₹<span
-                                style=''>${design_total_charges}</span>/-<span style='letter-spacing:.05pt;
-font-weight:normal'> </span><span style='font-weight:normal'>(Rupees <span style=''> ${design_total_charges_in_words}
-                                </span> Only) excl. of<span style='letter-spacing:.05pt'> </span>taxes and
-                                Terrace &amp; Balcony area.</span></h1>
+115%'><span style='font-weight:normal'>7.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span></span><span style='font-weight:normal'>Note:</span></h1>
 
-                <h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:0in;margin-left:
-4.2pt;margin-bottom:.0001pt;text-align:justify;line-height:115%'><span style='font-weight:normal'>&nbsp;</span></h1>
-
-                <h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:0in;margin-left:
-41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-.25in;line-height:
-115%'><span style='font-weight:normal'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Design charges after Special Armed Forces Discount (20% i.e. ₹<span
-                                style=''>${design_discount}</span>/-) = ₹<span
-                                style=''>${design_total_charges_after_discount}</span>/-<span style='font-weight:normal'> (Rupees <span
-                                        style=''>${design_total_charges_after_discount_in_words}
-        </span> Only) excl. of<span style='letter-spacing:.05pt'>
-                                </span>taxes.</span></h1>
-
-                <p class=MsoListParagraph style='line-height:115%'>&nbsp;</p>
-
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
-0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--.25in;line-height:115%'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                        </span><b>Balconies / Terrace at 60% of the discounted rate (₹<span
-                                        style=''>${terrace_and_balcony_charges_per_sft}</span>/Sft) ie @ ₹<span
-                                        style=''>${terrace_and_balcony_total_charges_discount}</span>/
-                                Sft x Terrace &amp; Balcony area @<span style=''>${terrace_and_balcony_area_in_sft}</span>
-                                Sft = ₹<span style=''> ${terrace_and_balcony_total_charges}</span> /-</b> (Rupees <b><span
-                                        style=''>${terrace_and_balcony_total_charges_in_words}</span></b> Only) excl. of<span
-                                style='letter-spacing:.05pt'> </span>taxes.</p>
-
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
-0in;margin-left:0in;margin-bottom:.0001pt;text-align:justify;line-height:115%'>&nbsp;</p>
-
-                <h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:0in;margin-left:
-41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:-.25in;line-height:
-115%'><span style='font-weight:normal'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                                </span></span>Final Design charges as per the site areas mentioned above are ₹<span
-                                style=';font-weight:normal'> ${design_total_charges_after_discount}</span> /- (Covered area) + ₹<span
-                                style=';font-weight:normal'> ${terrace_and_balcony_total_charges}</span> /- (Terrace &amp;
-                        Balcony area) = ₹<span style=';font-weight:normal'> ${total_design_charges}</span>
-                        /- <span style='font-weight:normal'>(Rupees <span style=''>${total_design_charges_in_words}
-                                    </span> Only) excl. of<span style='letter-spacing:.05pt'>
-                                </span>taxes.</span></h1>
-
-                <h1 style='margin-top:3.75pt;margin-right:5.75pt;margin-bottom:0in;margin-left:
-0in;margin-bottom:.0001pt;text-align:justify;line-height:115%'><span style='font-weight:normal'>&nbsp;</span></h1>
-
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
 0in;margin-left:59.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
 -.25in;line-height:115%'>a)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                        </span>Billing shall be as per covered area, as per measurement on-site.</p>
+</span>Billing shall be as per covered area, as per measurement on-site.</p>
 
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:5.85pt;margin-bottom:
 0in;margin-left:59.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
 -.25in;line-height:115%'>b)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-                        </span>The covered area includes all internal and external walls.</p>
+</span>The covered area includes all internal and external walls.</p>
 
-                <h1 style='margin-top:0in;margin-right:5.1pt;margin-bottom:0in;margin-left:
-0in;margin-bottom:.0001pt;line-height:115%'><u><span style='text-decoration:
- none'>&nbsp;</span></u></h1>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:0in;margin-bottom:
+3.0pt;margin-left:59.0pt;text-indent:-.25in'>c)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span>The above fees does not include services such as Landscape design, Govt.
+fees/ costs, Liaison with authorities for approval, completion, etc. </p>
 
+<p class=MsoListParagraph style='margin-top:0in;margin-right:0in;margin-bottom:
+3.0pt;margin-left:59.0pt;text-indent:-.25in'>d)<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
+</span>Terrace area as mentioned above excludes the mumty area.</p>
 
-                <h1 align=center style='margin-right:5.1pt;text-align:center;line-height:115%'><u>Designing<span
-                                        style='letter-spacing:-.05pt'> </span>Payment<span
-                                        style='letter-spacing:-.25pt'>
-                                </span>Terms<span style='letter-spacing:.05pt'> </span>&amp;<span
-                                        style='letter-spacing:-.2pt'> </span>Conditions</u></h1>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:0in;margin-bottom:
+3.0pt;margin-left:59.0pt;text-indent:0in'>&nbsp;</p>
 
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+<h1 align=center style='margin-right:5.1pt;text-align:center;line-height:115%'><u>Designing<span
+style='letter-spacing:-.05pt'> </span>Payment<span style='letter-spacing:-.25pt'>
+</span>Terms<span style='letter-spacing:.05pt'> </span>&amp;<span
+style='letter-spacing:-.2pt'> </span>Conditions</u></h1>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.95pt;margin-bottom:
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.95pt;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
 115%'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Interior Designing<span style='letter-spacing:.05pt'> process </span>shall<span
-                                style='letter-spacing:.15pt'> </span>commence<span style='letter-spacing:.25pt'>
-                        </span>within<span style='letter-spacing:.15pt'> </span>5<span style='letter-spacing:.35pt'>
-                        </span>Business<span style='letter-spacing:.25pt'>
-                        </span>days<span style='letter-spacing:.25pt'> </span>(Mon-Fri)<span
-                                style='letter-spacing:.25pt'> </span>from<span style='letter-spacing:.25pt'>
-                        </span>the<span style='letter-spacing:.25pt'> </span>date of receipt<span style='letter-spacing:
+</span>Interior Designing<span style='letter-spacing:.05pt'> process </span>shall<span
+style='letter-spacing:.15pt'> </span>commence<span style='letter-spacing:.25pt'>
+</span>within<span style='letter-spacing:.15pt'> </span>5<span
+style='letter-spacing:.35pt'> </span>Business<span style='letter-spacing:.25pt'>
+</span>days<span style='letter-spacing:.25pt'> </span>(Mon-Fri)<span
+style='letter-spacing:.25pt'> </span>from<span style='letter-spacing:.25pt'> </span>the<span
+style='letter-spacing:.25pt'> </span>date of receipt<span style='letter-spacing:
 -.15pt'> </span>of Mobilization Advance<span style='letter-spacing:.05pt'> </span>&amp;<span
-                                style='letter-spacing:-.1pt'> </span>Work<span style='letter-spacing:-.15pt'>
-                        </span>Contract<span style='letter-spacing:-.15pt'> </span>duly<span
-                                style='letter-spacing:-.15pt'> </span>signed.</p>
+style='letter-spacing:-.1pt'> </span>Work<span style='letter-spacing:-.15pt'> </span>Contract<span
+style='letter-spacing:-.15pt'> </span>duly<span style='letter-spacing:-.15pt'> </span>signed.</p>
 
-                <p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
 115%'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Payment<span style='letter-spacing:-.1pt'> </span>Terms:</p>
+</span>Payment<span style='letter-spacing:-.1pt'> </span>Terms:</p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
-0in;margin-left:68.8pt;margin-bottom:.0001pt;line-height:115%'><span style='font-family:Wingdings'>§<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                                </span></span><b>Booking<span style='letter-spacing:-.1pt'>
-                                </span>fee                                                           </b>-
-                        35%<span style='letter-spacing:-.1pt'> </span>of<span style='letter-spacing:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+0in;margin-left:68.8pt;margin-bottom:.0001pt;line-height:115%'><span
+style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span><b>Booking<span style='letter-spacing:-.1pt'> </span>fee                                                           </b>-
+35%<span style='letter-spacing:-.1pt'> </span>of<span style='letter-spacing:
 -.1pt'> </span>total</p>
 
-                <p class=MsoBodyText style='margin-top:2.0pt;margin-right:0in;margin-bottom:
-0in;margin-left:68.8pt;margin-bottom:.0001pt;line-height:115%'>Design<span style='letter-spacing:-.05pt'> </span>Fees
-                </p>
+<p class=MsoBodyText style='margin-top:2.0pt;margin-right:0in;margin-bottom:
+0in;margin-left:68.8pt;margin-bottom:.0001pt;line-height:115%'>Design<span
+style='letter-spacing:-.05pt'> </span>Fees</p>
 
-                <p class=MsoListParagraph style='margin-top:1.95pt;margin-right:19.2pt;
+<p class=MsoListParagraph style='margin-top:1.95pt;margin-right:19.2pt;
 margin-bottom:0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;
 line-height:115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                                </span></span><b>On<span style='letter-spacing:-.1pt'> </span>Finalisation of<span
-                                        style='letter-spacing:-.05pt'> </span>Furniture<span style='letter-spacing:
--.15pt'> </span>Layout                     </b>- 50% of total<span style='letter-spacing:-3.7pt'> </span>Design fees
-                </p>
+</span></span><b>On<span style='letter-spacing:-.1pt'> </span>Finalisation of<span
+style='letter-spacing:-.05pt'> </span>Furniture<span style='letter-spacing:
+-.15pt'> </span>Layout                     </b>- 50% of total<span
+style='letter-spacing:-3.7pt'> </span>Design fees</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
 0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
 115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                                </span></span><b>After<span style='letter-spacing:-.05pt'> </span>Finalisation
-                                of<span style='letter-spacing:-.2pt'> </span>Conceptual<span style='letter-spacing:
+</span></span><b>After<span style='letter-spacing:-.05pt'> </span>Finalisation
+of<span style='letter-spacing:-.2pt'> </span>Conceptual<span style='letter-spacing:
 -.2pt'> </span>3D<span style='letter-spacing:-.15pt'> </span>Designs       - </b>70%
-                        of total<span style='letter-spacing:-3.7pt'> </span>Design<span style='letter-spacing:-.05pt'>
-                        </span>Fees<span style='letter-spacing:.1pt'> </span>(ie,
-                        before the<span style='letter-spacing:-.05pt'> </span>commencement<span
-                                style='letter-spacing:-.2pt'> </span>of site<span style='letter-spacing:-.05pt'>
-                        </span>execution)</p>
+of total<span style='letter-spacing:-3.7pt'> </span>Design<span
+style='letter-spacing:-.05pt'> </span>Fees<span style='letter-spacing:.1pt'> </span>(ie,
+before the<span style='letter-spacing:-.05pt'> </span>commencement<span
+style='letter-spacing:-.2pt'> </span>of site<span style='letter-spacing:-.05pt'>
+</span>execution)</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
 0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
 115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                                </span></span><b>After<span style='letter-spacing:-.05pt'> </span>Finalisation
-                                of<span style='letter-spacing:-.2pt'> </span>GFCs and<span style='letter-spacing:
--.15pt'> </span>3Ds                       - </b>95% of total<span style='letter-spacing:-3.7pt'> </span>Design<span
-                                style='letter-spacing:-.05pt'>
-                        </span>Fees</p>
+</span></span><b>After<span style='letter-spacing:-.05pt'> </span>Finalisation
+of<span style='letter-spacing:-.2pt'> </span>GFCs and<span style='letter-spacing:
+-.15pt'> </span>3Ds                       - </b>95% of total<span
+style='letter-spacing:-3.7pt'> </span>Design<span style='letter-spacing:-.05pt'>
+</span>Fees</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
 0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
 115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                                </span></span><b>After<span style='letter-spacing:-.05pt'> </span>handing<span
-                                        style='letter-spacing:-.1pt'>
-                                </span>over                                                -
-                        </b>5 % of total <span style='letter-spacing:-3.7pt'> </span>Design<span
-                                style='letter-spacing:-.05pt'> </span>Fees</p>
+</span></span><b>After<span style='letter-spacing:-.05pt'> </span>handing<span
+style='letter-spacing:-.1pt'> </span>over                                                -
+</b>5 % of total <span style='letter-spacing:-3.7pt'> </span>Design<span
+style='letter-spacing:-.05pt'> </span>Fees</p>
 
-                <p class=MsoBodyText style='line-height:115%'>&nbsp;</p>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
+0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:0in;line-height:115%'>&nbsp;</p>
 
-                <p class=MsoBodyText style='margin-top:0in;margin-right:30.8pt;margin-bottom:
+<p class=MsoBodyText style='margin-top:0in;margin-right:30.8pt;margin-bottom:
 0in;margin-left:40.35pt;margin-bottom:.0001pt;line-height:115%'>The Client
-                        shall release respective payment installments within 3 days<span style='letter-spacing:-3.75pt'>
-                        </span>from the date<span style='letter-spacing:
--.1pt'> </span>of<span style='letter-spacing:-.15pt'> </span>completion<span style='letter-spacing:-.05pt'>
-                        </span>of<span style='letter-spacing:-.15pt'> </span>stage<span style='letter-spacing:-.1pt'> as
-                        </span>intimated by the<span style='letter-spacing:
+shall release respective payment installments within 3 days<span
+style='letter-spacing:-3.75pt'> </span>from the date<span style='letter-spacing:
+-.1pt'> </span>of<span style='letter-spacing:-.15pt'> </span>completion<span
+style='letter-spacing:-.05pt'> </span>of<span style='letter-spacing:-.15pt'> </span>stage<span
+style='letter-spacing:-.1pt'> as </span>intimated by the<span style='letter-spacing:
 -.05pt'> </span>Designer.</p>
 
-                <p class=MsoBodyText style='margin-top:0in;margin-right:30.8pt;margin-bottom:
-0in;margin-left:40.35pt;margin-bottom:.0001pt;line-height:115%'>&nbsp;</p>
+<p class=MsoBodyText style='margin-top:.55pt;line-height:115%'><span
+style='font-size:10.5pt;line-height:115%'>&nbsp;</span></p>
 
-                <p class=MsoBodyText style='margin-top:.55pt;line-height:115%'><span
-                                style='font-size:10.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:15.55pt;
+margin-bottom:12.0pt;margin-left:41.0pt;text-align:justify;text-indent:-.5in;
+line-height:115%'><span style='color:#3B3A3A'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><u>Site Visit.</u> </b>Up to 10 visits to the site, by The
+Designer’s <b>Design Team<span style='letter-spacing:-3.65pt'> </span></b>shall
+be made to ensure suitable progress, quality, and other checks.<span
+style='letter-spacing:.05pt'> </span>However,<span style='letter-spacing:-.05pt'>
+</span>the Site<span style='letter-spacing:-.05pt'> </span>Supervisor would<span
+style='letter-spacing:-.15pt'> </span>be<span style='letter-spacing:-.05pt'> on
+the Site </span>regularly.</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:15.55pt;
-margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;
-line-height:115%'><span style='color:#3B3A3A'>3.<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><b><u>Site Visit.</u> </b>Up to 10 visits to the site, by The
-                        Designer’s <b>Design Team<span style='letter-spacing:-3.65pt'>        </span></b> shall
-                        be made to ensure suitable progress, quality, and other checks.<span
-                                style='letter-spacing:.05pt'> </span>However,<span style='letter-spacing:-.05pt'>
-                        </span>the Site<span style='letter-spacing:-.05pt'> </span>Supervisor would<span
-                                style='letter-spacing:-.15pt'> </span>be<span style='letter-spacing:-.05pt'> on
-                                the Site </span>regularly.</p>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+12.0pt;margin-left:41.0pt;text-indent:-.5in;line-height:115%'>4.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Additional Site visits @3000/- visit for the designers, @5000/- visit
+for the head designer.</p>
 
-                <p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
-115%'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>The price<span style='letter-spacing:2.05pt'> </span>quoted<span
-                                style='letter-spacing:1.95pt'> </span>is<span style='letter-spacing:1.95pt'>
-                        </span>valid<span style='letter-spacing:1.95pt'> </span>for<span style='letter-spacing:1.95pt'>
-                                30 days </span>from<span style='letter-spacing:2.15pt'> </span>the<span
-                                style='letter-spacing:2.05pt'> </span>date<span style='letter-spacing:1.95pt'>
-                        </span>of<span style='letter-spacing:2.0pt'> </span>Quotation<span
-                                style='letter-spacing:1.95pt'>
-                        </span>&amp;<span style='letter-spacing:2.05pt'> </span>may<span style='letter-spacing:1.95pt'>
-                        </span>be revised at the time of<span style='letter-spacing:-.15pt'> </span>finalisation.</p>
+115%'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><b><u>Market Visits.</u></b></p>
 
-                <p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoListParagraph>&nbsp;</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.85pt;margin-bottom:
-0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--.5in;line-height:115%'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Order<span style='letter-spacing:.2pt'> </span>once<span style='letter-spacing:.25pt'>
-                        </span>placed<span style='letter-spacing:.2pt'> </span>cannot<span style='letter-spacing:.25pt'>
-                        </span>be<span style='letter-spacing:.2pt'> </span>cancelled.<span style='letter-spacing:.25pt'>
-                        </span>In<span style='letter-spacing:.35pt'> </span>case<span style='letter-spacing:.2pt'>
-                        </span>of<span style='letter-spacing:.2pt'> </span>cancellation,<span
-                                style='letter-spacing:.3pt'> the </span>Fee<span style='letter-spacing:.35pt'>
-                        </span>till<span style='letter-spacing:.1pt'> </span>the<span style='letter-spacing:-3.7pt'>
-                                         </span>stage<span style='letter-spacing:-.05pt'> </span>of services
-                        prepared<span style='letter-spacing:-.05pt'> </span>&amp; rendered shall<span
-                                style='letter-spacing:-.15pt'> </span>be paid<span style='letter-spacing:-.15pt'>
-                        </span>and<span style='letter-spacing:-.15pt'> </span>cleared.</p>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
+115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span>One visit for stone, tile selection at the vendor location.</p>
 
-                <p class=MsoBodyText style='margin-top:.35pt;line-height:115%'><span
-                                style='font-size:14.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
+115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span>One visit for furniture factory visit or finish selection at the
+vendor location.</p>
 
-                <h1 align=center style='margin-right:5.05pt;text-align:center;line-height:115%'><u>General<span
-                                        style='letter-spacing:-.2pt'> </span>Terms<span style='letter-spacing:.05pt'>
-                                </span>&amp;<span style='letter-spacing:-.15pt'> </span>Conditions</u></h1>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
+115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span>One visit for soft furnishings selection like curtains, binds,
+etc.</p>
 
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:112.7pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
+115%'>•<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>In Delhi/Gurgaon - 3hrs, time is allotted</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.65pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:112.7pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
+115%'>•<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Outside Delhi/Gurgaon - 2hrs, time is allotted</p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
+115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span></span>Visit outside Delhi/Gurgaon to include transportation costs.</p>
+
+<p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
+115%'>6.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>The price<span style='letter-spacing:2.05pt'> </span>quoted<span
+style='letter-spacing:1.95pt'> </span>is<span style='letter-spacing:1.95pt'> </span>valid<span
+style='letter-spacing:1.95pt'> </span>for<span style='letter-spacing:1.95pt'>
+30 days </span>from<span style='letter-spacing:2.15pt'> </span>the<span
+style='letter-spacing:2.05pt'> </span>date<span style='letter-spacing:1.95pt'> </span>of<span
+style='letter-spacing:2.0pt'> </span>Quotation<span style='letter-spacing:1.95pt'>
+</span>&amp;<span style='letter-spacing:2.05pt'> </span>may<span
+style='letter-spacing:1.95pt'> </span>be revised at the time of<span
+style='letter-spacing:-.15pt'> </span>finalisation.</p>
+
+<p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.85pt;margin-bottom:
+12.0pt;margin-left:41.0pt;text-align:justify;text-indent:-.5in;line-height:
+115%'>7.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Order<span style='letter-spacing:.2pt'> </span>once<span
+style='letter-spacing:.25pt'> </span>placed<span style='letter-spacing:.2pt'> </span>cannot<span
+style='letter-spacing:.25pt'> </span>be<span style='letter-spacing:.2pt'> </span>cancelled.<span
+style='letter-spacing:.25pt'> </span>In<span style='letter-spacing:.35pt'> </span>case<span
+style='letter-spacing:.2pt'> </span>of<span style='letter-spacing:.2pt'> </span>cancellation,<span
+style='letter-spacing:.3pt'> the </span>Fee<span style='letter-spacing:.35pt'> </span>till<span
+style='letter-spacing:.1pt'> </span>the<span style='letter-spacing:-3.7pt'>          </span>stage<span
+style='letter-spacing:-.05pt'> </span>of services prepared<span
+style='letter-spacing:-.05pt'> </span>&amp; rendered shall<span
+style='letter-spacing:-.15pt'> </span>be paid<span style='letter-spacing:-.15pt'>
+</span>and<span style='letter-spacing:-.15pt'> </span>cleared.</p>
+
+<p class=MsoListParagraph>&nbsp;</p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.85pt;margin-bottom:
+12.0pt;margin-left:41.0pt;text-align:justify;text-indent:0in;line-height:115%'>&nbsp;</p>
+
+<h1 align=center style='margin-right:5.05pt;text-align:center;line-height:115%'><u>General<span
+style='letter-spacing:-.2pt'> </span>Terms<span style='letter-spacing:.05pt'> </span>&amp;<span
+style='letter-spacing:-.15pt'> </span>Conditions</u></h1>
+
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.65pt;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
 -.5in;line-height:115%'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span><b><u>Scope</u></b>. Implementation Work shall be completed by The
-                        Designer as per<span style='letter-spacing:.05pt'> </span>the designs
-                        finalised. W will be the day of commencement of Work. All<span style='letter-spacing:.05pt'>
-                        </span>Sundays / Holidays / days when work is not
-                        permitted to be done will be<span style='letter-spacing:.05pt'> </span>added<span
-                                style='letter-spacing:.05pt'> </span>to the<span style='letter-spacing:.05pt'>
-                        </span>timeline.<span style='letter-spacing:.05pt'> </span>A Workday is considered as 8<span
-                                style='letter-spacing:.05pt'> </span>working hours,<span style='letter-spacing:
+</span><b><u>Scope</u></b>. Implementation Work shall be completed by The
+Designer as per<span style='letter-spacing:.05pt'> </span>the designs
+finalised. W will be the day of commencement of Work. All<span
+style='letter-spacing:.05pt'> </span>Sundays / Holidays / days when work is not
+permitted to be done will be<span style='letter-spacing:.05pt'> </span>added<span
+style='letter-spacing:.05pt'> </span>to the<span style='letter-spacing:.05pt'> </span>timeline.<span
+style='letter-spacing:.05pt'> </span>A Workday is considered as 8<span
+style='letter-spacing:.05pt'> </span>working hours,<span style='letter-spacing:
 .05pt'> </span>excluding 1 hour of mandatory lunch &amp; tea breaks, during the
-                        day. All<span style='letter-spacing:.05pt'> </span>restrictions on work time
-                        like half-day work, work stoppage due to Force<span style='letter-spacing:.05pt'>
-                        </span>Majeure / Govt. Orders / Regulatory bodies’ orders, will be added to<span
-                                style='letter-spacing:-.15pt'> </span>the Work Time<span style='letter-spacing:
+day. All<span style='letter-spacing:.05pt'> </span>restrictions on work time
+like half-day work, work stoppage due to Force<span style='letter-spacing:.05pt'>
+</span>Majeure / Govt. Orders / Regulatory bodies’ orders, will be added to<span
+style='letter-spacing:-.15pt'> </span>the Work Time<span style='letter-spacing:
 -.15pt'> </span>Plan.</p>
 
-                <h1 style='margin-top:3.75pt;margin-right:0in;margin-bottom:0in;margin-left:
-41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:115%'><span style='font-weight:normal'>2.<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><u>Design<span style='letter-spacing:-.1pt'> </span>Finalisation</u>
-                        <span style='font-weight:normal'>It is reiterated that once designs are finalised,
-                                any changes requested thereafter, causes restart of the entire design process
-                                for that area, all over again. Hence, it is in the interest of both parties
-                                that due deliberation is given to finalise the designs and thereafter, restrict
-                                the scope for change, unless extremely necessary. Charges for the same are
-                                listed below:</span>
-                </h1>
-
-                <p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><b>Furniture<span style='letter-spacing:.05pt'> </span>Layout</b>-<span
-                                style='letter-spacing:
-.05pt'> </span>Minor<span style='letter-spacing:.05pt'> </span>changes<span style='letter-spacing:.05pt'>
-                        </span>are<span style='letter-spacing:.05pt'> </span>acceptable<span
-                                style='letter-spacing:.05pt'> </span>till<span style='letter-spacing:.05pt'>
-                        </span>1<span style='letter-spacing:.05pt'> </span>week<span style='letter-spacing:.05pt'>
-                        </span>after<span style='letter-spacing:-3.75pt'> </span>finalisation<span style='letter-spacing:
--.2pt'> </span>of<span style='letter-spacing:-.15pt'> </span>layout.<span style='letter-spacing:-.15pt'>
-                        </span>Major<span style='letter-spacing:-.15pt'>
-                        </span>changes<span style='letter-spacing:-.05pt'> </span>/<span style='letter-spacing:-.4pt'>
-                        </span>more<span style='letter-spacing:-.15pt'> </span>than<span style='letter-spacing:-.25pt'>
-                        </span>2<span style='letter-spacing:-.2pt'> Minor
-                        </span>changes<span style='letter-spacing:-.25pt'> </span>shall<span
-                                style='letter-spacing:-.25pt'> </span>be<span style='letter-spacing:-3.75pt'>
-                        </span>chargeable
-                        @ ₹ 2,000/ per Major Change / more than two Minor Changes, eg, each change in
-                        layout of<span style='letter-spacing:.05pt'> </span>furniture, incl<span
-                                style='letter-spacing:-.15pt'> </span>modular<span style='letter-spacing:-.1pt'>
-                        </span>furniture is<span style='letter-spacing:-.15pt'> </span>considered<span
-                                style='letter-spacing:-.05pt'> </span>as<span style='letter-spacing:-.15pt'> </span>a
-                        Major Change.</p>
-
-                <p class=MsoBodyText style='margin-top:.25pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><b>LV,<span style='letter-spacing:-.7pt'> </span>Electrical<span style='letter-spacing:
--.7pt'> </span>&amp;<span style='letter-spacing:-.7pt'> </span>False<span style='letter-spacing:-.65pt'>
-                                </span>Ceiling<span style='letter-spacing:-.7pt'>
-                                </span>Plans</b>-<span style='letter-spacing:-.6pt'> </span>Unlimited<span
-                                style='letter-spacing:-.7pt'> </span>revisions<span style='letter-spacing:-.7pt'>
-                                are </span>allowed<span style='letter-spacing:-.65pt'> </span>in<span
-                                style='letter-spacing:-.7pt'> </span>the<span style='letter-spacing:-3.75pt'>
-                        </span>drawings
-                        until finalisation. However, only 1-time minor change, free<span style='letter-spacing:-3.75pt'>
-                        </span>of cost up to 5 days from the date of finalisation
-                        of plans, is acceptable. Any change<span style='letter-spacing:.05pt'> </span>thereafter,
-                        shall be chargeable @ ₹2,000/ per change. Any additional<span style='letter-spacing:
-.05pt'> </span>cost<span style='letter-spacing:-.05pt'> </span>incurred due to<span style='letter-spacing:-.1pt'> the
-                        </span>changed<span style='letter-spacing:
--.05pt'> </span>plan,<span style='letter-spacing:-.05pt'> </span>shall<span style='letter-spacing:-.15pt'> </span>be
-                        added to<span style='letter-spacing:
--.1pt'> </span>the<span style='letter-spacing:-.05pt'> </span>Bills.</p>
-
-                <p class=MsoBodyText style='margin-top:.35pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><b>Fixed
-                                Furniture</b>- Unlimited revisions are allowed in the drawings until<span
-                                style='letter-spacing:.05pt'> </span>finalisation.<span style='letter-spacing:
--.3pt'> </span>However,<span style='letter-spacing:-.3pt'> </span>only<span style='letter-spacing:-.35pt'>
-                        </span>1-time<span style='letter-spacing:-.2pt'>
-                        </span>minor<span style='letter-spacing:-.3pt'> </span>change is<span
-                                style='letter-spacing:-.25pt'> </span>free<span style='letter-spacing:-.2pt'>
-                        </span>of<span style='letter-spacing:-.3pt'> </span>cost<span style='letter-spacing:-.3pt'>
-                        </span>up<span style='letter-spacing:-.3pt'> </span>to<span style='letter-spacing:-.05pt'>
-                        </span>3<span style='letter-spacing:-3.75pt'> </span>days from the date of finalisation of
-                        plans. Any change thereafter shall be<span style='letter-spacing:.05pt'> </span>chargeable
-                        @ ₹ 2,000/ per change, provided the material for production<span style='letter-spacing:-3.75pt'>
-                        </span>has<span style='letter-spacing:.05pt'> </span>not<span style='letter-spacing:.05pt'>
-                        </span>been<span style='letter-spacing:.05pt'> </span>procured<span
-                                style='letter-spacing:.05pt'> </span>and/or<span style='letter-spacing:.05pt'>
-                        </span>resized<span style='letter-spacing:.05pt'> </span>as<span style='letter-spacing:.05pt'>
-                        </span>per<span style='letter-spacing:.05pt'> </span>the<span style='letter-spacing:.05pt'>
-                        </span>design<span style='letter-spacing:.05pt'> </span>to<span style='letter-spacing:.05pt'>
-                        </span>be<span style='letter-spacing:-3.75pt'> </span>implemented. In case any order has gone
-                        into production/material has been procured, the cost for the same, shall be
-                        borne by The Client.</p>
-
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
-
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:5.75pt;
-margin-bottom:0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;
-text-indent:-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><b>Loose
-                                Furniture</b>- Unlimited revisions are allowed in the drawings until<span
-                                style='letter-spacing:.05pt'> </span>finalisation.<span style='letter-spacing:
--.3pt'> </span>However,<span style='letter-spacing:-.3pt'> </span>only<span style='letter-spacing:-.35pt'>
-                        </span>1-time<span style='letter-spacing:-.2pt'>
-                        </span>minor<span style='letter-spacing:-.3pt'> </span>change is free<span
-                                style='letter-spacing:-.2pt'> </span>of<span style='letter-spacing:-.3pt'>
-                        </span>cost<span style='letter-spacing:-.3pt'> </span>up<span style='letter-spacing:-.3pt'>
-                        </span>to<span style='letter-spacing:-.05pt'> </span>3<span style='letter-spacing:-3.75pt'>
-                        </span>days
-                        from the date of finalisation of plans. Any change thereafter shall be<span
-                                style='letter-spacing:.05pt'> </span>chargeable @ ₹ 2,000/ per change. However,
-                        NO change is acceptable<span style='letter-spacing:.05pt'> </span>after<span
-                                style='letter-spacing:-.05pt'> </span>5 days,<span style='letter-spacing:.05pt'>
-                        </span>or once<span style='letter-spacing:-.15pt'> </span>the<span style='letter-spacing:-.1pt'>
-                        </span>frame<span style='letter-spacing:-.05pt'> </span>is
-                        made,<span style='letter-spacing:.05pt'> </span>whichever is<span style='letter-spacing:-.2pt'>
-                        </span>earlier. In case any order has gone into
-                        production/material has been procured, the cost for the same, shall be borne by
-                        The Client.</p>
-
-                <p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span><b>Major<span style='letter-spacing:-.6pt'> </span>Changes.<span
-                                        style='letter-spacing:2.75pt'>
-                                </span></b>In<span style='letter-spacing:-.55pt'> </span>case<span
-                                style='letter-spacing:-.45pt'> </span>of<span style='letter-spacing:-.6pt'>
-                        </span>any<span style='letter-spacing:-.7pt'> </span>major<span style='letter-spacing:-.7pt'>
-                        </span>change<span style='letter-spacing:-.5pt'> </span>in the<span
-                                style='letter-spacing:-.6pt'> </span>plan<span style='letter-spacing:-.6pt'>
-                        </span>after<span style='letter-spacing:-.55pt'> </span>the<span style='letter-spacing:-.6pt'>
-                        </span>plans<span style='letter-spacing:-.6pt'> </span>are<span style='letter-spacing:-3.75pt'>
-                        </span>frozen<span style='letter-spacing:-.45pt'>
-                        </span>and/or<span style='letter-spacing:-.55pt'> </span>work<span
-                                style='letter-spacing:-.55pt'> </span>has<span style='letter-spacing:-.55pt'>
-                        </span>commenced,<span style='letter-spacing:-.45pt'> </span>will<span
-                                style='letter-spacing:-.5pt'> </span>be<span style='letter-spacing:-.55pt'>
-                        </span>reassessed,<span style='letter-spacing:
--.45pt'> </span>and<span style='letter-spacing:-.55pt'> </span>considered<span style='letter-spacing:-3.75pt'>
-                        </span>as a<span style='letter-spacing:-.15pt'>
-                        </span>new design/drawing/work.</p>
-
-                <p class=MsoBodyText style='margin-top:.1pt;line-height:115%'><span
-                                style='font-size:10.0pt;line-height:115%'>&nbsp;</span></p>
-
-                <h1 style='margin-top:0in;margin-right:5.75pt;margin-bottom:0in;margin-left:
-54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:-14.3pt;
-line-height:115%'><span style='font-family:Symbol;font-weight:normal'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Orders
-                        once confirmed / closed, cannot be cancelled and are<span style='letter-spacing:
-.05pt'> </span>100%<span style='letter-spacing:-.2pt'> </span>payable.</h1>
-
-                <h1 style='margin-right:5.75pt;text-align:justify;line-height:115%'>&nbsp;</h1>
-
-                <p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
-
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
-0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
-115%'><b>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></b><b><u>3D<span style='letter-spacing:-.15pt'> </span>Visualisation</u></b></p>
-
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.9pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Conceptual
-                        Stage- 2 selected design options in 3D for each space as per<span
-                                style='letter-spacing:-3.75pt'> </span>views mentioned in<span
-                                style='letter-spacing:-.15pt'> </span>Design Contract will<span
-                                style='letter-spacing:-.15pt'> </span>be<span style='letter-spacing:-.05pt'>
-                        </span>provided.</p>
-
-                <p class=MsoNormal style='margin-right:5.9pt;text-align:justify;line-height:
-115%'>&nbsp;</p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
-0in;line-height:115%'><span lang=EN-IN><img border=0 width=566 height=49
-                                        src="Colonelz_Residential%20Int%20Design%20Contract_Mr%20ABC,%20Noida_13122023_files/image002.png"
-                                        alt="Please note, major changes in the 3D after finalisation lead to revisions in 2D drawings and the project timeline."></span>
-                </p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Detail<span style='letter-spacing:-.65pt'> </span>Finalisation-<span
-                                style='letter-spacing:
--.5pt'> </span>2<span style='letter-spacing:-.65pt'> </span>selected<span style='letter-spacing:-.6pt'>
-                        </span>finish<span style='letter-spacing:-.6pt'> </span>combinations<span
-                                style='letter-spacing:-.45pt'> </span>in<span style='letter-spacing:-.6pt'>
-                        </span>3D<span style='letter-spacing:-.45pt'> </span>for<span style='letter-spacing:-.55pt'>
-                        </span>each<span style='letter-spacing:-.6pt'> </span>space<span style='letter-spacing:-.55pt'>
-                        </span>as<span style='letter-spacing:-3.75pt'> </span>per<span style='letter-spacing:-.05pt'>
-                        </span>views
-                        mentioned<span style='letter-spacing:-.05pt'> </span>in<span style='letter-spacing:
--.15pt'> </span>Design Contract will<span style='letter-spacing:-.15pt'> </span>be<span style='letter-spacing:-.05pt'>
-                        </span>provided.</p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
-0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
-0in;line-height:115%'>&nbsp;</p>
-
-                <p class=MsoListParagraph style='margin-top:.1pt;margin-right:5.75pt;
-margin-bottom:0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;
-text-indent:-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>Revisions.
-                        Minor<span style='letter-spacing:-.6pt'> </span>revisions<span style='letter-spacing:-.55pt'>
-                        </span>offered<span style='letter-spacing:-.65pt'>
-                        </span>until<span style='letter-spacing:-.8pt'> </span>finalisation<span
-                                style='letter-spacing:-.55pt'> </span>of<span style='letter-spacing:-.65pt'>
-                        </span>design,<span style='letter-spacing:-.65pt'> </span>will<span
-                                style='letter-spacing:-.6pt'> </span>be<span style='letter-spacing:-.6pt'>
-                        </span>free,<span style='letter-spacing:-3.75pt'>
-                        </span>thereafter chargeable. These will be chargeable @₹3500/ per render<span
-                                style='letter-spacing:.05pt'> </span>view.</p>
-
-                <p class=MsoBodyText style='margin-top:.25pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
-
-                <p class=MsoListParagraph style='margin-top:3.2pt;margin-right:5.85pt;
-margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:115%'>4.<span
-                                style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Client shall be responsible for any delay caused due to site restrictions
-                        /<span style='letter-spacing:.05pt'> </span>hindrances, delay in approving
-                        materials, or keeping approvals on hold for any<span style='letter-spacing:
-.05pt'> </span>reason.</p>
-
-                <p class=MsoListParagraph style='margin-top:3.2pt;margin-right:5.85pt;
-margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
-text-indent:0in;line-height:115%'><b><u>Supervision<span style='letter-spacing:
-.05pt'> </span>of<span style='letter-spacing:.05pt'> </span>Execution.</u><span style='letter-spacing:.05pt'>
-                                </span></b>The<span style='letter-spacing:.05pt'>
-                        </span>Designer’s<span style='letter-spacing:.05pt'> </span>team<span
-                                style='letter-spacing:.05pt'> </span>shall<span style='letter-spacing:.05pt'>
-                        </span>do<span style='letter-spacing:.05pt'> </span>periodic<span style='letter-spacing:.05pt'>
-                        </span>supervision<span style='letter-spacing:-.05pt'> </span>and<span
-                                style='letter-spacing:-.15pt'> </span>provide<span style='letter-spacing:-.05pt'>
-                        </span>regular guidance. Supervision till the Original Timeline planned shall
-                        be complementary. <a name="_Hlk135152879">10 Days delay beyond the original
-                                timeline, shall be acceptable. Beyond that, there will be a Supervision cost @
-                                ₹1,000/ per day, till Handover.</a> <span style='color:black;background:white'> </span>
-                </p>
-
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.85pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.65pt;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;text-indent:
 0in;line-height:115%'>&nbsp;</p>
 
-                <p class=MsoListParagraph style='margin-top:3.75pt;margin-right:5.9pt;
-margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:115%'><b>5.<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></b><b><u>Project Implementation and Completion.</u> </b>Implementation
-                        of Work will<span style='letter-spacing:-3.75pt'> </span>depend on the
-                        finalisation of Design and Plans. Project Implementation is <b>Phase 2 of the
-                                Contract and Commences once the Designs are frozen, i.e. after completion of
-                                the DESIGN PHASE, ie Phase I.</b></p>
+<h1 style='margin-top:3.75pt;margin-right:0in;margin-bottom:0in;margin-left:
+41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:115%'><span
+style='font-weight:normal'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><u>Design<span style='letter-spacing:-.1pt'> </span>Finalisation</u>
+<span style='font-weight:normal'>It is reiterated that once designs are finalised,
+any changes requested thereafter, causes restart of the entire design process
+for that area, all over again. Hence, it is in the interest of both parties
+that due deliberation is given to finalise the designs and thereafter, restrict
+the scope for change, unless extremely necessary. Charges for the same are
+listed below:</span></h1>
 
-                <p class=MsoListParagraph style='margin-top:3.75pt;margin-right:5.9pt;
+<p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><b><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><b>Furniture<span
+style='letter-spacing:.05pt'> </span>Layout</b>-<span style='letter-spacing:
+.05pt'> </span>Minor<span style='letter-spacing:.05pt'> </span>changes<span
+style='letter-spacing:.05pt'> </span>are<span style='letter-spacing:.05pt'> </span>acceptable<span
+style='letter-spacing:.05pt'> </span>till<span style='letter-spacing:.05pt'> </span>1<span
+style='letter-spacing:.05pt'> </span>week<span style='letter-spacing:.05pt'> </span>after<span
+style='letter-spacing:-3.75pt'> </span>finalisation<span style='letter-spacing:
+-.2pt'> </span>of<span style='letter-spacing:-.15pt'> </span>layout.<span
+style='letter-spacing:-.15pt'> </span>Major<span style='letter-spacing:-.15pt'>
+</span>changes<span style='letter-spacing:-.05pt'> </span>/<span
+style='letter-spacing:-.4pt'> </span>more<span style='letter-spacing:-.15pt'> </span>than<span
+style='letter-spacing:-.25pt'> </span>2<span style='letter-spacing:-.2pt'> Minor
+</span>changes<span style='letter-spacing:-.25pt'> </span>shall<span
+style='letter-spacing:-.25pt'> </span>be<span style='letter-spacing:-3.75pt'> </span>chargeable
+@ ₹ 2,000/ per Major Change / more than two Minor Changes, eg, each change in
+layout of<span style='letter-spacing:.05pt'> </span>furniture, incl<span
+style='letter-spacing:-.15pt'> </span>modular<span style='letter-spacing:-.1pt'>
+</span>furniture is<span style='letter-spacing:-.15pt'> </span>considered<span
+style='letter-spacing:-.05pt'> </span>as<span style='letter-spacing:-.15pt'> </span>a
+Major Change.</p>
+
+<p class=MsoBodyText style='margin-top:.25pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><b>LV,<span
+style='letter-spacing:-.7pt'> </span>Electrical<span style='letter-spacing:
+-.7pt'> </span>&amp;<span style='letter-spacing:-.7pt'> </span>False<span
+style='letter-spacing:-.65pt'> </span>Ceiling<span style='letter-spacing:-.7pt'>
+</span>Plans</b>-<span style='letter-spacing:-.6pt'> </span>Unlimited<span
+style='letter-spacing:-.7pt'> </span>revisions<span style='letter-spacing:-.7pt'>
+are </span>allowed<span style='letter-spacing:-.65pt'> </span>in<span
+style='letter-spacing:-.7pt'> </span>the drawings until finalisation. However,
+only 1-time minor change, free<span style='letter-spacing:-3.75pt'> </span>of
+cost up to 5 days from the date of finalisation of plans, is acceptable. Any
+change<span style='letter-spacing:.05pt'> </span>thereafter, shall be
+chargeable @ ₹2,000/ per change. Any additional<span style='letter-spacing:
+.05pt'> </span>cost<span style='letter-spacing:-.05pt'> </span>incurred due to<span
+style='letter-spacing:-.1pt'> the </span>changed<span style='letter-spacing:
+-.05pt'> </span>plan,<span style='letter-spacing:-.05pt'> </span>shall<span
+style='letter-spacing:-.15pt'> </span>be added to<span style='letter-spacing:
+-.1pt'> </span>the<span style='letter-spacing:-.05pt'> </span>Bills.</p>
+
+<p class=MsoBodyText style='margin-top:.35pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><b>Fixed
+Furniture</b>- Unlimited revisions are allowed in the drawings until<span
+style='letter-spacing:.05pt'> </span>finalisation.<span style='letter-spacing:
+-.3pt'> </span>However,<span style='letter-spacing:-.3pt'> </span>only<span
+style='letter-spacing:-.35pt'> </span>1-time<span style='letter-spacing:-.2pt'>
+</span>minor<span style='letter-spacing:-.3pt'> </span>change is<span
+style='letter-spacing:-.25pt'> </span>free<span style='letter-spacing:-.2pt'> </span>of<span
+style='letter-spacing:-.3pt'> </span>cost<span style='letter-spacing:-.3pt'> </span>up<span
+style='letter-spacing:-.3pt'> </span>to<span style='letter-spacing:-.05pt'> </span>3<span
+style='letter-spacing:-3.75pt'> </span>days from the date of finalisation of
+plans. Any change thereafter shall be<span style='letter-spacing:.05pt'> </span>chargeable
+@ ₹ 2,000/ per change, provided the material for production<span
+style='letter-spacing:-3.75pt'> </span>has<span style='letter-spacing:.05pt'> </span>not<span
+style='letter-spacing:.05pt'> </span>been<span style='letter-spacing:.05pt'> </span>procured<span
+style='letter-spacing:.05pt'> </span>and/or<span style='letter-spacing:.05pt'> </span>resized<span
+style='letter-spacing:.05pt'> </span>as<span style='letter-spacing:.05pt'> </span>per<span
+style='letter-spacing:.05pt'> </span>the<span style='letter-spacing:.05pt'> </span>design<span
+style='letter-spacing:.05pt'> </span>to<span style='letter-spacing:.05pt'> </span>be<span
+style='letter-spacing:-3.75pt'> </span>implemented. In case any order has gone
+into production/material has been procured, the cost for the same, shall be
+borne by The Client.</p>
+
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:5.75pt;
+margin-bottom:0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;
+text-indent:-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><b>Loose
+Furniture</b>- Unlimited revisions are allowed in the drawings until<span
+style='letter-spacing:.05pt'> </span>finalisation.<span style='letter-spacing:
+-.3pt'> </span>However,<span style='letter-spacing:-.3pt'> </span>only<span
+style='letter-spacing:-.35pt'> </span>1-time<span style='letter-spacing:-.2pt'>
+</span>minor<span style='letter-spacing:-.3pt'> </span>change is free<span
+style='letter-spacing:-.2pt'> </span>of<span style='letter-spacing:-.3pt'> </span>cost<span
+style='letter-spacing:-.3pt'> </span>up<span style='letter-spacing:-.3pt'> </span>to<span
+style='letter-spacing:-.05pt'> </span>3<span style='letter-spacing:-3.75pt'> </span>days
+from the date of finalisation of plans. Any change thereafter shall be<span
+style='letter-spacing:.05pt'> </span>chargeable @ ₹ 2,000/ per change. However,
+NO change is acceptable<span style='letter-spacing:.05pt'> </span>after<span
+style='letter-spacing:-.05pt'> </span>5 days,<span style='letter-spacing:.05pt'>
+</span>or once<span style='letter-spacing:-.15pt'> </span>the<span
+style='letter-spacing:-.1pt'> </span>frame<span style='letter-spacing:-.05pt'> </span>is
+made,<span style='letter-spacing:.05pt'> </span>whichever is<span
+style='letter-spacing:-.2pt'> </span>earlier. In case any order has gone into
+production/material has been procured, the cost for the same, shall be borne by
+The Client.</p>
+
+<p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.75pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><b>Major<span
+style='letter-spacing:-.6pt'> </span>Changes.<span style='letter-spacing:2.75pt'>
+</span></b>In<span style='letter-spacing:-.55pt'> </span>case<span
+style='letter-spacing:-.45pt'> </span>of<span style='letter-spacing:-.6pt'> </span>any<span
+style='letter-spacing:-.7pt'> </span>major<span style='letter-spacing:-.7pt'> </span>change<span
+style='letter-spacing:-.5pt'> </span>in the<span style='letter-spacing:-.6pt'> </span>plan<span
+style='letter-spacing:-.6pt'> </span>after<span style='letter-spacing:-.55pt'> </span>the<span
+style='letter-spacing:-.6pt'> </span>plans<span style='letter-spacing:-.6pt'> </span>are<span
+style='letter-spacing:-3.75pt'> </span>frozen<span style='letter-spacing:-.45pt'>
+</span>and/or<span style='letter-spacing:-.55pt'> </span>work<span
+style='letter-spacing:-.55pt'> </span>has<span style='letter-spacing:-.55pt'> </span>commenced,<span
+style='letter-spacing:-.45pt'> </span>will<span style='letter-spacing:-.5pt'> </span>be<span
+style='letter-spacing:-.55pt'> </span>reassessed,<span style='letter-spacing:
+-.45pt'> </span>and<span style='letter-spacing:-.55pt'> </span>considered<span
+style='letter-spacing:-3.75pt'> </span>as a<span style='letter-spacing:-.15pt'>
+</span>new design/drawing/work.</p>
+
+<p class=MsoBodyText style='margin-top:.1pt;line-height:115%'><span
+style='font-size:10.0pt;line-height:115%'>&nbsp;</span></p>
+
+<h1 style='margin-top:0in;margin-right:5.75pt;margin-bottom:0in;margin-left:
+54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:-14.3pt;
+line-height:115%'><span style='font-family:Symbol;font-weight:normal'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Orders
+once confirmed / closed, cannot be cancelled and are<span style='letter-spacing:
+.05pt'> </span>100%<span style='letter-spacing:-.2pt'> </span>payable.</h1>
+
+<p class=MsoListParagraph>&nbsp;</p>
+
+<h1 style='margin-top:0in;margin-right:5.75pt;margin-bottom:0in;margin-left:
+54.65pt;margin-bottom:.0001pt;text-align:justify;line-height:115%'>&nbsp;</h1>
+
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
+115%'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><b><u>3D<span style='letter-spacing:-.15pt'> </span>Visualisation</u></b></p>
+
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.9pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Conceptual
+Stage- 2 selected design options in 3D for each space as per<span
+style='letter-spacing:-3.75pt'> </span>views mentioned in<span
+style='letter-spacing:-.15pt'> </span>Design Contract will<span
+style='letter-spacing:-.15pt'> </span>be<span style='letter-spacing:-.05pt'> </span>provided.</p>
+
+<p class=MsoNormal style='margin-right:5.9pt;text-align:justify;line-height:
+115%'>&nbsp;</p>
+<p style="margin-left: 54.65pt; text-align: justify; line-height: 115%; color: gray; font-style: italic;">
+  Please note, major changes in the 3D after finalization can lead to revisions in 2D drawings and affect the project timeline.
+</p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Detail<span
+style='letter-spacing:-.65pt'> </span>Finalisation-<span style='letter-spacing:
+-.5pt'> </span>2<span style='letter-spacing:-.65pt'> </span>selected<span
+style='letter-spacing:-.6pt'> </span>finish<span style='letter-spacing:-.6pt'> </span>combinations<span
+style='letter-spacing:-.45pt'> </span>in<span style='letter-spacing:-.6pt'> </span>3D<span
+style='letter-spacing:-.45pt'> </span>for<span style='letter-spacing:-.55pt'> </span>each<span
+style='letter-spacing:-.6pt'> </span>space<span style='letter-spacing:-.55pt'> </span>as<span
+style='letter-spacing:-3.75pt'> </span>per<span style='letter-spacing:-.05pt'> </span>views
+mentioned<span style='letter-spacing:-.05pt'> </span>in<span style='letter-spacing:
+-.15pt'> </span>Design Contract will<span style='letter-spacing:-.15pt'> </span>be<span
+style='letter-spacing:-.05pt'> </span>provided.</p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+0in;line-height:115%'>&nbsp;</p>
+
+<p class=MsoListParagraph style='margin-top:.1pt;margin-right:5.75pt;
+margin-bottom:0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;
+text-indent:-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Revisions.
+Minor<span style='letter-spacing:-.6pt'> </span>revisions<span
+style='letter-spacing:-.55pt'> </span>offered<span style='letter-spacing:-.65pt'>
+</span>until<span style='letter-spacing:-.8pt'> </span>finalisation<span
+style='letter-spacing:-.55pt'> </span>of<span style='letter-spacing:-.65pt'> </span>design,<span
+style='letter-spacing:-.65pt'> </span>will<span style='letter-spacing:-.6pt'> </span>be<span
+style='letter-spacing:-.6pt'> </span>free,<span style='letter-spacing:-3.75pt'>
+</span>thereafter chargeable. These will be chargeable @₹3500/ per render<span
+style='letter-spacing:.05pt'> </span>view.</p>
+
+<p class=MsoBodyText style='margin-top:.25pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:3.2pt;margin-right:5.85pt;
+margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
+text-indent:-.5in;line-height:115%'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Client shall be responsible for any delay caused due to site
+restrictions /<span style='letter-spacing:.05pt'> </span>hindrances, delay in approving
+materials, or keeping approvals on hold for any<span style='letter-spacing:
+.05pt'> </span>reason.</p>
+
+<p class=MsoListParagraph style='margin-top:3.2pt;margin-right:5.85pt;
+margin-bottom:12.0pt;margin-left:41.0pt;text-align:justify;text-indent:0in;
+line-height:115%'><b><u>Supervision<span style='letter-spacing:.05pt'> </span>of<span
+style='letter-spacing:.05pt'> </span>Execution.</u><span style='letter-spacing:
+.05pt'> </span></b>The<span style='letter-spacing:.05pt'> </span>Designer’s<span
+style='letter-spacing:.05pt'> </span>team<span style='letter-spacing:.05pt'> </span>shall<span
+style='letter-spacing:.05pt'> </span>do<span style='letter-spacing:.05pt'> </span>periodic<span
+style='letter-spacing:.05pt'> </span>supervision<span style='letter-spacing:
+-.05pt'> </span>and<span style='letter-spacing:-.15pt'> </span>provide<span
+style='letter-spacing:-.05pt'> </span>regular guidance. Supervision till the
+Original Timeline planned shall be complementary. <a name="_Hlk135152879">10
+Days delay beyond the original timeline, shall be acceptable. Beyond that,
+there will be a Supervision cost @ ₹1,000/ per day, till Handover.</a> <span
+style='color:black;background:white'> </span></p>
+
+<p class=MsoListParagraph style='margin-top:3.75pt;margin-right:5.9pt;
+margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
+text-indent:-.5in;line-height:115%'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><b><u>Project Implementation and Completion.</u> </b>Implementation of
+Work will<span style='letter-spacing:-3.75pt'> </span>depend on the
+finalisation of Design and Plans. Project Implementation is <b>Phase 2 of the
+Contract and Commences once the Designs are frozen, i.e. after completion of
+the DESIGN PHASE, ie Phase I.</b></p>
+
+<p class=MsoListParagraph style='margin-top:3.75pt;margin-right:5.9pt;
 margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
 text-indent:0in;line-height:115%'><b>&nbsp;</b></p>
 
-                <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
 margin-left:54.65pt;text-align:justify;text-indent:-14.3pt;line-height:115%;
 text-autospace:ideograph-numeric ideograph-other'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>As per the scope discussed till date, the project is likely to be
-                        completed within 150 Working days (<b>W+ 150) </b>from the <b>Date of Signing
-                                of the Finalised BoQ, Finalised Furniture &amp; other plans and Receipt of
-                                Project Implementation Mobilization Advance</b>. In case of a major change in
-                        plans, the timeline shall be reassessed. </p>
+</span></span>As per the scope discussed till date, the project is likely to be
+completed within 120 Working days (<b>W+ 120) </b>from the <b>Date of Signing
+of the Finalised BOQ, Finalised Furniture &amp; other plans and Receipt of
+Project Implementation Mobilization Advance</b>. In case of a major change in
+plans, the timeline shall be reassessed. </p>
 
-                <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
 margin-left:54.65pt;text-align:justify;text-indent:-14.3pt;line-height:115%;
 text-autospace:ideograph-numeric ideograph-other'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>To Commence W period, all three conditions need to be met, i.e., Signing
-                        of this Contract, Signing of finalised BoQ and Payment of Execution Advance to
-                        the Company. </p>
+</span></span>To Commence W period, all three conditions need to be met, i.e., Signing
+of this Contract, Signing of finalised BOQ and Payment of Execution Advance to
+the Company. </p>
 
-                <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
 margin-left:54.65pt;text-align:justify;text-indent:-14.3pt;line-height:115%;
 text-autospace:ideograph-numeric ideograph-other'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>W is the day of commencement of Work. Sundays will not be
-                        included in Work days. Similarly, Holidays (like Holi)/days when work is not
-                        permitted/restrictions are imposed on working, due to any reason, will also be
-                        added to the timeline. </p>
+</span></span>W is the day of commencement of Work. Sundays will not be
+included in Work days. Similarly, Holidays (like Holi)/days when work is not
+permitted/restrictions are imposed on working, due to any reason, will also be
+added to the timeline. </p>
 
-                <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
 margin-left:54.65pt;text-align:justify;text-indent:-14.3pt;line-height:115%;
 text-autospace:ideograph-numeric ideograph-other'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>The timeline also pertains to the freezing of all designs, except
-                        very limited revisions /changes, as elucidated earlier. All changes that may
-                        entail changes in the Timeline will be communicated. A detailed timeline shall
-                        be shared<b>.</b></p>
+</span></span>The timeline also pertains to the freezing of all designs, except
+very limited revisions /changes, as elucidated earlier. All changes that may
+entail changes in the Timeline will be communicated. A detailed timeline shall
+be shared<b>.</b></p>
 
-                <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
 margin-left:54.65pt;text-align:justify;text-indent:-14.3pt;line-height:115%;
 text-autospace:ideograph-numeric ideograph-other'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>As detailed above, W shall be deemed to commence from the Date of
-                        Signing of the finalised BoQ, Finalised Furniture and other Plans and receipt
-                        of Project Implementation Mobilization Advance. All delays due to whatsoever
-                        reason shall be communicated on the <b>“ <span style=''>${project}</span>”</b>
-                        group and preferably on the emails as in this document. After accounting and
-                        adjusting for all delays, the Final Completion Date shall be arrived at.</p>
+</span></span>As detailed above, W shall be deemed to commence from the Date of
+Signing of the finalised BOQ, Finalised Furniture and other Plans and receipt
+of Project Implementation Mobilization Advance. All delays due to whatsoever
+reason shall be communicated on the <b>“<span style=''>${project}</span>”</b>
+group and preferably on the emails as in this document. After accounting and
+adjusting for all delays, the Final Completion Date shall be arrived at.</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
-0in;margin-left:56.7pt;margin-bottom:.0001pt;text-align:justify;text-indent:
--16.35pt;line-height:115%'><span style='font-family:Symbol'>·<span
-                                        style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </span></span>A Workday is considered as 8 working hours, excluding 1 hour of<span
-                                style='letter-spacing:.05pt'> </span>mandatory<span style='letter-spacing:-.8pt'>
-                        </span>lunch &amp;<span style='letter-spacing:-.9pt'> </span>tea breaks.<span
-                                style='letter-spacing:-.85pt'> </span>Work<span style='letter-spacing:-.9pt'>
-                        </span>breaks<span style='letter-spacing:-.75pt'> </span>during<span
-                                style='letter-spacing:-.9pt'>
-                        </span>the<span style='letter-spacing:-.9pt'> </span>day<span style='letter-spacing:
--.9pt'> </span>or<span style='letter-spacing:-.75pt'> </span>as<span style='letter-spacing:-.65pt'>
-                        </span>specified<span style='letter-spacing:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+0in;margin-left:54.65pt;margin-bottom:.0001pt;text-align:justify;text-indent:
+-14.3pt;line-height:115%'><span style='font-family:Symbol'>·<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>A
+Workday is considered as 8 working hours, excluding 1 hour of<span
+style='letter-spacing:.05pt'> </span>mandatory<span style='letter-spacing:-.8pt'>
+</span>lunch &amp;<span style='letter-spacing:-.9pt'> </span>tea breaks.<span
+style='letter-spacing:-.85pt'> </span>Work<span style='letter-spacing:-.9pt'> </span>breaks<span
+style='letter-spacing:-.75pt'> </span>during<span style='letter-spacing:-.9pt'>
+</span>the<span style='letter-spacing:-.9pt'> </span>day<span style='letter-spacing:
+-.9pt'> </span>or<span style='letter-spacing:-.75pt'> </span>as<span
+style='letter-spacing:-.65pt'> </span>specified<span style='letter-spacing:
 -3.75pt'> </span>by the society’s rules &amp; and regulations add to the
-                        timeline. The timeline<span style='letter-spacing:.05pt'> </span>also<span
-                                style='letter-spacing:.25pt'> </span>pertains<span style='letter-spacing:.35pt'>
-                        </span>to<span style='letter-spacing:.35pt'> the </span>freezing<span
-                                style='letter-spacing:.2pt'> </span>of<span style='letter-spacing:.35pt'>
-                        </span>all<span style='letter-spacing:.25pt'> </span>designs,<span style='letter-spacing:.4pt'>
-                        </span>except<span style='letter-spacing:.35pt'> </span>very<span style='letter-spacing:.35pt'>
-                        </span>limited<span style='letter-spacing:.35pt'>
-                        </span>revisions /changes. All changes that may entail changes in the Timeline
-                        will be<span style='letter-spacing:.05pt'> </span>communicated.<span
-                                style='letter-spacing:-.1pt'> </span>A<span style='letter-spacing:.05pt'>
-                        </span>detailed
-                        timeline shall<span style='letter-spacing:-.15pt'> </span>be<span style='letter-spacing:-.05pt'>
-                        </span>shared.</p>
+timeline. The labour is expected to start the day around 10-10:30 am. Starting
+earlier than that regularly is not possible, even if society permits.</p>
 
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:5.75pt;
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:5.75pt;
 margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:115%'>6.<span
-                                style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span><b><u>Suspension<span style='letter-spacing:.05pt'> </span>/<span
-                                                style='letter-spacing:.05pt'> </span>Termination<span style='letter-spacing:
-.05pt'> </span>of<span style='letter-spacing:.05pt'> </span>Project</u>.<span style='letter-spacing:.05pt'>
-                                </span></b>If<span style='letter-spacing:.05pt'> </span>the<span
-                                style='letter-spacing:.05pt'> </span>Client<span style='letter-spacing:.05pt'>
-                        </span>suspends<span style='letter-spacing:.05pt'> </span>/<span style='letter-spacing:.05pt'>
-                        </span>terminates
-                        the work on the project, it will be communicated in writing on<span
-                                style='letter-spacing:.05pt'> </span>mail<span style='letter-spacing:-.65pt'>
-                        </span>to<span style='letter-spacing:-.5pt'> </span><a href="mailto:biraj@colonelz.com"><b><span
-                                                style='color:windowtext;text-decoration:none'>biraj@colonelz.com</span></b><span
-                                        style='color:windowtext;text-decoration:none'>.<span style='letter-spacing:
--.45pt'> </span></span></a>All<span style='letter-spacing:-.55pt'> </span>payments<span style='letter-spacing:-.55pt'>
-                        </span>for<span style='letter-spacing:-.55pt'> </span>the<span style='letter-spacing:-.55pt'>
-                        </span>works<span style='letter-spacing:-.55pt'>
-                        </span>done<span style='letter-spacing:-.5pt'> </span>as<span style='letter-spacing:
--.4pt'> </span>per<span style='letter-spacing:-.5pt'> </span>Work<span style='letter-spacing:-3.75pt'>
-                        </span>Schedule<span style='letter-spacing:
--.9pt'> </span>will<span style='letter-spacing:-.9pt'> </span>be<span style='letter-spacing:-.85pt'> </span>made<span
-                                style='letter-spacing:-1.0pt'> </span>within<span style='letter-spacing:-1.0pt'>
-                        </span>two<span style='letter-spacing:-.8pt'> </span>working<span style='letter-spacing:-.85pt'>
-                        </span>days,<span style='letter-spacing:-.75pt'>
-                        </span>from<span style='letter-spacing:-.8pt'> </span>the<span style='letter-spacing:-.85pt'>
-                        </span>date<span style='letter-spacing:-.9pt'> </span>of<span style='letter-spacing:-.8pt'>
-                        </span>suspension/cancellation<span style='letter-spacing:-.65pt'> </span>of<span
-                                style='letter-spacing:-.75pt'> </span>the<span style='letter-spacing:-.8pt'>
-                        </span>project.<span style='letter-spacing:-.75pt'>
-                        </span>If<span style='letter-spacing:-.75pt'> </span>No<span style='letter-spacing:
--.75pt'> </span>work<span style='letter-spacing:-.75pt'> </span>is<span style='letter-spacing:-.75pt'>
-                        </span>allowed<span style='letter-spacing:-.8pt'>
-                        </span>on<span style='letter-spacing:-.75pt'> </span>the<span style='letter-spacing:
--.75pt'> </span>Site<span style='letter-spacing:-.8pt'> </span>for<span style='letter-spacing:-.7pt'> </span>15<span
-                                style='letter-spacing:-.8pt'> </span>working<span style='letter-spacing:-3.75pt'>
-                        </span>days, by the Client or the Building’s
-                        Estate Management, for whatever<span style='letter-spacing:.05pt'> </span>reason,
-                        the work shall be deemed as Suspended. In the event of suspension,<span
-                                style='letter-spacing:.05pt'> </span>there may be a rate revision in case the
-                        prices of input materials go up by 5%<span style='letter-spacing:-.25pt'> </span>or<span
-                                style='letter-spacing:-.35pt'> </span>more.<span style='letter-spacing:-.25pt'>
-                        </span>If<span style='letter-spacing:-.35pt'> </span>work<span style='letter-spacing:-.3pt'>
-                        </span>is<span style='letter-spacing:-.35pt'> </span>still<span style='letter-spacing:-.4pt'>
-                        </span>NOT<span style='letter-spacing:-.25pt'> </span>permitted<span
-                                style='letter-spacing:-.35pt'> </span>for<span style='letter-spacing:-.2pt'>
-                        </span>30<span style='letter-spacing:-.25pt'> </span>days,<span style='letter-spacing:-.3pt'>
-                        </span>it<span style='letter-spacing:-.35pt'> </span>will<span style='letter-spacing:-.35pt'>
-                        </span>be<span style='letter-spacing:-.25pt'> </span>deemed<span style='letter-spacing:-.35pt'>
-                        </span>as <span style='letter-spacing:-3.75pt'> </span>Termination.</p>
+text-indent:-.5in;line-height:115%'>6.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><b><u>Suspension<span style='letter-spacing:.05pt'> </span>/<span
+style='letter-spacing:.05pt'> </span>Termination<span style='letter-spacing:
+.05pt'> </span>of<span style='letter-spacing:.05pt'> </span>Project</u>.<span
+style='letter-spacing:.05pt'> </span></b>If<span style='letter-spacing:.05pt'> </span>the<span
+style='letter-spacing:.05pt'> </span>Client<span style='letter-spacing:.05pt'> </span>suspends/terminates
+the work on the project, it will be communicated in writing on<span
+style='letter-spacing:.05pt'> </span>mail<span style='letter-spacing:-.65pt'> </span>to<span
+style='letter-spacing:-.5pt'> </span><a href="mailto:biraj@colonelz.com"><b><span
+style='color:windowtext;text-decoration:none'>biraj@colonelz.com</span></b><span
+style='color:windowtext;text-decoration:none'>.<span style='letter-spacing:
+-.45pt'> </span></span></a>All<span style='letter-spacing:-.55pt'> </span>payments<span
+style='letter-spacing:-.55pt'> </span>for<span style='letter-spacing:-.55pt'> </span>the<span
+style='letter-spacing:-.55pt'> </span>works<span style='letter-spacing:-.55pt'>
+</span>done<span style='letter-spacing:-.5pt'> </span>as<span style='letter-spacing:
+-.4pt'> </span>per<span style='letter-spacing:-.5pt'> </span>Work<span
+style='letter-spacing:-3.75pt'> </span>Schedule<span style='letter-spacing:
+-.9pt'> </span>will<span style='letter-spacing:-.9pt'> </span>be<span
+style='letter-spacing:-.85pt'> </span>made<span style='letter-spacing:-1.0pt'> </span>within<span
+style='letter-spacing:-1.0pt'> </span>two<span style='letter-spacing:-.8pt'> </span>working<span
+style='letter-spacing:-.85pt'> </span>days,<span style='letter-spacing:-.75pt'>
+</span>from<span style='letter-spacing:-.8pt'> </span>the<span
+style='letter-spacing:-.85pt'> </span>date<span style='letter-spacing:-.9pt'> </span>of<span
+style='letter-spacing:-.8pt'> </span>suspension/cancellation<span
+style='letter-spacing:-.65pt'> </span>of<span style='letter-spacing:-.75pt'> </span>the<span
+style='letter-spacing:-.8pt'> </span>project.<span style='letter-spacing:-.75pt'>
+</span>If<span style='letter-spacing:-.75pt'> </span>No<span style='letter-spacing:
+-.75pt'> </span>work<span style='letter-spacing:-.75pt'> </span>is<span
+style='letter-spacing:-.75pt'> </span>allowed<span style='letter-spacing:-.8pt'>
+</span>on<span style='letter-spacing:-.75pt'> </span>the<span style='letter-spacing:
+-.75pt'> </span>Site<span style='letter-spacing:-.8pt'> </span>for<span
+style='letter-spacing:-.7pt'> </span>15<span style='letter-spacing:-.8pt'> </span>working<span
+style='letter-spacing:-3.75pt'> </span>days, by the Client or the Building’s
+Estate Management, for whatever<span style='letter-spacing:.05pt'> </span>reason,
+the work shall be deemed as Suspended. In the event of suspension,<span
+style='letter-spacing:.05pt'> </span>there may be a rate revision in case the
+prices of input materials go up by 5%<span style='letter-spacing:-.25pt'> </span>or<span
+style='letter-spacing:-.35pt'> </span>more.<span style='letter-spacing:-.25pt'>
+</span>If<span style='letter-spacing:-.35pt'> </span>work<span
+style='letter-spacing:-.3pt'> </span>is<span style='letter-spacing:-.35pt'> </span>still<span
+style='letter-spacing:-.4pt'> </span>NOT<span style='letter-spacing:-.25pt'> </span>permitted<span
+style='letter-spacing:-.35pt'> </span>for<span style='letter-spacing:-.2pt'> </span>30<span
+style='letter-spacing:-.25pt'> </span>days,<span style='letter-spacing:-.3pt'> </span>it<span
+style='letter-spacing:-.35pt'> </span>will<span style='letter-spacing:-.35pt'> </span>be<span
+style='letter-spacing:-.25pt'> </span>deemed<span style='letter-spacing:-.35pt'>
+</span>as <span style='letter-spacing:-3.75pt'> </span>Termination.</p>
 
-                <p class=MsoBodyText style='margin-top:0in;margin-right:5.75pt;margin-bottom:
-0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify'>&nbsp;</p>
+<p class=MsoBodyText style='margin-right:5.75pt;text-align:justify'>&nbsp;</p>
 
-                <p class=MsoBodyText style='margin-top:0in;margin-right:5.75pt;margin-bottom:
-0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify'>&nbsp;</p>
+<h1 align=center style='margin-left:5.0pt;text-align:center'><u><span
+ style='text-decoration:none'>&nbsp;</span></u></h1>
 
-                <p class=MsoBodyText style='margin-top:0in;margin-right:5.75pt;margin-bottom:
-0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify'>&nbsp;</p>
-
-                <h1 align=center style='margin-left:5.0pt;text-align:center'><u><span
-                                        style='text-decoration:none'>&nbsp;</span></u></h1>
-
-                <h1 align=center style='margin-left:5.0pt;text-align:center'><u>Design<span
-                                        style='letter-spacing:-.1pt'> </span>Implementation Payment<span
-                                        style='letter-spacing:-.1pt'> </span>Terms &amp;<span style='letter-spacing:
+<h1 align=center style='margin-left:5.0pt;text-align:center'><u>Design<span
+style='letter-spacing:-.1pt'> </span>Implementation Payment<span
+style='letter-spacing:-.1pt'> </span>Terms &amp;<span style='letter-spacing:
 -.2pt'> </span>Conditions</u></h1>
 
-                <p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
-                                        style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
+<p class=MsoBodyText style='margin-top:.4pt;line-height:115%'><b><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></b></p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:5.7pt;
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:5.7pt;
 margin-bottom:0in;margin-left:41.0pt;margin-bottom:.0001pt;text-align:justify;
-text-indent:-.5in;line-height:115%'>1.<span
-                                style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Work shall commence within 5 Business days from the date of receipt of<span
-                                style='letter-spacing:.05pt'> </span>Mobilization<span style='letter-spacing:
+text-indent:-.5in;line-height:115%'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Work shall commence within 5 Business days from the date of receipt of<span
+style='letter-spacing:.05pt'> </span>Mobilization<span style='letter-spacing:
 -.05pt'> </span>Advance<span style='letter-spacing:-.05pt'> </span>&amp; Work
-                        Contract,<span style='letter-spacing:-.05pt'> </span>duly<span style='letter-spacing:-.15pt'>
-                        </span>signed.</p>
+Contract,<span style='letter-spacing:-.05pt'> </span>duly<span
+style='letter-spacing:-.15pt'> </span>signed.</p>
 
-                <p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoBodyText style='margin-top:.45pt;line-height:115%'><span
+style='font-size:9.5pt;line-height:115%'>&nbsp;</span></p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.8pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.8pt;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
 115%'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Payment<span style='letter-spacing:2.45pt'> </span>Terms<span
-                                style='letter-spacing:2.45pt'> </span>for<span style='letter-spacing:2.55pt'>
-                        </span>the<span style='letter-spacing:2.5pt'> </span>execution<span
-                                style='letter-spacing:2.45pt'>
-                        </span>are<span style='letter-spacing:2.6pt'> </span>as<span style='letter-spacing:
-2.65pt'> </span>mentioned<span style='letter-spacing:2.55pt'> </span>below<span style='letter-spacing:2.45pt'>
-                        </span>(X<span style='letter-spacing:2.5pt'> </span>being<span style='letter-spacing:2.5pt'>
-                        </span>the<span style='letter-spacing:-3.75pt'> </span>completion<span
-                                style='letter-spacing:-.05pt'> </span>time):</p>
+</span>Payment<span style='letter-spacing:2.45pt'> </span>Terms<span
+style='letter-spacing:2.45pt'> </span>for<span style='letter-spacing:2.55pt'> </span>the<span
+style='letter-spacing:2.5pt'> </span>execution<span style='letter-spacing:2.45pt'>
+</span>are<span style='letter-spacing:2.6pt'> </span>as<span style='letter-spacing:
+2.65pt'> </span>mentioned<span style='letter-spacing:2.55pt'> </span>below<span
+style='letter-spacing:2.45pt'> </span>(X<span style='letter-spacing:2.5pt'> </span>being<span
+style='letter-spacing:2.5pt'> </span>the<span style='letter-spacing:-3.75pt'> </span>completion<span
+style='letter-spacing:-.05pt'> </span>time):</p>
 
-                <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
+<p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
 0in;margin-left:1.0in;margin-bottom:.0001pt;text-indent:-.25in;line-height:
-115%'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span><b>25%<span style='letter-spacing:.05pt'>
-                                </span></b>Mobilization Advance based on<span style='letter-spacing:-.05pt'> the
-                        </span>Proposed<span style='letter-spacing:
+115%'>a.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span><b>25%<span
+style='letter-spacing:.05pt'> </span></b>Mobilization Advance based on<span
+style='letter-spacing:-.05pt'> the </span>Proposed<span style='letter-spacing:
 -.15pt'> </span>Plan.</p>
 
-                <p class=MsoListParagraph style='margin-left:1.0in;text-indent:-.25in;
+<p class=MsoListParagraph style='margin-left:1.0in;text-indent:-.25in;
 line-height:115%'>b.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                        </span><b>35%<span style='letter-spacing:.05pt'> </span></b>on<span
-                                style='letter-spacing:-.05pt'> </span>W<span style='letter-spacing:-.05pt'>
-                        </span>plus<span style='letter-spacing:-.05pt'> </span>1/3<span style='letter-spacing:-.05pt'>
-                        </span>X.</p>
+</span><b>35%<span style='letter-spacing:.05pt'> </span></b>on<span
+style='letter-spacing:-.05pt'> </span>W<span style='letter-spacing:-.05pt'> </span>plus<span
+style='letter-spacing:-.05pt'> </span>1/3<span style='letter-spacing:-.05pt'> </span>X.</p>
 
-                <p class=MsoListParagraph style='margin-left:1.0in;text-indent:-.25in;
+<p class=MsoListParagraph style='margin-left:1.0in;text-indent:-.25in;
 line-height:115%'>c.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                        </span><b>35%<span style='letter-spacing:.05pt'> </span></b>on<span
-                                style='letter-spacing:-.05pt'> </span>W<span style='letter-spacing:-.05pt'>
-                        </span>plus<span style='letter-spacing:-.05pt'> </span>3/4<span style='letter-spacing:-.05pt'>
-                        </span>X.</p>
+</span><b>35%<span style='letter-spacing:.05pt'> </span></b>on<span
+style='letter-spacing:-.05pt'> </span>W<span style='letter-spacing:-.05pt'> </span>plus<span
+style='letter-spacing:-.05pt'> </span>3/4<span style='letter-spacing:-.05pt'> </span>X.</p>
 
-                <p class=MsoListParagraph style='margin-left:1.0in;text-indent:-.25in;
+<p class=MsoListParagraph style='margin-left:1.0in;text-indent:-.25in;
 line-height:115%'>d.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
-                        </span><b>5%<span style='letter-spacing:.05pt'> </span></b>on Completion<span
-                                style='letter-spacing:-.25pt'> </span>of<span style='letter-spacing:.05pt'> </span>Scope
-                        of<span style='letter-spacing:.05pt'> </span>Works.</p>
+</span><b>5%<span style='letter-spacing:.05pt'> </span></b>on Completion<span
+style='letter-spacing:-.25pt'> </span>of<span style='letter-spacing:.05pt'> </span>Scope
+of<span style='letter-spacing:.05pt'> </span>Works.</p>
 
-                <p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><span
-                                style='font-size:10.5pt;line-height:115%'>&nbsp;</span></p>
+<p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><span
+style='font-size:10.5pt;line-height:115%'>&nbsp;</span></p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+<p class=MsoBodyText style='margin-top:.5pt;line-height:115%'><span
+style='font-size:10.5pt;line-height:115%'>&nbsp;</span></p>
+
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:-.5in;line-height:
 115%'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>The price quoted for the execution will be deemed valid for the duration
-                        of the<span style='letter-spacing:.05pt'> </span>proposed<span style='letter-spacing:-.15pt'>
-                        </span>implementation.<span style='letter-spacing:
--.15pt'> </span>However, there<span style='letter-spacing:-.1pt'> </span>may<span style='letter-spacing:-.1pt'>
-                        </span>be<span style='letter-spacing:-.15pt'> </span>rate<span style='letter-spacing:-.15pt'>
-                        </span>revision<span style='letter-spacing:-.25pt'>
-                        </span>in<span style='letter-spacing:-.2pt'> </span>case<span style='letter-spacing:
--.1pt'> </span>the<span style='letter-spacing:-3.75pt'> </span>prices<span style='letter-spacing:-.8pt'> </span>of<span
-                                style='letter-spacing:-.8pt'> </span>input<span style='letter-spacing:-.75pt'>
-                        </span>materials<span style='letter-spacing:
--.8pt'> </span>go<span style='letter-spacing:-.75pt'> </span>up<span style='letter-spacing:-.95pt'> </span>by<span
-                                style='letter-spacing:-.75pt'> </span>10%<span style='letter-spacing:-1.0pt'>
-                        </span>or<span style='letter-spacing:-.7pt'> </span>more.<span style='letter-spacing:-.55pt'>
-                        </span>GST<span style='letter-spacing:-.7pt'> </span>@<span style='letter-spacing:-.85pt'>
-                        </span>18% <span style='letter-spacing:-.7pt'>and
-                                any other Govt Levy, will be charged </span>will<span style='letter-spacing:
+</span>The price quoted for the execution will be deemed valid for the duration
+of the<span style='letter-spacing:.05pt'> </span>proposed<span
+style='letter-spacing:-.15pt'> </span>implementation.<span style='letter-spacing:
+-.15pt'> </span>However, there<span style='letter-spacing:-.1pt'> </span>may<span
+style='letter-spacing:-.1pt'> </span>be<span style='letter-spacing:-.15pt'> </span>rate<span
+style='letter-spacing:-.15pt'> </span>revision<span style='letter-spacing:-.25pt'>
+</span>in<span style='letter-spacing:-.2pt'> </span>case<span style='letter-spacing:
+-.1pt'> </span>the<span style='letter-spacing:-3.75pt'> </span>prices<span
+style='letter-spacing:-.8pt'> </span>of<span style='letter-spacing:-.8pt'> </span>input<span
+style='letter-spacing:-.75pt'> </span>materials<span style='letter-spacing:
+-.8pt'> </span>go<span style='letter-spacing:-.75pt'> </span>up<span
+style='letter-spacing:-.95pt'> </span>by<span style='letter-spacing:-.75pt'> </span>10%<span
+style='letter-spacing:-1.0pt'> </span>or<span style='letter-spacing:-.7pt'> </span>more.<span
+style='letter-spacing:-.55pt'> </span>GST<span style='letter-spacing:-.7pt'> </span>@<span
+style='letter-spacing:-.85pt'> </span>18% <span style='letter-spacing:-.7pt'>and
+any other Govt Levy, will be charged </span>will<span style='letter-spacing:
 -.8pt'> </span>be<span style='letter-spacing:-.8pt'> </span>charged, as per
-                        actual.</p>
+actual.</p>
 
-                <p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
+<p class=MsoListParagraph style='margin-top:0in;margin-right:5.7pt;margin-bottom:
 0in;margin-left:41.0pt;margin-bottom:.0001pt;text-indent:0in;line-height:115%'><span
-                                style='font-size:9.5pt;line-height:115%'> </span></p>
+style='font-size:9.5pt;line-height:115%'> </span></p>
 
-                <h1 style='margin-left:41.0pt;text-indent:-.5in;line-height:115%'>4.<span
-                                style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </span>Orders<span style='letter-spacing:-.05pt'> </span>once<span style='letter-spacing:-.1pt'>
-                        </span>confirmed<span style='letter-spacing:-.15pt'>
-                        </span>and<span style='letter-spacing:-.1pt'> </span>closed,<span style='letter-spacing:-.05pt'>
-                        </span>cannot<span style='letter-spacing:-.05pt'>
-                        </span>be<span style='letter-spacing:-.15pt'> </span>cancelled.</h1>
+<h1 style='margin-left:41.0pt;text-indent:-.5in;line-height:115%'><span
+style='font-weight:normal'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span>Orders<span style='letter-spacing:-.05pt'> </span>once<span
+style='letter-spacing:-.1pt'> </span>confirmed<span style='letter-spacing:-.15pt'>
+</span>and<span style='letter-spacing:-.1pt'> </span>closed,<span
+style='letter-spacing:-.05pt'> </span>cannot<span style='letter-spacing:-.05pt'>
+</span>be<span style='letter-spacing:-.15pt'> </span>cancelled.</h1>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText style='margin-top:.45pt'>
+<p class=MsoBodyText style='margin-top:.45pt'>
 
-                <table cellpadding=0 cellspacing=0 align=left>
-                        <tr>
-                                <td width=96 height=0></td>
-                                <td width=169></td>
-                                <td width=215></td>
-                                <td width=169></td>
-                        </tr>
-                        <tr>
-                                <td height=1></td>
-                                <td align=left valign=top><img width=169 height=1
-                                                src="Colonelz_Residential%20Int%20Design%20Contract_Mr%20ABC,%20Noida_13122023_files/image003.png">
-                                </td>
-                                <td></td>
-                                <td align=left valign=top><img width=169 height=1
-                                                src="Colonelz_Residential%20Int%20Design%20Contract_Mr%20ABC,%20Noida_13122023_files/image004.png">
-                                </td>
-                        </tr>
-                </table>
+<table cellpadding=0 cellspacing=0 align=left>
+ <tr>
+  <td width=96 height=0></td>
+  <td width=169></td>
+  <td width=215></td>
+  <td width=169></td>
+ </tr>
+ <tr>
+  <td height=1></td>
+  <td align=left valign=top><img width=169 height=1
+  src="Colonelz_Residential%20Int%20Design%20Contract_Client%20Name,%20Location_Date_files/image003.png"></td>
+  <td></td>
+  <td align=left valign=top><img width=169 height=1
+  src="Colonelz_Residential%20Int%20Design%20Contract_Client%20Name,%20Location_Date_files/image004.png"></td>
+ </tr>
+</table>
 
-                <br clear=ALL>
-                </p>
+<br clear=ALL>
+</p>
 
-                <p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:6.0pt'>&nbsp;</span></b></p>
+<p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:6.0pt'>&nbsp;</span></b></p>
 
-                <p class=MsoBodyText style='margin-top:5.05pt;margin-right:0in;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt'><span style=''>${client_name[0]}</span>                                                                 Ms
-                        Naomi<span style='letter-spacing:.05pt'> </span>Sahay</p>
+<p class=MsoBodyText style='margin-top:5.05pt;margin-right:0in;margin-bottom:
+0in;margin-left:5.0pt;margin-bottom:.0001pt'><span style=''>${client_name[0]}</span>                                                           Ms. Naomi<span
+style='letter-spacing:.05pt'> </span>Sahay</p>
 
-                <p class=MsoBodyText>&nbsp;</p>
+<p class=MsoBodyText>&nbsp;</p>
 
-                <p class=MsoBodyText style='margin-left:5.0pt'>The
-                        Client                                                              The
-                        Designer</p>
+<p class=MsoBodyText style='margin-left:5.0pt'>The Client                                                              The
+Designer</p>
 
-                <p class=MsoBodyText style='margin-left:5.0pt'>
-                                                                                                     For</p>
+<p class=MsoBodyText style='margin-left:5.0pt'>                                                                             For</p>
 
-                <p class=MsoBodyText style='margin-left:5.0pt'>
-                                                                                                     Colonelz
-                        Constructions Pvt Ltd</p>
+<p class=MsoBodyText style='margin-left:5.0pt'>                                                                             Colonelz
+Constructions Pvt Ltd</p>
 
-                <p class=MsoBodyText><span style='font-size:13.0pt'>&nbsp;</span></p>
+<p class=MsoBodyText><span style='font-size:13.0pt'>&nbsp;</span></p>
 
-                <p class=MsoNormal style='margin-top:10.95pt;margin-right:0in;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:13.35pt'><b><span style='color:#212121'>Bank<span
-                                                style='letter-spacing:-.05pt'> </span>Details:</span></b></p>
+<p class=MsoNormal style='margin-top:10.95pt;margin-right:0in;margin-bottom:
+0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:13.35pt'><b><span
+style='color:#212121'>Bank<span style='letter-spacing:-.05pt'> </span>Details:</span></b></p>
 
-                <p class=MsoBodyText style='margin-left:5.0pt;line-height:13.35pt'><span
-                                style='color:#212121'>Bank            -        HDFC Bank Account</span></p>
+<p class=MsoBodyText style='margin-left:5.0pt;line-height:13.35pt'><span
+style='color:#212121'>Bank            -        HDFC Bank Account</span></p>
 
-                <p class=MsoBodyText style='margin-top:.05pt;margin-right:137.1pt;margin-bottom:
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:137.1pt;margin-bottom:
 0in;margin-left:5.0pt;margin-bottom:.0001pt'><span style='color:#212121'>A/c
-                                Holder    –        </span><span style='color:#BF0000'>COLONELZ CONSTRUCTIONS
-                                PVT LTD<span style='letter-spacing:-3.7pt'></p>
-                                <p class=MsoBodyText style='margin-top:.05pt;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt'><span
-                                style='color:#212121'>A/c<span style='letter-spacing:-.05pt'>
-                                </span>no.         –</span><span
-                                style='font-family:"Times New Roman",serif;color:#212121'>          </span><span
-                                style='color:#212121'>50200007351695</span>
+Holder    –        </span><span style='color:#BF0000'>COLONELZ CONSTRUCTIONS
+PVT LTD<span style='letter-spacing:-3.7pt'> </span></span>
+</p>
+<p class=MsoBodyText style='margin-top:.05pt;margin-right:137.1pt;margin-bottom:
+0in;margin-left:5.0pt;margin-bottom:.0001pt'>
+<span
+style='color:#212121'>A/c<span style='letter-spacing:-.05pt'> </span>no.                   –</span><span
+style='font-family:"Times New Roman",serif;color:#212121'>          </span><span
+style='color:#212121'>50200007351695</span></p>
 
-                                 </p>
+<p class=MsoBodyText style='margin-left:5.0pt;line-height:13.25pt'><span
+style='color:#212121'>IFSC            –        HDFC0000043</span></p>
 
-                <p class=MsoBodyText style='margin-left:5.0pt;line-height:13.25pt'><span
-                                style='color:#212121'>IFSC             –        HDFC0000043</span></p>
-
-        </div>
+</div>
 
 </body>
 
 </html>
-
-    `;
+`;
         return htmlTemplate;
 }
 
@@ -2873,7 +2775,8 @@ export function commercialContract(
                                 style="font-family:Verdana; color:#222222"> </span><span
                                 style="width:25.14pt; display:inline-block">&nbsp;</span><span
                                 style="font-family:Verdana; color:#c00000">COLONELZ CONSTRUCTIONS PVT LTD</span></p>
-                <p style="margin-top:0pt; margin-bottom:0pt; font-size:11pt; background-color:#ffffff"><span
+                                <br></br>
+                <p style="margin-top:1pt; margin-bottom:0pt; font-size:11pt; background-color:#ffffff"> <span
                                 style="font-family:Verdana; color:#222222">A/c no.</span><span
                                 style="width:32.25pt; display:inline-block">&nbsp;</span><span
                                 style="font-family:Verdana; color:#222222">–</span><span
