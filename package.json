@@ -27,7 +27,6 @@
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
     "html-pdf": "^3.0.1",
-    "html-pdf-phantomjs-included": "^1.0.2",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "moment-timezone": "^0.5.44",
