@@ -432,10 +432,10 @@ export const generatePdf = async (req, res) => {
         const pdfOptions = {
           format: "A4",
           border: {
-            top: "1cm",
-            right: "1cm",
-            bottom: "1cm",
-            left: "1cm",
+            top: "0.1cm",
+            right: "0.1cm",
+            bottom: "0.1cm",
+            left: "0.1cm",
           }
         };
 
