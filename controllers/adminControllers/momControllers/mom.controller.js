@@ -2,13 +2,38 @@ import { responseData } from "../../../utils/respounse.js";
 import projectModel from "../../../models/adminModels/project.model.js";
 import AWS from "aws-sdk";
 import { onlyAlphabetsValidation } from "../../../utils/validation.js";
-import pdf from "html-pdf";
+// import pdf from "html-pdf";
 import nodemailer from "nodemailer";
 import fs from "fs";
 import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 import { momPdfTemplate } from "../../../utils/mom.pdf.template.js";
+import puppeteer from "puppeteer";
 
 
+async function generatePDFfromHTML(htmlContent, outputPath, pdfFileName, res) {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  await page.setContent(htmlContent);
+  await page.pdf({ path: outputPath, format: 'A4', printBackground: true, });
+  await browser.close();
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${pdfFileName}"`);
+
+  // Stream the file to the client
+  const fileStream = fs.createReadStream(outputPath);
+  fileStream.pipe(res);
+
+  // Delete the file after sending
+  fileStream.on('close', () => {
+    fs.unlink(outputPath, (err) => {
+      if (err) {
+        console.error('Error deleting PDF:', err);
+      }
+    });
+  });
+ 
+
+}
 function generateSixDigitNumber() {
   const min = 100000;
   const max = 999999;
@@ -135,7 +160,7 @@ export const getAllProjectMom = async (req, res) => {
             location: find_project[i].mom[j].location,
             meetingDate: find_project[i].mom[j].meetingdate,
           });
-          
+
           break;
         }
 
@@ -203,7 +228,7 @@ export const createmom = async (req, res) => {
         const files = req.files?.files;
         const fileUploadPromises = [];
         let successfullyUploadedFiles = [];
-        let fileSize= [];
+        let fileSize = [];
 
         if (files) {
           const filesToUpload = Array.isArray(files)
@@ -284,7 +309,7 @@ export const createmom = async (req, res) => {
               project_id,
               project_Name,
               folder_name,
-              updated_date : new Date(),
+              updated_date: new Date(),
               files: fileUrls,
             });
           } else {
@@ -420,11 +445,11 @@ export const generatePdf = async (req, res) => {
 
       if (check_mom.length > 0) {
         const momData = check_mom[0];
-         // Extracting the MOM data
-       
-        
+        // Extracting the MOM data
+
+
         const htmlTemplate = momPdfTemplate(momData, check_project[0].project_name)
-       
+
 
 
 
@@ -439,15 +464,23 @@ export const generatePdf = async (req, res) => {
           }
         };
 
+
         // Generate PDF  using html-pdf library and send it as an attachment in the email 
-        pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
-          if (err) {
-            res.status(503).send(err);
-          } else {
-            res.setHeader("Content-Type", "application/pdf");
-            stream.pipe(res);
-          }
-        });
+        // pdf.create(htmlTemplate, pdfOptions).toStream((err, stream) => {
+        //   if (err) {
+        //     res.status(503).send(err);
+        //   } else {
+        //     res.setHeader("Content-Type", "application/pdf");
+        //     stream.pipe(res);
+        //   }
+        // });
+        const pdfFileName = `pdf-${Date.now()}.pdf`;
+        const pdfFilePath = '../../../momdata/';
+
+        generatePDFfromHTML(htmlTemplate, pdfFilePath,pdfFileName,  res)
+          .then(() => console.log('PDF generated successfully')
+        )
+          .catch(err => console.error('Error generating PDF:', err));
 
 
 
@@ -480,7 +513,7 @@ export const sendPdf = async (req, res) => {
 
       if (check_mom.length > 0) {
         const momData = check_mom[0]; // Extracting the MOM data
-       
+
 
 
 
@@ -489,11 +522,11 @@ export const sendPdf = async (req, res) => {
         const pdfOptions = {
           format: "A4",
           border: {
-            top: "1cm",
-            right: "1cm",
-            bottom: "1cm",
-            left: "1cm",
-          },
+            top: "0.1cm",
+            right: "0.1cm",
+            bottom: "0.1cm",
+            left: "0.1cm",
+          }
         };
 
         // Generate PDF
@@ -505,7 +538,7 @@ export const sendPdf = async (req, res) => {
               res.status(500).send(err);
             } else {
               const filePath = `momdata/${mom_id}.pdf`;
-             
+
               const mailOptions = {
                 from: "a72302492@gmail.com",
                 to: check_project[0].client[0].client_email,
