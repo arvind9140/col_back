@@ -276,7 +276,7 @@ export const createmom = async (req, res) => {
           const existingFile = await fileuploadModel.findOne({
             project_id: project_id,
           });
-          const folder_name = `MOM`;
+          const folder_name = `mom`;
           const project_Name = existingFile.project_name;
 
           if (existingFile) {

@@ -4,6 +4,7 @@ import nodemailer from "nodemailer";
 import AWS from "aws-sdk";
 import fs from "fs";
 import { residentialContract, commercialContract } from "../../../utils/contract.js";
+import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 function generateSixDigitNumber() {
   const min = 100000;
   const max = 999999;
@@ -120,12 +121,95 @@ function numberToWordsString(number) {
   return result.trim();
 }
 
-// Test
-// console.log(numberToWordsString()); // Output: "one hundred twenty three"
+
+
+let fileSizeArray = []; 
+
+function addFileSize(sizeInBytes) {
+  const sizeInKilobytes = sizeInBytes / 1024;
+  fileSizeArray.push(sizeInKilobytes);
+}
+
+function getFileSizes() {
+  return fileSizeArray;
+}
+
+const saveFileUploadData = async (
+  res,
+  existingFileUploadData,
+  
+) => {
+  try {
+    
+      // Use update query to push data
+      const updateResult = await fileuploadModel.updateOne(
+        {
+          lead_id: existingFileUploadData.lead_id,
+          "files.folder_name": existingFileUploadData.folder_name,
+        },
+        {
+          $set: {
+            "files.$.updated_date": existingFileUploadData.updated_Date,
+          },
+          $push: {
+           
+            "files.$.files": { $each: existingFileUploadData.files },
+          },
+        },
+        {
+          arrayFilters: [
+            { "folder.folder_name": existingFileUploadData.folder_name },
+          ],
+        }
+      );
+
+      if (updateResult.modifiedCount === 1) {
+        console.log("File Upload Data Updated Successfully");
+      } else {
+        // If the folder does not exist, create a new folder object
+        const updateNewFolderResult = await fileuploadModel.updateOne(
+          { lead_id: existingFileUploadData.lead_id },
+          {
+            $push: {
+              files: {
+                folder_name: existingFileUploadData.folder_name,
+                updated_date: existingFileUploadData.updated_date,
+                files: existingFileUploadData.files,
+              },
+            },
+          }
+        );
+
+        if (updateNewFolderResult.modifiedCount === 1) {
+          console.log("New Folder Created and File Upload Data Updated Successfully");
+        } else {
+          console.log("Lead not found or file data already updated");
+          responseData(
+            res,
+            "",
+            404,
+            false,
+            "Lead not found or file data already updated"
+          );
+        }
+      }
+    
+  } catch (error) {
+    console.error("Error saving file upload data:", error);
+    responseData(
+      res,
+      "",
+      500,
+      false,
+      "Something went wrong. File data not updated"
+    );
+  }
+};
 
 
 export const contractShare = async (req, res) => {
 
+  const  lead_id = req.body.lead_id;
   const client_email = req.body.client_email;
   const client_phone = req.body.client_phone;
   const residential_type = req.body.contract_type;
@@ -137,7 +221,7 @@ export const contractShare = async (req, res) => {
   const quotation = req.body.quotation;
   const client_name = req.body.client_name;
   //  const project_id = req.body.project_id;
-  // const contract_id = req.body.contract_id;
+ 
 
 
   if (type === "commercial") {
@@ -312,16 +396,27 @@ const total_design_charges_in_words = numberToWordsString(total_design_charges)
         res.status(500).send(err);
       } else {
         // stream.pipe(res);
-        // res.send(localFilePath)
-        const localFilePath = `contract/${contract_name}.${Date.now()}.pdf`;
+        // res.send(localFilePath) 
+        
+        const localFilePath = `contract/residential${contract_name}.${Date.now()}.pdf`;
         const fileWriteStream = fs.createWriteStream(localFilePath);
-
+       
         // Pipe the PDF stream to the file write stream
         stream.pipe(fileWriteStream);
 
         // Handle events for when the stream finishes writing to the file
         fileWriteStream.on('finish', async () => {
           // Close the file write stream
+          fs.stat(localFilePath, (statErr, stats) => {
+            if (statErr) {
+              return res.status(500).send(statErr);
+            }
+
+            const fileSizeInBytes = stats.size; // File size in bytes
+             addFileSize(fileSizeInBytes); 
+
+            
+          });
           fileWriteStream.close();
 
           let response;
@@ -330,6 +425,33 @@ const total_design_charges_in_words = numberToWordsString(total_design_charges)
             response = await uploadImage(req, localFilePath, contract_name);
             
             if (response.status) {
+
+
+              let fileUrls =[{
+                fileUrl: response.data.Location,
+                fileName: response.data.Location.split('/').pop(),
+                fileId: `FL-${generateSixDigitNumber()}`,
+                fileSize: `${getFileSizes()} KB`,
+                date: new Date()
+              }]
+             
+              
+              const existingFile = await fileuploadModel.findOne({
+                lead_id: lead_id,
+              });
+              const folder_name = `contract`;
+              const lead_Name = existingFile.name;
+
+              if (existingFile) {
+                await saveFileUploadData(res, {
+                  lead_id,
+                lead_Name,
+                  folder_name,
+                  updated_date: new Date(),
+                  files: fileUrls,
+                });
+              } 
+
               responseData(res, "contract create successfully", 200, true, "", response.data.Location);
               
               fs.unlink(localFilePath, (unlinkErr) => {
