@@ -185,55 +185,50 @@ style='font-size:12.0pt;'>${project} &amp;${city}</span></u></b></p>
 
 <p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:10.5pt'>&nbsp;</span></b></p>
 
-<h1 style='margin-left:5.0pt;line-height:150%'>Client                  -<span
+<h1 style='margin-left:5.0pt;line-height:150%'>Client                   -<span
 style='letter-spacing:-.15pt'> </span><span style=''>${client_name[0]}</span></h1>
 
-<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
-margin-left:5.0pt;line-height:150%'><b>Designer             -<span
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;;
+margin-left:5.0pt;line-height:150%'><b>Designer              -<span
 style='letter-spacing:-.15pt'> </span>Ms.<span style='letter-spacing:-.15pt'> </span>Naomi
 Sahay</b></p>
-
-<p class=MsoBodyText style='margin-top:.05pt;margin-right:1.8pt;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Date                    -
+<p class=MsoBodyText style='margin-right:1.8pt;;margin-left:5.0pt;line-height:150%'>Date                     -
 <span style=''>${date}</span><span
 style='letter-spacing:.05pt'> <br>
-</span>Quotation<span style='letter-spacing:-.05pt'> </span>No        -<span
+</span>Quotation<span style='letter-spacing:-.05pt'> </span>No        -<span
 style='letter-spacing:-.25pt'> </span>CCPL<span style='letter-spacing:-.3pt'> </span>/FY25/<span
 style='letter-spacing:-.3pt'> </span><span style=''>${quotation}</span></p>
 
-<p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
-margin-left:5.0pt;line-height:150%'>Site Address         - <span
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;
+margin-left:5.0pt;line-height:150%'>Site Address          - <span
 style=''>${site_address}</span></p>
-<p class=MsoBodyText style='margin-left:5.0pt;line-height:150%'>Client<span
-style='letter-spacing:-.15pt'></span>Contact        - ${client_name
+<p class=MsoBodyText style='margin-top:0in;margin-right:0in;
+margin-left:5.0pt;line-height:150%'>Client<span
+style='letter-spacing:-.15pt'></span>Contact        -${client_name
                         .map(
                                 (name, index) => `
-                               <span
-                                style="width:24.88pt; text-indent:0pt; display:inline-block"></span><span
-                                style="font-family:Verdana; font-size:11pt"></span><span
-                                style="font-family:Verdana; font-size:11pt"></span>
-                                <span style="font-family:Verdana; font-size:11pt; ">${client_name[index]}</span><span
-                                style="font-family:Verdana; font-size:11pt; ">  </span><span
+                                <span style="font-family:Verdana; font-size:11pt;">${client_name[index]}</span><span
+                                style="font-family:Verdana; font-size:11pt; "></span><span
                                 style="font-family:Verdana; font-size:11pt; ">; +91 </span><span
                                 style="font-family:Verdana; font-size:11pt; ">${client_phone[index]}; </span><a
                                 href="mailto:${client_email[index]}" style="text-decoration:none"><span
                                         style="font-family:'Times New Roman'; font-size:10pt; color:#000000; ">&nbsp;</span><span
-                                        style="font-family:Verdana; font-size:11pt; text-decoration:underline; color:#0000ff; ">${client_email[index]}</span></a><br></br><span
-                                style="font-family:Verdana; font-size:11pt; "> </span></p>
-                <p style="margin-top:0pt; margin-left:108pt; margin-bottom:0pt; line-height:15pt"><span
-                                style="font-family:Verdana; font-size:11pt; ">&nbsp; </span>
+                                        style="font-family:Verdana; font-size:11pt; text-decoration:underline; color:#0000ff; ">${client_email[index]}</span></a><span
+                                style="font-family:Verdana; font-size:11pt; "></span></p>
+                <p style="margin-top:0pt; margin-left:120pt; margin-bottom:0pt;"><span
+                                style="font-family:Verdana; font-size:11pt; "></span>
                        
                             `
                         )
                         .join("")}
                         </P>                    
 
-<p class=MsoBodyText style='margin-top:5.05pt;margin-right:0in;margin-bottom:
+<p class=MsoBodyText style='margin-right:0in;margin-bottom:
 0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Colonelz’ Contact  -
 Ms. Naomi Sahay, Principal Designer;</p>
 
-<p class=MsoBodyText align=center style='margin-top:0in;margin-right:0in;
-margin-bottom:12.0pt;margin-left:4.2pt;text-align:center;line-height:150%'>+91 8447500754, <a
+<p class=MsoBody style='margin-top:0in;margin-right:0in;
+margin-bottom:12.0pt; margin-left:117.0pt;line-height:150%'>+91 8447500754, <a
 href="mailto:naomi@colonelz.com"><span style='color:blue'>naomi@colonelz.com</span></a></p>
 
 <h1 align=center style='margin-top:5.05pt;margin-right:5.05pt;margin-bottom:
@@ -328,6 +323,7 @@ style='letter-spacing:-.1pt'> </span>Sketches</p>
 <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span>Conceptual 3D Views with 1 view each of the following spaces:</p>
+<br></br>
 
 ${design_stage.map((name, index) => {
         if (name === 'Bedrooms') {
@@ -413,7 +409,7 @@ style='letter-spacing:-.2pt'> </span>Views<span style='letter-spacing:-.05pt'> <
 style='letter-spacing:-.05pt'> </span>finalised<span style='letter-spacing:
 -.05pt'> </span>details):</p>
 
-
+<br></br>
 ${design_stage.map((name, index) => {
         if (name === 'Bedrooms') {
                 return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
