@@ -166,10 +166,10 @@ ul
 <p class=MsoBodyText style='margin-top:.15pt'><span style='font-size:6.0pt;
 font-family:"Times New Roman",serif'>&nbsp;</span></p>
 
-<p class=MsoBodyText style='margin-left:164.8pt'><span lang=EN-IN
+<p class=MsoBodyText style='margin-left:170.8pt'><span lang=EN-IN
 style='font-size:10.0pt;font-family:"Times New Roman",serif'><img width=172
 height=122 id=image1.jpeg
-src="https://www.colonelz.com/wupsujyz/2022/12/colonelz-logo.png"></span></p>
+src="https://s3.amazonaws.com/myrecords.in/colonelz-logo.png"></span></p>
 
 <p class=MsoBodyText><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></p>
 
@@ -185,42 +185,40 @@ style='font-size:12.0pt;'>${project} &amp;${city}</span></u></b></p>
 
 <p class=MsoBodyText style='margin-top:.25pt'><b><span style='font-size:10.5pt'>&nbsp;</span></b></p>
 
-<h1 style='margin-left:5.0pt;line-height:150%'>Client                   -<span
+<h1 style='margin-left:5.0pt;line-height:150%'>Client                  -<span
 style='letter-spacing:-.15pt'> </span><span style=''>${client_name[0]}</span></h1>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
-margin-left:5.0pt;line-height:150%'><b>Designer              -<span
+margin-left:5.0pt;line-height:150%'><b>Designer             -<span
 style='letter-spacing:-.15pt'> </span>Ms.<span style='letter-spacing:-.15pt'> </span>Naomi
 Sahay</b></p>
 
 <p class=MsoBodyText style='margin-top:.05pt;margin-right:1.8pt;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Date                      -
+0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Date                    -
 <span style=''>${date}</span><span
 style='letter-spacing:.05pt'> <br>
-</span>Quotation<span style='letter-spacing:-.05pt'> </span>No         -<span
+</span>Quotation<span style='letter-spacing:-.05pt'> </span>No        -<span
 style='letter-spacing:-.25pt'> </span>CCPL<span style='letter-spacing:-.3pt'> </span>/FY25/<span
 style='letter-spacing:-.3pt'> </span><span style=''>${quotation}</span></p>
 
 <p class=MsoBodyText style='margin-top:0in;margin-right:0in;margin-bottom:12.0pt;
-margin-left:5.0pt;line-height:150%'>Site Address          - <span
+margin-left:5.0pt;line-height:150%'>Site Address         - <span
 style=''>${site_address}</span></p>
-
 <p class=MsoBodyText style='margin-left:5.0pt;line-height:150%'>Client<span
-style='letter-spacing:-.15pt'> </span>Contact        -  ${client_name
+style='letter-spacing:-.15pt'></span>Contact        - ${client_name
                         .map(
                                 (name, index) => `
                                <span
-                                style="width:24.88pt; text-indent:0pt; display:inline-block">&nbsp;</span><span
-                                style="font-family:Verdana; font-size:11pt">-</span><span
-                                style="font-family:Verdana; font-size:11pt"> </span>
-                                <span
-                                style="font-family:Verdana; font-size:11pt; ">${client_name[index]}</span><span
-                                style="font-family:Verdana; font-size:11pt; "> </span><span
-                                style="font-family:Verdana; font-size:11pt; ">: +91 </span><span
+                                style="width:24.88pt; text-indent:0pt; display:inline-block"></span><span
+                                style="font-family:Verdana; font-size:11pt"></span><span
+                                style="font-family:Verdana; font-size:11pt"></span>
+                                <span style="font-family:Verdana; font-size:11pt; ">${client_name[index]}</span><span
+                                style="font-family:Verdana; font-size:11pt; ">  </span><span
+                                style="font-family:Verdana; font-size:11pt; ">; +91 </span><span
                                 style="font-family:Verdana; font-size:11pt; ">${client_phone[index]}; </span><a
                                 href="mailto:${client_email[index]}" style="text-decoration:none"><span
                                         style="font-family:'Times New Roman'; font-size:10pt; color:#000000; ">&nbsp;</span><span
-                                        style="font-family:Verdana; font-size:11pt; text-decoration:underline; color:#0000ff; ">${client_email[index]}</span></a><span
+                                        style="font-family:Verdana; font-size:11pt; text-decoration:underline; color:#0000ff; ">${client_email[index]}</span></a><br></br><span
                                 style="font-family:Verdana; font-size:11pt; "> </span></p>
                 <p style="margin-top:0pt; margin-left:108pt; margin-bottom:0pt; line-height:15pt"><span
                                 style="font-family:Verdana; font-size:11pt; ">&nbsp; </span>
@@ -228,10 +226,10 @@ style='letter-spacing:-.15pt'> </span>Contact        -  ${client_name
                             `
                         )
                         .join("")}
-                           
+                        </P>                    
 
 <p class=MsoBodyText style='margin-top:5.05pt;margin-right:0in;margin-bottom:
-0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Colonelz’ Contact   -
+0in;margin-left:5.0pt;margin-bottom:.0001pt;line-height:150%'>Colonelz’ Contact  -
 Ms. Naomi Sahay, Principal Designer;</p>
 
 <p class=MsoBodyText align=center style='margin-top:0in;margin-right:0in;
@@ -332,33 +330,25 @@ Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nb
 </span></span>Conceptual 3D Views with 1 view each of the following spaces:</p>
 
 ${design_stage.map((name, index) => {
-                                if (name === 'Bedrooms') {
-                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+        if (name === 'Bedrooms') {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      - ${number[0]}
-no.</span></p>`
-                                }
-                                else if (name === 'Balconies') {
-                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+</span></span><span style=''> ${design_stage[index]}                    - ${number[0]} no.</span></p>`;
+        } else if (name === 'Balconies') {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      - ${number[1]}
-no.</span></p>`
-                                }
-                                else if (name === 'Toilets') {
-                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+</span></span><span style=''> ${design_stage[index]}                     - ${number[1]} no.</span></p>`;
+        } else if (name === 'Toilets') {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      - ${number[2]}
-no.</span></p>`
-                                }
-                                else {
-                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+</span></span><span style=''> ${name}                          - ${number[2]} no.</span></p>`;
+        } else {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      
-</span></p>`
+</span></span><span style=''> ${name}</span></p>`;
+        }
+}).join('')}
 
-                                }
-                        })
-                }
 
 <p class=MsoNormal style='margin-top:1.95pt;margin-right:0in;margin-bottom:
 0in;margin-left:90.05pt;margin-bottom:.0001pt;line-height:115%'>&nbsp;</p>
@@ -425,33 +415,25 @@ style='letter-spacing:-.05pt'> </span>finalised<span style='letter-spacing:
 
 
 ${design_stage.map((name, index) => {
-                        if (name === 'Bedrooms') {
-                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+        if (name === 'Bedrooms') {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      - ${number[0]}
-no.</span></p>`
-                        }
-                        else if (name === 'Balconies') {
-                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+</span></span><span style=''> ${design_stage[index]}                    - ${number[0]} no.</span></p>`;
+        } else if (name === 'Balconies') {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      - ${number[1]}
-no.</span></p>`
-                        }
-                        else if (name === 'Toilets') {
-                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+</span></span><span style=''> ${design_stage[index]}                     - ${number[1]} no.</span></p>`;
+        } else if (name === 'Toilets') {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      - ${number[2]}
-no.</span></p>`
-                        }
-                        else {
-                                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+</span></span><span style=''> ${name}                          - ${number[2]} no.</span></p>`;
+        } else {
+                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span><span style=''> ${name}                      
-</span></p>`
+</span></span><span style=''> ${name}</span></p>`;
+        }
+}).join('')}
 
-                        }
-                })
-                }
 <p class=MsoNormal>&nbsp;</p>
 
 <p class=MsoListParagraph style='margin-top:.05pt;margin-right:0in;margin-bottom:
@@ -1489,10 +1471,10 @@ style='letter-spacing:.05pt'> </span>Sahay</p>
 <p class=MsoBodyText style='margin-left:5.0pt'>The Client                                                              The
 Designer</p>
 
-<p class=MsoBodyText style='margin-left:5.0pt'>                                                                             For</p>
-
-<p class=MsoBodyText style='margin-left:5.0pt'>                                                                             Colonelz
+<p class=MsoBodyText style='margin-left:5.0pt'>                                                                             For Colonelz
 Constructions Pvt Ltd</p>
+
+<p class=MsoBodyText style='margin-left:5.0pt'>                                                                             </p>
 
 <p class=MsoBodyText><span style='font-size:13.0pt'>&nbsp;</span></p>
 
@@ -1505,13 +1487,13 @@ style='color:#212121'>Bank            -        HDFC Bank Accou
 
 <p class=MsoBodyText style='margin-top:.05pt;margin-right:137.1pt;margin-bottom:
 0in;margin-left:5.0pt;margin-bottom:.0001pt'><span style='color:#212121'>A/c
-Holder    –        </span><span style='color:#BF0000'>COLONELZ CONSTRUCTIONS
+Holder    –       </span><span style='color:#BF0000'>COLONELZ CONSTRUCTIONS
 PVT LTD<span style='letter-spacing:-3.7pt'> </span></span>
 </p>
 <p class=MsoBodyText style='margin-top:.05pt;margin-right:137.1pt;margin-bottom:
 0in;margin-left:5.0pt;margin-bottom:.0001pt'>
 <span
-style='color:#212121'>A/c<span style='letter-spacing:-.05pt'> </span>no.                   –</span><span
+style='color:#212121'>A/c<span style='letter-spacing:-.05pt'> </span>no.        –</span><span
 style='font-family:"Times New Roman",serif;color:#212121'>          </span><span
 style='color:#212121'>50200007351695</span></p>
 
@@ -2778,10 +2760,11 @@ export function commercialContract(
                                 <br></br>
                 <p style="margin-top:1pt; margin-bottom:0pt; font-size:11pt; background-color:#ffffff"> <span
                                 style="font-family:Verdana; color:#222222">A/c no.</span><span
-                                style="width:32.25pt; display:inline-block">&nbsp;</span><span
+                                 style="width:5.98pt; display:inline-block">&nbsp;</span><span
+                                
                                 style="font-family:Verdana; color:#222222">–</span><span
                                 style="font-family:Verdana; color:#222222"> </span><span
-                                style="width:25.14pt; display:inline-block">&nbsp;</span><span
+                                style="width:25.14pt; display:inline-block"></span><span
                                 style="font-family:Verdana; color:#222222; background-color:#ffffff">50200007351695</span>
                 </p>
                 <p style="margin-top:0pt; margin-bottom:0pt; font-size:11pt"><span
