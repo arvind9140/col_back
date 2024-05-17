@@ -179,7 +179,7 @@ src="https://s3.amazonaws.com/myrecords.in/colonelz-logo.png"></span></p>
 
 <p class=MsoNormal align=center style='margin-top:11.85pt;margin-right:5.05pt;
 margin-bottom:0in;margin-left:4.2pt;margin-bottom:.0001pt;text-align:center'><b><u><span
-style='font-size:12.0pt;'>${project} &amp;${city}</span></u></b></p>
+style='font-size:12.0pt;'>${project}, ${city}</span></u></b></p>
 
 <p class=MsoBodyText><b><span style='font-size:10.0pt'>&nbsp;</span></b></p>
 
@@ -787,7 +787,7 @@ style='letter-spacing:-3.7pt'> </span>Design fees</p>
 115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
 </span></span><b>After<span style='letter-spacing:-.05pt'> </span>Finalisation
 of<span style='letter-spacing:-.2pt'> </span>Conceptual<span style='letter-spacing:
--.2pt'> </span>3D<span style='letter-spacing:-.15pt'> </span>Designs       - </b>70%
+-.2pt'> </span>3D<span style='letter-spacing:-.15pt'> </span>Designs        </b>- 70%
 of total<span style='letter-spacing:-3.7pt'> </span>Design<span
 style='letter-spacing:-.05pt'> </span>Fees<span style='letter-spacing:.1pt'> </span>(ie,
 before the<span style='letter-spacing:-.05pt'> </span>commencement<span
@@ -799,7 +799,7 @@ style='letter-spacing:-.2pt'> </span>of site<span style='letter-spacing:-.05pt'>
 115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
 </span></span><b>After<span style='letter-spacing:-.05pt'> </span>Finalisation
 of<span style='letter-spacing:-.2pt'> </span>GFCs and<span style='letter-spacing:
--.15pt'> </span>3Ds                       - </b>95% of total<span
+-.15pt'> </span>3Ds                       </b>- 95% of total<span
 style='letter-spacing:-3.7pt'> </span>Design<span style='letter-spacing:-.05pt'>
 </span>Fees</p>
 
@@ -807,8 +807,8 @@ style='letter-spacing:-3.7pt'> </span>Design<span style='letter-spacing:-.05pt'>
 0in;margin-left:68.8pt;margin-bottom:.0001pt;text-indent:-28.45pt;line-height:
 115%'><span style='font-family:Wingdings'>§<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
 </span></span><b>After<span style='letter-spacing:-.05pt'> </span>handing<span
-style='letter-spacing:-.1pt'> </span>over                                                -
-</b>5 % of total <span style='letter-spacing:-3.7pt'> </span>Design<span
+style='letter-spacing:-.1pt'> </span>over                                                
+</b> - 5 % of total <span style='letter-spacing:-3.7pt'> </span>Design<span
 style='letter-spacing:-.05pt'> </span>Fees</p>
 
 <p class=MsoListParagraph style='margin-top:0in;margin-right:19.0pt;margin-bottom:
@@ -817,7 +817,7 @@ style='letter-spacing:-.05pt'> </span>Fees</p>
 <p class=MsoBodyText style='margin-top:0in;margin-right:30.8pt;margin-bottom:
 0in;margin-left:40.35pt;margin-bottom:.0001pt;line-height:115%'>The Client
 shall release respective payment installments within 3 days<span
-style='letter-spacing:-3.75pt'> </span>from the date<span style='letter-spacing:
+style='letter-spacing:-3.75pt'> </span> from the date<span style='letter-spacing:
 -.1pt'> </span>of<span style='letter-spacing:-.15pt'> </span>completion<span
 style='letter-spacing:-.05pt'> </span>of<span style='letter-spacing:-.15pt'> </span>stage<span
 style='letter-spacing:-.1pt'> as </span>intimated by the<span style='letter-spacing:
@@ -830,7 +830,7 @@ style='font-size:10.5pt;line-height:115%'>&nbsp;</span></p>
 margin-bottom:12.0pt;margin-left:41.0pt;text-align:justify;text-indent:-.5in;
 line-height:115%'><span style='color:#3B3A3A'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span><b><u>Site Visit.</u> </b>Up to 10 visits to the site, by The
-Designer’s <b>Design Team<span style='letter-spacing:-3.65pt'> </span></b>shall
+Designer’s <b>Design Team<span style='letter-spacing:-3.65pt'> </span></b> shall
 be made to ensure suitable progress, quality, and other checks.<span
 style='letter-spacing:.05pt'> </span>However,<span style='letter-spacing:-.05pt'>
 </span>the Site<span style='letter-spacing:-.05pt'> </span>Supervisor would<span
