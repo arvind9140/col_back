@@ -323,27 +323,26 @@ style='letter-spacing:-.1pt'> </span>Sketches</p>
 <p class=MsoListParagraph style='line-height:115%'><span style='font-family:
 Symbol'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span>Conceptual 3D Views with 1 view each of the following spaces:</p>
-<br></br>
-
+<p></p>
 ${design_stage.map((name, index) => {
-        if (name === 'Bedrooms') {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                if (name === 'Bedrooms') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${design_stage[index]}                    - ${number[0]} no.</span></p>`;
-        } else if (name === 'Balconies') {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                } else if (name === 'Balconies') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${design_stage[index]}                     - ${number[1]} no.</span></p>`;
-        } else if (name === 'Toilets') {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                } else if (name === 'Toilets') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${name}                          - ${number[2]} no.</span></p>`;
-        } else {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                } else {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${name}</span></p>`;
-        }
-}).join('')}
+                                }
+                        }).join('')}
 
 
 <p class=MsoNormal style='margin-top:1.95pt;margin-right:0in;margin-bottom:
@@ -408,27 +407,26 @@ style='letter-spacing:-.2pt'> </span>Views<span style='letter-spacing:-.05pt'> <
 1-2 views each (as per requirement) of the following spaces (with<span
 style='letter-spacing:-.05pt'> </span>finalised<span style='letter-spacing:
 -.05pt'> </span>details):</p>
-
-<br></br>
+<p></p>
 ${design_stage.map((name, index) => {
-        if (name === 'Bedrooms') {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                if (name === 'Bedrooms') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${design_stage[index]}                    - ${number[0]} no.</span></p>`;
-        } else if (name === 'Balconies') {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                } else if (name === 'Balconies') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${design_stage[index]}                     - ${number[1]} no.</span></p>`;
-        } else if (name === 'Toilets') {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                } else if (name === 'Toilets') {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${name}                          - ${number[2]} no.</span></p>`;
-        } else {
-                return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
+                                } else {
+                                        return `<p class=MsoListParagraph style='margin-left:113.0pt;text-indent:-22.95pt'><span
 style='font-family:Wingdings;'>Ø<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
 </span></span><span style=''> ${name}</span></p>`;
-        }
-}).join('')}
+                                }
+                        }).join('')}
 
 <p class=MsoNormal>&nbsp;</p>
 

@@ -101,7 +101,7 @@ style='letter-spacing:-.3pt'> </span></span></b><span style='font-size:12.0pt'>$
 <p class=MsoNormal style='margin-left:34.0pt;line-height:14.35pt'><b><span
 style='font-size:12.0pt;font-family:Roboto'>Client:<span style='letter-spacing:
 -.6pt'> </span></span></b><span style='font-size:12.0pt'>${momData.attendees.client_name}  <span style='letter-spacing:-.8pt'> </span><span
-style='letter-spacing:-.2pt'>                            </span></span><b><span
+style='letter-spacing:-.2pt'>                               </span></span><b><span
 style='font-size:12.0pt;font-family:Roboto'>Organized<span style='letter-spacing:
 -.3pt'> </span>By: </span></b><span style='font-size:12.0pt'>${momData.attendees.organisor}   </span></p>
 
@@ -110,7 +110,7 @@ style='font-size:12.0pt'>&nbsp;</span></p>
 
 <p class=MsoNormal style='margin-left:34.0pt;line-height:14.35pt'><span
 style='font-size:12.0pt'></span><b><span style='font-size:12.0pt;font-family:
-Roboto'>Designer: </span></b><span style='font-size:12.0pt'>${momData.attendees.designer}                                                          </span><b><span
+Roboto'>Designer: </span></b><span style='font-size:12.0pt'>${momData.attendees.designer}                                                             </span><b><span
 style='font-size:12.0pt;font-family:Roboto'>Others: </span></b><span
 style='font-size:12.0pt'>${momData.attendees.attendees}</span></p>
 
