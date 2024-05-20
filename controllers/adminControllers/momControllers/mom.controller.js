@@ -135,7 +135,7 @@ export const getAllProjectMom = async (req, res) => {
             location: find_project[i].mom[j].location,
             meetingDate: find_project[i].mom[j].meetingdate,
           });
-          
+
           break;
         }
 
@@ -203,7 +203,7 @@ export const createmom = async (req, res) => {
         const files = req.files?.files;
         const fileUploadPromises = [];
         let successfullyUploadedFiles = [];
-        let fileSize= [];
+        let fileSize = [];
 
         if (files) {
           const filesToUpload = Array.isArray(files)
@@ -284,7 +284,7 @@ export const createmom = async (req, res) => {
               project_id,
               project_Name,
               folder_name,
-              updated_date : new Date(),
+              updated_date: new Date(),
               files: fileUrls,
             });
           } else {
@@ -420,11 +420,11 @@ export const generatePdf = async (req, res) => {
 
       if (check_mom.length > 0) {
         const momData = check_mom[0];
-         // Extracting the MOM data
-       
-        
+        // Extracting the MOM data
+
+
         const htmlTemplate = momPdfTemplate(momData, check_project[0].project_name)
-       
+
 
 
 
@@ -480,7 +480,7 @@ export const sendPdf = async (req, res) => {
 
       if (check_mom.length > 0) {
         const momData = check_mom[0]; // Extracting the MOM data
-       
+
 
 
 
@@ -506,7 +506,7 @@ export const sendPdf = async (req, res) => {
               res.status(500).send(err);
             } else {
               const filePath = `momdata/${mom_id}.pdf`;
-             
+
               const mailOptions = {
                 from: "a72302492@gmail.com",
                 to: check_project[0].client[0].client_email,

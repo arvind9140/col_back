@@ -31,14 +31,14 @@ const s3 = new AWS.S3({
   region: "ap-south-1",
 });
 
-const uploadImage = async (req, filePath, fileName) => {
+const uploadImage = async (req, filePath, lead_id, fileName) => {
 
   if (typeof fileName !== 'string') {
     fileName = String(fileName);
   }
   let response = s3
     .upload({
-      Bucket: `collegemanage`,
+      Bucket: `collegemanage/${lead_id}/contract`,
       Key: fileName,
       Body: fs.createReadStream(filePath),
       ContentType: 'application/pdf',
@@ -402,7 +402,7 @@ export const contractShare = async (req, res) => {
             // stream.pipe(res);
             // res.send(localFilePath) 
 
-            const localFilePath = `contract/residential${contract_name}.${Date.now()}.pdf`;
+            const localFilePath = `contract/residential_${contract_name}.pdf`;
             const fileWriteStream = fs.createWriteStream(localFilePath);
 
             // Pipe the PDF stream to the file write stream
@@ -426,7 +426,7 @@ export const contractShare = async (req, res) => {
               let response;
               try {
 
-                response = await uploadImage(req, localFilePath, contract_name);
+                response = await uploadImage(req, localFilePath, lead_id, contract_name);
 
                 if (response.status) {
 
@@ -491,7 +491,7 @@ export const contractShare = async (req, res) => {
       }
     }
     else {
-      return responseData(res, "", 400, false, "You are not Senior Architect");
+      return responseData(res, "", 400, false, "You are not a Senior Architect");
     }
   }
   catch (err) {

@@ -63,7 +63,7 @@ const saveFileUploadData = async (
           $push: {
             "files.$.files": { $each: existingFileUploadData.files },
           },
-          $set:{
+          $set: {
             "files.$.updated_date": existingFileUploadData.updated_Date,
           }
         },
@@ -78,7 +78,7 @@ const saveFileUploadData = async (
         responseData(res, "File data updated successfully", 200, true);
       } else {
         // If the folder does not exist, create a new folder object
-       
+
         const updateNewFolderResult = await fileuploadModel.updateOne(
           { lead_id: existingFileUploadData.lead_id },
           {
@@ -162,12 +162,12 @@ const fileupload = async (req, res) => {
         for (const file of filesToUpload) {
           const fileName = file.name;
           const fileSizeInBytes = file.size;
-          fileSize.push(fileSizeInBytes/1024)
-          
+          fileSize.push(fileSizeInBytes / 1024)
+
 
           fileUploadPromises.push(uploadFile(file, fileName, lead_id, folder_name));
         }
-        
+
 
         const responses = await Promise.all(fileUploadPromises);
         // console.log(responses)
@@ -182,16 +182,15 @@ const fileupload = async (req, res) => {
         );
         let fileUrls
         if (successfullyUploadedFiles.length > 0) {
-          for(let i=0;i<fileSize.length;i++)
-          {
-             fileUrls = successfullyUploadedFiles.map((result) => ({
+          for (let i = 0; i < fileSize.length; i++) {
+            fileUrls = successfullyUploadedFiles.map((result) => ({
               fileUrl: result.data.Location,
               fileName: result.data.Location.split('/').pop(),
               fileId: `FL-${generateSixDigitNumber()}`,
               fileSize: `${fileSize[i]} KB`,
-                date: new Date()
+              date: new Date()
 
-            })); 
+            }));
 
           }
 
@@ -209,7 +208,7 @@ const fileupload = async (req, res) => {
               lead_id,
               lead_Name,
               folder_name,
-              updated_Date:fileUrls[0].date,
+              updated_Date: fileUrls[0].date,
               files: fileUrls,
             });
           } else {
