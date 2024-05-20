@@ -5,13 +5,14 @@ import { onlyAlphabetsValidation } from "../../../utils/validation.js";
 // import pdf from "html-pdf";
 import nodemailer from "nodemailer";
 import fs from "fs";
+import path from "path";
 import fileuploadModel from "../../../models/adminModels/fileuploadModel.js";
 import { momPdfTemplate } from "../../../utils/mom.pdf.template.js";
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
 
 
 async function generatePDFfromHTML(htmlContent, outputPath, pdfFileName, res) {
-  const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium'});
+  const browser = await puppeteer.launch({ executablePath: '/usr/bin/chromium' });
   const page = await browser.newPage();
   await page.setContent(htmlContent);
   await page.pdf({ path: outputPath, format: 'A4', printBackground: true, });
@@ -31,7 +32,7 @@ async function generatePDFfromHTML(htmlContent, outputPath, pdfFileName, res) {
       }
     });
   });
- 
+
 
 }
 function generateSixDigitNumber() {
@@ -477,9 +478,9 @@ export const generatePdf = async (req, res) => {
         const pdfFileName = `pdf-${Date.now()}.pdf`;
         const pdfFilePath = '../../../momdata/';
 
-        generatePDFfromHTML(htmlTemplate, pdfFilePath,pdfFileName,  res)
+        generatePDFfromHTML(htmlTemplate, pdfFilePath, pdfFileName, res)
           .then(() => console.log('PDF generated successfully')
-        )
+          )
           .catch(err => console.error('Error generating PDF:', err));
 
 
@@ -499,92 +500,160 @@ export const generatePdf = async (req, res) => {
 };
 
 
+// export const sendPdf = async (req, res) => {
+//   try {
+//     const project_id = req.body.project_id;
+//     const mom_id = req.body.mom_id;
+
+//     const check_project = await projectModel.find({ project_id: project_id });
+
+//     if (check_project.length > 0) {
+//       const check_mom = check_project[0].mom.filter(
+//         (mom) => mom.mom_id.toString() === mom_id
+//       );
+
+//       if (check_mom.length > 0) {
+//         const momData = check_mom[0]; // Extracting the MOM data
+
+
+
+
+//         const htmlTemplate = momPdfTemplate(momData, check_project[0].project_name)
+
+//         const pdfOptions = {
+//           format: "A4",
+//           border: {
+//             top: "0.1cm",
+//             right: "0.1cm",
+//             bottom: "0.1cm",
+//             left: "0.1cm",
+//           }
+//         };
+
+//         // Generate PDF
+
+//         pdf
+//           .create(htmlTemplate, pdfOptions)
+//           .toFile(`momdata/${mom_id}.pdf`, (err, pdfPath) => {
+//             if (err) {
+//               res.status(500).send(err);
+//             } else {
+//               const filePath = `momdata/${mom_id}.pdf`;
+
+//               const mailOptions = {
+//                 from: "a72302492@gmail.com",
+//                 to: check_project[0].client[0].client_email,
+//                 subject: "MOM Data",
+//                 attachments: [
+//                   {
+//                     filename: `${mom_id}.pdf`,
+//                     path: filePath, // Pass the file path directly
+//                   },
+//                 ],
+//               };
+
+//               transporter.sendMail(mailOptions, (error, info) => {
+//                 if (error) {
+//                   responseData(res, "", 400, false, "Failed to send email");
+//                 } else {
+//                   fs.unlink(filePath, (err) => {
+//                     if (err) {
+//                       console.error("Error deleting file:", err);
+//                     } else {
+//                       console.log("File deleted successfully");
+//                     }
+//                   });
+//                   responseData(
+//                     res,
+//                     `Email has been sent successfully`,
+//                     200,
+//                     true,
+//                     ""
+//                   );
+//                 }
+//               });
+//             }
+//           });
+//       } else {
+//         responseData(res, "", 404, false, "MOM Not Found");
+//       }
+//     } else {
+//       responseData(res, "", 404, false, "Project Not Found");
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     responseData(res, "", 400, false, err.message);
+//   }
+// };
+
+
 export const sendPdf = async (req, res) => {
   try {
-    const project_id = req.body.project_id;
-    const mom_id = req.body.mom_id;
-
+    const { project_id, mom_id } = req.body;
     const check_project = await projectModel.find({ project_id: project_id });
 
     if (check_project.length > 0) {
+      
       const check_mom = check_project[0].mom.filter(
         (mom) => mom.mom_id.toString() === mom_id
       );
 
       if (check_mom.length > 0) {
-        const momData = check_mom[0]; // Extracting the MOM data
+       
+        const mom_pdf = req.files.file;
+        const filePath = path.join('momdata', mom_pdf.name);
 
-
-
-
-        const htmlTemplate = momPdfTemplate(momData, check_project[0].project_name)
-
-        const pdfOptions = {
-          format: "A4",
-          border: {
-            top: "0.1cm",
-            right: "0.1cm",
-            bottom: "0.1cm",
-            left: "0.1cm",
+r
+        mom_pdf.mv(filePath, (err) => {
+          if (err) {
+            console.error('Error saving file:', err);
+            return responseData(res, '', 500, false, 'Failed to save file');
           }
-        };
 
-        // Generate PDF
+          // Define the mail options
+          const mailOptions = {
+            from: 'a72302492@gmail.com',
+            to: check_project[0].client[0].client_email,
+            subject: 'MOM Data',
+            attachments: [
+              {
+                filename: mom_pdf.name,
+                path: filePath,
+              },
+            ],
+          };
 
-        pdf
-          .create(htmlTemplate, pdfOptions)
-          .toFile(`momdata/${mom_id}.pdf`, (err, pdfPath) => {
-            if (err) {
-              res.status(500).send(err);
+          // Send the email
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+              return responseData(res, '', 400, false, 'Failed to send email');
             } else {
-              const filePath = `momdata/${mom_id}.pdf`;
+              console.log('Email sent:', info.response);
 
-              const mailOptions = {
-                from: "a72302492@gmail.com",
-                to: check_project[0].client[0].client_email,
-                subject: "MOM Data",
-                attachments: [
-                  {
-                    filename: `${mom_id}.pdf`,
-                    path: filePath, // Pass the file path directly
-                  },
-                ],
-              };
-
-              transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                  responseData(res, "", 400, false, "Failed to send email");
+              fs.unlink(filePath, (err) => {
+                if (err) {
+                  console.error('Error deleting file:', err);
                 } else {
-                  fs.unlink(filePath, (err) => {
-                    if (err) {
-                      console.error("Error deleting file:", err);
-                    } else {
-                      console.log("File deleted successfully");
-                    }
-                  });
-                  responseData(
-                    res,
-                    `Email has been sent successfully`,
-                    200,
-                    true,
-                    ""
-                  );
+                  console.log('File deleted successfully');
                 }
               });
+
+              return responseData(res, 'Email has been sent successfully', 200, true, '');
             }
           });
+        });
       } else {
-        responseData(res, "", 404, false, "MOM Not Found");
+        return responseData(res, '', 404, false, 'MOM Not Found');
       }
     } else {
-      responseData(res, "", 404, false, "Project Not Found");
+      return responseData(res, '', 404, false, 'Project Not Found');
     }
   } catch (err) {
-    console.log(err);
-    responseData(res, "", 400, false, err.message);
+    console.error('Error:', err);
+    return responseData(res, '', 400, false, err.message);
   }
 };
-
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
